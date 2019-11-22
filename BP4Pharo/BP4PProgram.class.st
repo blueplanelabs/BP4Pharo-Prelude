@@ -48,7 +48,11 @@ BP4PProgram >> scenarios [
 
 { #category : #api }
 BP4PProgram >> start [
-	[controller start] forkAt: 20 named: 'controller' .
+	"start bpcontroller in a new process"
+
+	[ controller start ] forkAt: 20 named: 'controller'.
+
+	"start every scenario add to the bprogram in a diferent process"
 	scenarios
 		do:
 			[ :scenario | [ scenario valuable value: self ] forkAt: 20 named: scenario name ]
@@ -56,18 +60,36 @@ BP4PProgram >> start [
 
 { #category : #api }
 BP4PProgram >> syncRequested: rEvents waited: wEvents blocked: bEvents [
-	| syncScenarioAnnouncement tempContext scenario |
+	| syncScenarioAnnouncement tempContext scenario continue |
 	tempContext := thisContext.
+
+	"go through the contexts until it find the scenario to which it belongs"
+	continue := false.
 	[ tempContext receiver isKindOf: BP4PScenario ]
 		whileFalse: [ tempContext := tempContext sender ].
 	scenario := tempContext receiver.
+	"create synchronizedScenarioAnnouncement with scenario's name and its events requesteds, waiteds and blockeds"
 	syncScenarioAnnouncement := BP4PSynchronizedScenarioAnnouncement
 		scenario: scenario name
 		requested: rEvents
 		waited: wEvents
 		blocked: bEvents.
 	scenarioAnnouncer announce: syncScenarioAnnouncement.
-	"Trace for show the announcement"
 	Transcript
-		crShow: 'Announced ' , syncScenarioAnnouncement printString
+		crShow: 'Announced ' , syncScenarioAnnouncement printString.
+	"Evaluate if the selectedEvent is in requested or blocked. If is true, lets continue"
+	scenarioAnnouncer
+		when: BP4PSelectedEventAnnouncement
+		send: #value:
+		to: [ :selectedEvent | 
+			continue := rEvents , wEvents includes: selectedEvent event.
+			"Trace for show scenario progress or NOT progress"
+			continue
+				ifTrue:
+					[ Transcript crShow: 'Progress ' , scenario printString ]
+				ifFalse:
+					[ Transcript crShow: 'NOT Progress ' , scenario printString ] ].
+	[ continue ] whileFalse.
+	scenarioAnnouncer
+		announce: (BP4POutOfSyncScenarioAnnouncement scenario: scenario name)
 ]

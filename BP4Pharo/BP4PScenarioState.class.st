@@ -34,6 +34,11 @@ BP4PScenarioState class >> withPriority: aPriority [
 ]
 
 { #category : #accessing }
+BP4PScenarioState >> blocked: anObject [
+	blockedEvents := anObject
+]
+
+{ #category : #accessing }
 BP4PScenarioState >> blockedEvents [
 	^ blockedEvents
 ]
@@ -47,6 +52,16 @@ BP4PScenarioState >> isSynchronized [
 { #category : #accessing }
 BP4PScenarioState >> priority [
 	^ priority
+]
+
+{ #category : #accessing }
+BP4PScenarioState >> priority: anObject [
+	priority := anObject
+]
+
+{ #category : #accessing }
+BP4PScenarioState >> requested: anObject [
+	requestedEvents := anObject
 ]
 
 { #category : #initalize }
@@ -63,14 +78,14 @@ BP4PScenarioState >> requestedEvents [
 	^ requestedEvents
 ]
 
-{ #category : #api }
-BP4PScenarioState >> updateBySync: aBP4PScenarioState [
-	"change the values modified by a sync"
+{ #category : #accessing }
+BP4PScenarioState >> synchronized: anObject [
+	synchronized := anObject
+]
 
-	requestedEvents := aBP4PScenarioState requestedEvents.
-	waitedEvents := aBP4PScenarioState waitedEvents.
-	blockedEvents := aBP4PScenarioState blockedEvents.
-	synchronized := aBP4PScenarioState isSynchronized
+{ #category : #accessing }
+BP4PScenarioState >> waited: anObject [
+	waitedEvents := anObject
 ]
 
 { #category : #accessing }

@@ -18,11 +18,12 @@ BP4PController class >> checkIn: anAnnouncer [
 		checkIn: anAnnouncer;
 		scenarios;
 		auctionner;
-		createSubscriptions.
+		createSubscriptions;
+		yourself.
 	^ controller
 ]
 
-{ #category : #'private - initialization' }
+{ #category : #'private-actions' }
 BP4PController >> addScenario: aBP4PAddedScenarioAnnouncement [
 	"add info from the announcement of scenario added in the BP4PProgram to the map scenarios"
 
@@ -42,7 +43,20 @@ BP4PController >> announcer [
 
 { #category : #accessing }
 BP4PController >> auctionner [
-	^ auctionner ifNil: [ auctionner := BP4PAuctionner checkIn: self announcer ] 
+	^ auctionner := auctionner
+		ifNil: [ BP4PAuctionner checkIn: self announcer]
+]
+
+{ #category : #'private-actions' }
+BP4PController >> checkAllScenariosSync [
+	"initially check if all the scenarios are sync"
+
+	((scenarios collect: [ :each | each isSynchronized ]) values
+		allSatisfy: [ :each | each ])
+		ifFalse: [ ^self].
+		Transcript crShow: 'All Scenarios Synchronized'.
+			announcer
+				announce: (BP4PAllScenariosSyncAnnouncement scenariosStates: scenarios values) 
 ]
 
 { #category : #'private - initialization' }
@@ -59,7 +73,23 @@ BP4PController >> createSubscriptions [
 	announcer
 		subscribe: BP4PSynchronizedScenarioAnnouncement
 		send: #syncScenario:
+		to: self.
+	announcer
+		subscribe: BP4POutOfSyncScenarioAnnouncement
+		send: #outOfSyncScenario:
 		to: self
+]
+
+{ #category : #'private-actions' }
+BP4PController >> outOfSyncScenario: aBP4POutOfSyncScenarioAnnouncement [
+	"change the synchronized value of scenario to false in the map scenarios"
+	|scenarioName|
+	scenarioName := aBP4POutOfSyncScenarioAnnouncement scenario.
+	scenarios
+		at: scenarioName
+		put:
+			((scenarios at: scenarioName) synchronized: false).
+
 ]
 
 { #category : #'private - initialization' }
@@ -67,30 +97,40 @@ BP4PController >> scenarios [
 	^ scenarios := scenarios ifNil: [ Dictionary new ]
 ]
 
-{ #category : #'private - initialization' }
+{ #category : #api }
 BP4PController >> start [
+	"initially check if all the scenarios are sync"
+	
+	self checkAllScenariosSync
+	
+	"check if all bscenarios are synchronized and if is true publish event allscenariossync with all scenarios states
+
 	[ true ]
 		whileTrue: [ ((scenarios collect: [ :each | each isSynchronized ]) values
-				allSatisfy: [ :each | each ] )ifTrue: [ Transcript crShow: 'All Scenarios Synchronized' ] ]
+				allSatisfy: [ :each | each ])
+				ifTrue: [ Transcript crShow: 'All Scenarios Synchronized'.
+					announcer
+						announce: (BP4PAllScenariosSyncAnnouncement scenariosStates: scenarios values) ] ]"
 ]
 
-{ #category : #'private - initialization' }
+{ #category : #'private-actions' }
 BP4PController >> syncScenario: aBP4PSynchronizedScenarioAnnouncement [
 	"change info from the announcement of scenario synchronized in the BP4PProgram to the map scenarios"
-	|scenarioName|
-	
+
+	| scenarioName |
 	scenarioName := aBP4PSynchronizedScenarioAnnouncement scenario.
 	scenarios
 		at: scenarioName
 		put:
 			((scenarios at: scenarioName)
-				requested: aBP4PSynchronizedScenarioAnnouncement requestedEvents
-				waited: aBP4PSynchronizedScenarioAnnouncement waitedEvents 
-				blocked: aBP4PSynchronizedScenarioAnnouncement blockedEvents 
-				synchronized: true
-				priority:
-					(scenarios at: scenarioName )
-						priority).
+				requested: aBP4PSynchronizedScenarioAnnouncement requestedEvents;
+				waited: aBP4PSynchronizedScenarioAnnouncement waitedEvents;
+				blocked: aBP4PSynchronizedScenarioAnnouncement blockedEvents;
+				synchronized: true;
+				yourself).
+				
+	"check if all the scenarios are sync in every change"
+	self checkAllScenariosSync.
 
 	"Trace"
 	Transcript

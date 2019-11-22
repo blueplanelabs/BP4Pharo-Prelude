@@ -8,7 +8,7 @@ Class {
 	#category : #BP4Pharo
 }
 
-{ #category : #creating }
+{ #category : #creation }
 BP4PAddedScenarioAnnouncement class >> scenario: aScenarioName priority: aPriority [
 	"create a new announcement of scenario added with name and priority"
 
