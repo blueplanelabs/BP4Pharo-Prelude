@@ -72,5 +72,9 @@ BP4PScenario >> run: aBP4PProgram [
 
 { #category : #initialize }
 BP4PScenario >> valuable [
-	^ [ :bp | self run: bp]
+	"	Here will be the Scenario Program in subclasses of BP4PScenario.
+		It must be a block with one arg for aBP4PProgram.	
+	"
+
+	^ [ :bp | self run: bp ]
 ]

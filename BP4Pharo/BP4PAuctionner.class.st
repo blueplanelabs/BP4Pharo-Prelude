@@ -24,7 +24,7 @@ BP4PAuctionner >> checkIn: anAnnouncer [
 
 { #category : #'private - initialization' }
 BP4PAuctionner >> chooseEvent: scenariosStates [
-	| selectedEvent requested blocked candidates|
+	| selectedEvent requested blocked candidates  |
 	scenariosStates sort: [ :a :b | a priority > b priority ].
 	requested := self
 		extractFrom: scenariosStates
@@ -33,7 +33,7 @@ BP4PAuctionner >> chooseEvent: scenariosStates [
 		extractFrom: scenariosStates
 		eventsType: #blockedEvents.
 	candidates := requested \ blocked.
-	selectedEvent := candidates first .
+	selectedEvent := candidates first.
 	^ selectedEvent
 ]
 
@@ -63,13 +63,9 @@ BP4PAuctionner >> selectEvent: aBP4PAllScenariosSyncAnnouncement [
 	| selectedEvent |
 	selectedEvent := self
 		chooseEvent: aBP4PAllScenariosSyncAnnouncement scenariosStates.
-		
+
 	"Trace for show selected Event"
-	Transcript
-		crShow: 'Selected Event ' , selectedEvent.
-	
+	Transcript crShow: 'Selected Event ' , selectedEvent printString .
 	announcer
 		announce: (BP4PSelectedEventAnnouncement event: selectedEvent)
-		
-
 ]

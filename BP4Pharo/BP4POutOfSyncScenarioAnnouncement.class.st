@@ -14,6 +14,14 @@ BP4POutOfSyncScenarioAnnouncement class >> scenario: aScenarioName [
 	^ self new scenario: aScenarioName
 ]
 
+{ #category : #printing }
+BP4POutOfSyncScenarioAnnouncement >> printOn: aStream [
+	super printOn: aStream.
+	aStream nextPutAll: ' with scenario '.
+	scenarioName  printOn: aStream.
+
+]
+
 { #category : #accessing }
 BP4POutOfSyncScenarioAnnouncement >> scenario [
 	^ scenarioName

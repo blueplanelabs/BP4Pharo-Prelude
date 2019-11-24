@@ -68,6 +68,16 @@ BP4PProgram >> syncRequested: rEvents waited: wEvents blocked: bEvents [
 	[ tempContext receiver isKindOf: BP4PScenario ]
 		whileFalse: [ tempContext := tempContext sender ].
 	scenario := tempContext receiver.
+	"Create subscription to change the value of continue in an async form by evaluate if the selectedEvent is in requested or blocked. If is true, lets continue"
+	scenarioAnnouncer
+		when: BP4PSelectedEventAnnouncement
+		send: #value:
+		to: [ :selectedEvent | 
+			continue := rEvents , wEvents includes: selectedEvent event.
+			"Trace for show scenario progress or NOT progress"
+			continue
+				ifTrue: [ Transcript crShow: 'Progress ' , scenario printString ]
+				ifFalse: [ Transcript crShow: 'NOT Progress ' , scenario printString ] ].
 	"create synchronizedScenarioAnnouncement with scenario's name and its events requesteds, waiteds and blockeds"
 	syncScenarioAnnouncement := BP4PSynchronizedScenarioAnnouncement
 		scenario: scenario name
@@ -77,19 +87,8 @@ BP4PProgram >> syncRequested: rEvents waited: wEvents blocked: bEvents [
 	scenarioAnnouncer announce: syncScenarioAnnouncement.
 	Transcript
 		crShow: 'Announced ' , syncScenarioAnnouncement printString.
-	"Evaluate if the selectedEvent is in requested or blocked. If is true, lets continue"
-	scenarioAnnouncer
-		when: BP4PSelectedEventAnnouncement
-		send: #value:
-		to: [ :selectedEvent | 
-			continue := rEvents , wEvents includes: selectedEvent event.
-			"Trace for show scenario progress or NOT progress"
-			continue
-				ifTrue:
-					[ Transcript crShow: 'Progress ' , scenario printString ]
-				ifFalse:
-					[ Transcript crShow: 'NOT Progress ' , scenario printString ] ].
-	[ continue ] whileFalse.
+	[ (Delay forSeconds: 10) wait.
+	continue ] whileFalse.
 	scenarioAnnouncer
 		announce: (BP4POutOfSyncScenarioAnnouncement scenario: scenario name)
 ]
