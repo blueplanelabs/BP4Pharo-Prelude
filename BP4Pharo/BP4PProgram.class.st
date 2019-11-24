@@ -60,7 +60,7 @@ BP4PProgram >> start [
 
 { #category : #api }
 BP4PProgram >> syncRequested: rEvents waited: wEvents blocked: bEvents [
-	| syncScenarioAnnouncement tempContext scenario continue |
+	| syncScenarioAnnouncement tempContext scenario continue outOfSyncScenarioAnnouncement changeSubscription |
 	tempContext := thisContext.
 
 	"go through the contexts until it find the scenario to which it belongs"
@@ -69,15 +69,16 @@ BP4PProgram >> syncRequested: rEvents waited: wEvents blocked: bEvents [
 		whileFalse: [ tempContext := tempContext sender ].
 	scenario := tempContext receiver.
 	"Create subscription to change the value of continue in an async form by evaluate if the selectedEvent is in requested or blocked. If is true, lets continue"
+	changeSubscription := [ :selectedEvent | 
+	continue := rEvents , wEvents includes: selectedEvent event.
+	"Trace for show scenario progress or NOT progress"
+	continue
+		ifTrue: [ Transcript crShow: 'Progress ' , scenario printString ]
+		ifFalse: [ Transcript crShow: 'NOT Progress ' , scenario printString ] ].
 	scenarioAnnouncer
 		when: BP4PSelectedEventAnnouncement
 		send: #value:
-		to: [ :selectedEvent | 
-			continue := rEvents , wEvents includes: selectedEvent event.
-			"Trace for show scenario progress or NOT progress"
-			continue
-				ifTrue: [ Transcript crShow: 'Progress ' , scenario printString ]
-				ifFalse: [ Transcript crShow: 'NOT Progress ' , scenario printString ] ].
+		to: changeSubscription.
 	"create synchronizedScenarioAnnouncement with scenario's name and its events requesteds, waiteds and blockeds"
 	syncScenarioAnnouncement := BP4PSynchronizedScenarioAnnouncement
 		scenario: scenario name
@@ -89,6 +90,11 @@ BP4PProgram >> syncRequested: rEvents waited: wEvents blocked: bEvents [
 		crShow: 'Announced ' , syncScenarioAnnouncement printString.
 	[ (Delay forSeconds: 10) wait.
 	continue ] whileFalse.
-	scenarioAnnouncer
-		announce: (BP4POutOfSyncScenarioAnnouncement scenario: scenario name)
+	"Unsubscribe changeSubscription from scenarioAnnouncer"
+	scenarioAnnouncer unsubscribe: changeSubscription.
+	outOfSyncScenarioAnnouncement := BP4POutOfSyncScenarioAnnouncement
+		scenario: scenario name.
+	scenarioAnnouncer announce: outOfSyncScenarioAnnouncement.
+	Transcript
+		crShow: 'Announced ' , outOfSyncScenarioAnnouncement printString
 ]
