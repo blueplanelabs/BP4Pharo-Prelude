@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'name',
 		'priority',
-		'blockToRun'
+		'blockToRun',
+		'announcer'
 	],
 	#classInstVars : [
 		'DefaultPriority'
@@ -34,6 +35,16 @@ BP4PScenario class >> name: aScenarioName valuable: aBlock [
 	"create a scenario with a name, default priority and aBlock with a BP4PProgram as argument"
 
 	^ self new name: aScenarioName priority: self defaultPriority valuable: aBlock
+]
+
+{ #category : #accessing }
+BP4PScenario >> announcer [
+	^ announcer
+]
+
+{ #category : #accessing }
+BP4PScenario >> announcer: anObject [
+	announcer := anObject
 ]
 
 { #category : #accessing }
@@ -76,5 +87,11 @@ BP4PScenario >> valuable [
 		It must be a block with one arg for aBP4PProgram.	
 	"
 
-	^ [ :bp | self run: bp ]
+	^ [ :bp | |endScenarioAnnouncement|
+	self run: bp.
+	endScenarioAnnouncement := BP4PEndScenarioAnnouncement scenario: self name.
+	self announcer
+		announce: (endScenarioAnnouncement).
+	Transcript
+		crShow: 'Announced ' , endScenarioAnnouncement printString. ]
 ]

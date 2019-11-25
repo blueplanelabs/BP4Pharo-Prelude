@@ -4,7 +4,8 @@ Class {
 	#instVars : [
 		'controller',
 		'scenarios',
-		'scenarioAnnouncer'
+		'scenarioAnnouncer',
+		'processes'
 	],
 	#category : #BP4Pharo
 }
@@ -12,7 +13,8 @@ Class {
 { #category : #api }
 BP4PProgram >> add: aScenario [
 	| addedScenarioAnnouncement |
-	scenarios add: aScenario.
+	aScenario announcer: self announcer .
+	self scenarios add: aScenario.
 	addedScenarioAnnouncement := BP4PAddedScenarioAnnouncement
 		scenario: aScenario name
 		priority: aScenario priority.
@@ -38,7 +40,13 @@ BP4PProgram >> initialize [
 	self
 		announcer;
 		scenarios;
-		controller
+		controller;
+		processes
+]
+
+{ #category : #initialization }
+BP4PProgram >> processes [
+	^ processes := processes ifNil: [ Dictionary  new ]
 ]
 
 { #category : #initialization }
@@ -50,32 +58,46 @@ BP4PProgram >> scenarios [
 BP4PProgram >> start [
 	"start bpcontroller in a new process"
 
-	[ controller start ] forkAt: 20 named: 'controller'.
+	self processes
+		add:
+			self controller
+				-> ([ controller start ] forkAt: 20 named: 'controller').
 
 	"start every scenario add to the bprogram in a diferent process"
-	scenarios
-		do:
-			[ :scenario | [ scenario valuable value: self ] forkAt: 20 named: scenario name ]
+	self scenarios
+		do: [ :scenario | 
+			self processes
+				add:
+					(scenario -> ([ scenario valuable value: self ]
+						forkAt: 20
+						named: scenario name)) ]
 ]
 
 { #category : #api }
 BP4PProgram >> syncRequested: rEvents waited: wEvents blocked: bEvents [
-	| syncScenarioAnnouncement tempContext scenario continue outOfSyncScenarioAnnouncement changeSubscription |
-	tempContext := thisContext.
-
-	"go through the contexts until it find the scenario to which it belongs"
+	| syncScenarioAnnouncement tempContext scenario continue outOfSyncScenarioAnnouncement changeSubscription scenarioProcess |
+	"tempContext := thisContext."
 	continue := false.
+
+	"go through the contexts until it find the scenario to which it belongs
 	[ tempContext receiver isKindOf: BP4PScenario ]
 		whileFalse: [ tempContext := tempContext sender ].
-	scenario := tempContext receiver.
+	scenario := tempContext receiver."
+	scenario := self processes
+		keyAtValue: Processor activeProcess effectiveProcess.
+	scenarioProcess := self processes at: scenario.
+
 	"Create subscription to change the value of continue in an async form by evaluate if the selectedEvent is in requested or blocked. If is true, lets continue"
 	changeSubscription := [ :selectedEvent | 
 	continue := rEvents , wEvents includes: selectedEvent event.
 	"Trace for show scenario progress or NOT progress"
 	continue
-		ifTrue: [ Transcript crShow: 'Progress ' , scenario printString ]
+		ifTrue: [ Transcript crShow: 'Progress ' , scenario printString.
+			scenarioProcess isTerminated
+				ifTrue: [ Transcript crShow: 'Resumed process ' , scenarioProcess printString.
+					scenarioProcess resume ] ]
 		ifFalse: [ Transcript crShow: 'NOT Progress ' , scenario printString ] ].
-	scenarioAnnouncer
+	self announcer
 		when: BP4PSelectedEventAnnouncement
 		send: #value:
 		to: changeSubscription.
@@ -85,16 +107,19 @@ BP4PProgram >> syncRequested: rEvents waited: wEvents blocked: bEvents [
 		requested: rEvents
 		waited: wEvents
 		blocked: bEvents.
-	scenarioAnnouncer announce: syncScenarioAnnouncement.
+	self announcer announce: syncScenarioAnnouncement.
 	Transcript
 		crShow: 'Announced ' , syncScenarioAnnouncement printString.
-	[ (Delay forSeconds: 10) wait.
-	continue ] whileFalse.
+	"	[ (Delay forSeconds: 10) wait.
+	continue ] whileFalse."
+	continue
+		ifFalse: [ Transcript crShow: 'Suspended process ' , scenarioProcess name.
+			scenarioProcess suspend ].
 	"Unsubscribe changeSubscription from scenarioAnnouncer"
-	scenarioAnnouncer unsubscribe: changeSubscription.
+	self announcer unsubscribe: changeSubscription.
 	outOfSyncScenarioAnnouncement := BP4POutOfSyncScenarioAnnouncement
 		scenario: scenario name.
-	scenarioAnnouncer announce: outOfSyncScenarioAnnouncement.
+	self announcer  announce: outOfSyncScenarioAnnouncement.
 	Transcript
 		crShow: 'Announced ' , outOfSyncScenarioAnnouncement printString
 ]

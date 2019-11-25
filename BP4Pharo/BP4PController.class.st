@@ -81,7 +81,11 @@ BP4PController >> createSubscriptions [
 	announcer
 		subscribe: BP4POutOfSyncScenarioAnnouncement
 		send: #outOfSyncScenario:
-		to: self
+		to: self.
+	announcer
+		subscribe: BP4PEndScenarioAnnouncement
+		send: #removeScenario:
+		to: self.
 ]
 
 { #category : #'private-actions' }
@@ -97,6 +101,19 @@ BP4PController >> outOfSyncScenario: aBP4POutOfSyncScenarioAnnouncement [
 	"Trace"
 	Transcript
 		crShow: 'Received ' , aBP4POutOfSyncScenarioAnnouncement printString
+]
+
+{ #category : #'private-actions' }
+BP4PController >> removeScenario: aBP4PEndScenarioAnnouncement [
+	"remove scenario ended in the BP4PProgram to the map scenarios"
+
+	scenarios removeKey: aBP4PEndScenarioAnnouncement scenario.
+	"check if all the scenarios are sync in every change"
+	self checkAllScenariosSync.
+
+	"Trace"
+	Transcript
+		crShow: 'Received ' , aBP4PEndScenarioAnnouncement printString
 ]
 
 { #category : #'private - initialization' }
