@@ -24,16 +24,23 @@ BP4PAuctionner >> checkIn: anAnnouncer [
 
 { #category : #'private - initialization' }
 BP4PAuctionner >> chooseEvent: scenariosStates [
-	| selectedEvent requested blocked candidates  |
+	| selectedEvent requested blocked candidates |
 	scenariosStates sort: [ :a :b | a priority > b priority ].
 	requested := self
 		extractFrom: scenariosStates
 		eventsType: #requestedEvents.
+	"There are none event requested return none event"
+	requested isEmpty
+		ifTrue: [ ^ BP4PEvent new ].
 	blocked := self
 		extractFrom: scenariosStates
 		eventsType: #blockedEvents.
-	candidates := requested \ blocked.
-	selectedEvent := candidates first.
+	candidates := requested select: [ :r | (blocked includes: r) not ].
+	"If all requested events are blocked return an event with name nil else the first event of the candidates"
+	candidates isEmpty
+		ifTrue: [ Transcript crShow: 'ALL REQUESTED EVENTS ARE BLOCKED'.
+			selectedEvent := BP4PEvent name: nil ]
+		ifFalse: [ selectedEvent := candidates first ].
 	^ selectedEvent
 ]
 
@@ -50,10 +57,15 @@ BP4PAuctionner >> createSubscriptions [
 BP4PAuctionner >> extractFrom: scenariosStates eventsType: aEventsTypeSymbol [
 	"types: requested -> #requestedEvents , waited -> #waitedEvents , blocked -> blockedEvents"
 
-	^(scenariosStates
+	| elements |
+	elements := OrderedCollection new.
+	elements := scenariosStates
 		collect: [ :scenarioState | 
 			(MessageSend receiver: scenarioState selector: aEventsTypeSymbol)
-				value ]) flattened
+				value events ].
+	"Remove the none events"
+	^ elements flattened asOrderedCollection
+		removeAllSuchThat: [ :e | e name isEmpty ]
 ]
 
 { #category : #'private - initialization' }

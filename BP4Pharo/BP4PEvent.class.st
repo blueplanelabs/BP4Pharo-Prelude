@@ -1,9 +1,6 @@
 Class {
 	#name : #BP4PEvent,
-	#superclass : #Object,
-	#instVars : [
-		'name'
-	],
+	#superclass : #BP4PEventSetInterface,
 	#category : #BP4Pharo
 }
 
@@ -14,10 +11,15 @@ BP4PEvent class >> name: aName [
 ]
 
 { #category : #accessing }
-BP4PEvent >> , aBP4PEvent [
-	"return a new BP4PEventadd with self names and the names of the other event"
+BP4PEvent >> , aEventOrEventSet [
+	"Return a new BP4PEventSet with self name and the names of the other event or eventSet"
 
-	^ BP4PEvent name: (self name , aBP4PEvent name)
+	^ BP4PEventSet name: self name , aEventOrEventSet name
+]
+
+{ #category : #accessing }
+BP4PEvent >> events [
+	^self
 ]
 
 { #category : #accessing }
@@ -29,13 +31,16 @@ BP4PEvent >> includes: aBP4PEvent [
 
 { #category : #accessing }
 BP4PEvent >> name [
+"	^ name
+		ifNil: [ name := Set with: (self className withoutSuffix: ' class') ]"
+
 	^ name
-		ifNil: [name := Set with: (self className withoutSuffix: ' class') ]
+		ifNil: [ name := Set new ]
 ]
 
 { #category : #accessing }
-BP4PEvent >> name: aName [
-	(aName isKindOf: Set) ifTrue: [ name:=aName ]ifFalse: [name := Set with: aName]
+BP4PEvent >> name: aString [
+	name := Set with: aString
 ]
 
 { #category : #printing }

@@ -57,8 +57,12 @@ BP4PController >> checkAllScenariosSync [
 	((scenarios collect: [ :each | each isSynchronized ]) values
 		allSatisfy: [ :each | each ])
 		ifFalse: [ Transcript crShow: 'Scenarios NOT Synchronized'.
-			^self ].
-	Transcript crShow: 'ALL Scenarios Synchronized'.
+			^ self ].
+	Transcript
+		crShow:
+			'ALL Scenarios Synchronized '
+				, Processor activeProcess effectiveProcess printString , ' '
+				, Processor activeProcess effectiveProcess name.
 	announcer
 		announce: (BP4PAllScenariosSyncAnnouncement scenariosStates: scenarios values)
 ]
@@ -86,6 +90,10 @@ BP4PController >> createSubscriptions [
 		subscribe: BP4PEndScenarioAnnouncement
 		send: #removeScenario:
 		to: self.
+	announcer
+		subscribe: BP4PSelectedEventAnnouncement
+		send: #updateScenariosStates:
+		to: self
 ]
 
 { #category : #'private-actions' }
@@ -159,4 +167,25 @@ BP4PController >> syncScenario: aBP4PSynchronizedScenarioAnnouncement [
 	"Trace"
 	Transcript
 		crShow: 'Received ' , aBP4PSynchronizedScenarioAnnouncement printString
+]
+
+{ #category : #'private-actions' }
+BP4PController >> updateScenariosStates: aBP4PSelectedEventAnnouncement [
+	"	Change to usync scenariosStates whose scenario have this event requested or waited. "
+
+	| selectedEvent |
+	selectedEvent := aBP4PSelectedEventAnnouncement event.
+	selectedEvent = BP4PEvent new
+		ifTrue:
+			[ Transcript crShow: 'ALL SCENARIOS SYNC AND NONE EVENT REQUESTED' ].
+	scenarios := scenarios
+		collect: [ :scenarioState | 
+			((scenarioState requestedEvents , scenarioState waitedEvents)
+				includes: aBP4PSelectedEventAnnouncement event)
+				ifTrue: [ scenarioState synchronized: false ].
+			scenarioState ].
+	self announcer
+		announce:
+			(BP4PChangedScenariosStatesAnnouncement
+				event: aBP4PSelectedEventAnnouncement event)
 ]

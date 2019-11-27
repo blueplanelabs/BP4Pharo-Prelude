@@ -24,6 +24,13 @@ BP4PScenario class >> initialize [
 ]
 
 { #category : #creation }
+BP4PScenario class >> name: aScenarioName priority: aPriority [
+	"create a scenario with a name and a priority with a BP4PProgram as argument"
+
+	^ self new name: aScenarioName priority: aPriority
+]
+
+{ #category : #creation }
 BP4PScenario class >> name: aScenarioName priority: aPriority valuable: aBlock [
 	"create a scenario with a name, a priority and aBlock with a BP4PProgram as argument"
 
@@ -53,6 +60,15 @@ BP4PScenario >> name [
 ]
 
 { #category : #initialize }
+BP4PScenario >> name: aScenarioName priority: aPriority [
+	"set name, priority of the scenario"
+
+	name := aScenarioName.
+	priority := aPriority.
+
+]
+
+{ #category : #initialize }
 BP4PScenario >> name: aScenarioName priority: aPriority valuable: aBlock [
 	"set name, priority and run of the scenario"
 
@@ -74,6 +90,11 @@ BP4PScenario >> printOn: aStream [
 { #category : #accessing }
 BP4PScenario >> priority [
 	^ priority
+]
+
+{ #category : #accessing }
+BP4PScenario >> priority: anInteger [
+	priority:= anInteger
 ]
 
 { #category : #initialize }
