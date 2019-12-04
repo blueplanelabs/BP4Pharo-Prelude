@@ -26,21 +26,21 @@ BP4PEventSetInterface >> = anObject [
 ^ self name = anObject name
 ]
 
-{ #category : #accessing }
-BP4PEventSetInterface >> events [
-	"Answer all the events it contains"
-
-	self subclassResponsibility
-]
-
 { #category : #comparing }
 BP4PEventSetInterface >> hash [ 
 	^ self name hash
 ]
 
 { #category : #accessing }
-BP4PEventSetInterface >> includes: aBP4PEvent [
+BP4PEventSetInterface >> includesEvent: anEvent [
 	"Answer if includes aBP4PEvent"
+
+	self subclassResponsibility
+]
+
+{ #category : #accessing }
+BP4PEventSetInterface >> isNone [
+	"True if is the none event"
 
 	self subclassResponsibility
 ]
@@ -55,6 +55,20 @@ BP4PEventSetInterface >> name [
 { #category : #accessing }
 BP4PEventSetInterface >> name: aName [
 	"Setter for name."
+
+	self subclassResponsibility
+]
+
+{ #category : #accessing }
+BP4PEventSetInterface >> set [
+	"Answer a set with all the events it contains"
+
+	self subclassResponsibility
+]
+
+{ #category : #accessing }
+BP4PEventSetInterface >> withoutNone [
+	"True if is the none event"
 
 	self subclassResponsibility
 ]

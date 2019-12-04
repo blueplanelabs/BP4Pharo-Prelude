@@ -1,7 +1,7 @@
 Class {
 	#name : #AlterningTapsTest,
 	#superclass : #TestCase,
-	#category : #'BP4Pharo-Test'
+	#category : #'BP4Pharo-Test-AlterningTaps'
 }
 
 { #category : #'as yet unclassified' }

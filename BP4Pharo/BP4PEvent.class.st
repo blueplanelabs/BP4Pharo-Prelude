@@ -11,41 +11,62 @@ BP4PEvent class >> name: aName [
 ]
 
 { #category : #accessing }
-BP4PEvent >> , aEventOrEventSet [
-	"Return a new BP4PEventSet with self name and the names of the other event or eventSet"
-
-	^ BP4PEventSet name: self name , aEventOrEventSet name
+BP4PEvent class >> none [
+	^ self new name: 'none'
 ]
 
 { #category : #accessing }
-BP4PEvent >> events [
-	^self
+BP4PEvent >> , aEventOrEventSetOrEventOfClass [
+	"Return a new BP4PEventSet with name the combination of names and events the set of every event, eventSet or eventOfClass"
+
+	^ self asEventSet , aEventOrEventSetOrEventOfClass asEventSet
 ]
 
 { #category : #accessing }
-BP4PEvent >> includes: aBP4PEvent [
-	"answer if includes aBP4PEvent"
+BP4PEvent >> asEventSet [
+	^ BP4PEventSet with: self set
+]
 
-	^(self name intersection: aBP4PEvent name) isNotEmpty
+{ #category : #accessing }
+BP4PEvent >> includes: anEventOrAnEventSet [
+	"answer if includes anEventOrAnEventSet"
+
+	^ self set includes: anEventOrAnEventSet set
+]
+
+{ #category : #accessing }
+BP4PEvent >> includesEvent: anEvent [
+	"answer if includes anEvent"
+
+	^ self = anEvent
+]
+
+{ #category : #accessing }
+BP4PEvent >> isNone [
+	^ self = BP4PEvent none
 ]
 
 { #category : #accessing }
 BP4PEvent >> name [
-"	^ name
+	"	^ name
 		ifNil: [ name := Set with: (self className withoutSuffix: ' class') ]"
 
-	^ name
-		ifNil: [ name := Set new ]
+	^ name ifNil: [ name := 'none' ]
 ]
 
 { #category : #accessing }
 BP4PEvent >> name: aString [
-	name := Set with: aString
+	name := aString
 ]
 
 { #category : #printing }
 BP4PEvent >> printOn: aStream [
 	super printOn: aStream.
-	aStream nextPutAll: ' name '.
+	aStream nextPutAll: ' name: '.
 	name printOn: aStream
+]
+
+{ #category : #accessing }
+BP4PEvent >> set [
+	^ Set with: self
 ]

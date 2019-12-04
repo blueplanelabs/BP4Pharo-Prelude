@@ -43,6 +43,12 @@ BP4PScenarioState >> blockedEvents [
 	^ blockedEvents
 ]
 
+{ #category : #accessing }
+BP4PScenarioState >> isProgressedWithEvent: aBP4PEvent [
+	^self requestedEvents , self waitedEvents
+						includes: aBP4PEvent
+]
+
 { #category : #api }
 BP4PScenarioState >> isSynchronized [
 
@@ -79,8 +85,18 @@ BP4PScenarioState >> requestedEvents [
 ]
 
 { #category : #accessing }
-BP4PScenarioState >> synchronized: anObject [
-	synchronized := anObject
+BP4PScenarioState >> synchronize [
+	synchronized := true
+]
+
+{ #category : #accessing }
+BP4PScenarioState >> synchronized: aBoolean [
+	synchronized := aBoolean
+]
+
+{ #category : #accessing }
+BP4PScenarioState >> unsynchronize [
+	synchronized := false
 ]
 
 { #category : #accessing }

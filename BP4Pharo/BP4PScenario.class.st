@@ -25,7 +25,7 @@ BP4PScenario class >> initialize [
 
 { #category : #creation }
 BP4PScenario class >> name: aScenarioName priority: aPriority [
-	"create a scenario with a name and a priority with a BP4PProgram as argument"
+	"create a scenario with a name and a priority"
 
 	^ self new name: aScenarioName priority: aPriority
 ]

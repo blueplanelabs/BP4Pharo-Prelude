@@ -61,14 +61,15 @@ BP4PProgram >> lastEvent [
 { #category : #accessing }
 BP4PProgram >> lastEvent: aBP4PChangedScenariosStatesAnnouncement [
 	lastEvent := aBP4PChangedScenariosStatesAnnouncement event.
-	lastEvent = (BP4PEvent name: nil)
-		ifTrue: [ Transcript crShow: 'Program stopped'.
-			self stop ]
+	lastEvent = (BP4PEvent none)
+		ifFalse: [ ^ self ].
+	Transcript crShow: 'Program stopped'.
+	self stop
 ]
 
 { #category : #initialization }
 BP4PProgram >> processes [
-	^ processes := processes ifNil: [ Dictionary  new ]
+	^ processes ifNil: [ processes := Dictionary new ]
 ]
 
 { #category : #initialization }
@@ -78,7 +79,7 @@ BP4PProgram >> scenarios [
 
 { #category : #api }
 BP4PProgram >> start [
-	"create "
+	"Create all the subscriptions needed"
 
 	self createSubscriptions.
 
@@ -101,7 +102,8 @@ BP4PProgram >> start [
 BP4PProgram >> stop [
 	"Terminate all the processes "
 
-	self processes do: [ :process | process terminate ]
+	self processes do: [ :process | process terminate ].
+	processes := nil
 ]
 
 { #category : #api }
@@ -120,19 +122,9 @@ BP4PProgram >> syncRequested: rEvents waited: wEvents blocked: bEvents [
 
 	"Create subscription to change the state of the process that has the scenario execution in an async form by evaluate if the selectedEvent is in requested or waited. If is true, lets resume"
 	continueProcessSubscription := [ :selectedEvent | 
-	continue := rEvents , wEvents includes: selectedEvent event.
-	"Trace for show scenario progress or NOT progress"
-	"	continue
-		ifTrue: [ Transcript crShow: 'Progress ' , scenario printString.
-			[ Transcript
-				crShow: 'Resumed process ' , scenarioProcess printString ,' ' , scenarioProcess name.
-			scenarioProcess resume ]
-				on: Exception
-				do: [  ] ]
-		ifFalse: [ Transcript crShow: 'NOT Progress ' , scenario printString ] ]."
+	continue := rEvents , wEvents includesEvent: selectedEvent event.
 	continue
 		ifTrue: [ scenarioProcess = Processor activeProcess effectiveProcess
-			"scenarioProcess isSuspended"
 				ifFalse: [ "This is not the process of the scenario execution. Resumes it"
 					Transcript
 						crShow:
@@ -140,6 +132,7 @@ BP4PProgram >> syncRequested: rEvents waited: wEvents blocked: bEvents [
 								, scenarioProcess name.
 					scenarioProcess resume ]
 				ifTrue: [ "This is the same process of the scenario execution"
+					"scenarioProcess isSuspended"
 					Transcript
 						crShow:
 							'Progress process ' , scenarioProcess printString , ' '

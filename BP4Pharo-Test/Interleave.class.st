@@ -1,7 +1,7 @@
 Class {
 	#name : #Interleave,
 	#superclass : #BP4PScenario,
-	#category : #'BP4Pharo-Test'
+	#category : #'BP4Pharo-Test-AlterningTaps'
 }
 
 { #category : #initialize }

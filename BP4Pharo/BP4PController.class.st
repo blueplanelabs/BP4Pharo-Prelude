@@ -175,15 +175,13 @@ BP4PController >> updateScenariosStates: aBP4PSelectedEventAnnouncement [
 
 	| selectedEvent |
 	selectedEvent := aBP4PSelectedEventAnnouncement event.
-	selectedEvent = BP4PEvent new
-		ifTrue:
-			[ Transcript crShow: 'ALL SCENARIOS SYNC AND NONE EVENT REQUESTED' ].
-	scenarios := scenarios
-		collect: [ :scenarioState | 
-			((scenarioState requestedEvents , scenarioState waitedEvents)
-				includes: aBP4PSelectedEventAnnouncement event)
-				ifTrue: [ scenarioState synchronized: false ].
-			scenarioState ].
+	selectedEvent = BP4PEvent none
+		ifFalse: [ scenarios
+				do: [ :scenarioState | 
+					(scenarioState
+						isProgressedWithEvent: aBP4PSelectedEventAnnouncement event)
+						ifTrue: [ scenarioState unsynchronize ] ] ].
+	Transcript crShow: 'Announced changedScenariosStates'.
 	self announcer
 		announce:
 			(BP4PChangedScenariosStatesAnnouncement
