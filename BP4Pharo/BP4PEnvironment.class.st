@@ -8,10 +8,10 @@ Class {
 BP4PEnvironment class >> send: aString toProgram: aBP4PProgram [
 	"Send a Event with aString as name to the aBP4PProgram"
 
-	| event scenario none|
+	| event scenario none |
 	"Create event"
 	event := BP4PEvent name: aString.
-	none := BP4PEvent new.
+	none := BP4PEvent none.
 	"Create a scenario with event requested"
 	scenario := BP4PScenario
 		name: 'environment' , aString

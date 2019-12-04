@@ -14,6 +14,13 @@ BP4PAllScenariosSyncAnnouncement class >> scenariosStates: allScenariosStates [
 	^ self new scenariosStates: allScenariosStates
 ]
 
+{ #category : #printing }
+BP4PAllScenariosSyncAnnouncement >> printOn: aStream [
+	super printOn: aStream.
+	aStream nextPutAll: ' with scenarioState '.
+	self scenariosStates printOn: aStream
+]
+
 { #category : #accessing }
 BP4PAllScenariosSyncAnnouncement >> scenariosStates [
 	^ scenariosStates

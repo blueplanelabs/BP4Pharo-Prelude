@@ -6,12 +6,12 @@ Class {
 
 { #category : #initialize }
 DisplayEvents >> run: aBP4PProgram [
-	| none addHot addCold continue|
+	| none addHot addCold continue |
 	continue := true.
 	none := BP4PEvent new.
 	addHot := BP4PEvent name: 'addHot'.
 	addCold := BP4PEvent name: 'addCold'.
-	[ continue  ]
+	[ continue ]
 		whileTrue: [ aBP4PProgram
 				syncRequested: none
 				waited: addHot , addCold
@@ -20,5 +20,5 @@ DisplayEvents >> run: aBP4PProgram [
 				crShow:
 					'Último evento seleccionado: '
 						, aBP4PProgram lastEvent name printString.
-			continue := aBP4PProgram lastEvent name isNotEmpty ]
+					continue := aBP4PProgram lastEvent isNone not ]
 ]

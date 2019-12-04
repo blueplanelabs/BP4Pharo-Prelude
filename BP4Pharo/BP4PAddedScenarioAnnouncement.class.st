@@ -21,9 +21,9 @@ BP4PAddedScenarioAnnouncement class >> scenario: aScenarioName priority: aPriori
 BP4PAddedScenarioAnnouncement >> printOn: aStream [
 	super printOn: aStream.
 	aStream nextPutAll: ' with scenario '.
-	scenario printOn: aStream.
+	self scenario printOn: aStream.
 	aStream nextPutAll: ' priority '.
-	priority printOn: aStream.
+	self priority printOn: aStream
 ]
 
 { #category : #accessing }

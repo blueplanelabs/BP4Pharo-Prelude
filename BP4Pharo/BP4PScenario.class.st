@@ -108,11 +108,12 @@ BP4PScenario >> valuable [
 		It must be a block with one arg for aBP4PProgram.	
 	"
 
-	^ [ :bp | |endScenarioAnnouncement|
+	^ [ :bp | 
+	| endScenarioAnnouncement |
 	self run: bp.
-	endScenarioAnnouncement := BP4PEndScenarioAnnouncement scenario: self name.
-	self announcer
-		announce: (endScenarioAnnouncement).
-	Transcript
-		crShow: 'Announced ' , endScenarioAnnouncement printString. ]
+	endScenarioAnnouncement := BP4PEndScenarioAnnouncement
+		scenario: self name.
+	Transcript crShow: 'Announced ' , endScenarioAnnouncement printString.
+	self announcer announce: endScenarioAnnouncement.
+ ]
 ]

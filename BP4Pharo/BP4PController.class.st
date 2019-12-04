@@ -27,9 +27,11 @@ BP4PController class >> checkIn: anAnnouncer [
 BP4PController >> addScenario: aBP4PAddedScenarioAnnouncement [
 	"add info from the announcement of scenario added in the BP4PProgram to the map scenarios"
 
-	scenarios
+	self scenarios
 		at: aBP4PAddedScenarioAnnouncement scenario
-		put: (BP4PScenarioState withPriority: aBP4PAddedScenarioAnnouncement priority).
+		put:
+			(BP4PScenarioState
+				withPriority: aBP4PAddedScenarioAnnouncement priority).
 
 	"Trace"
 	Transcript
@@ -53,9 +55,8 @@ BP4PController >> checkAllScenariosSync [
 		Called when each synchronizedScenarioAnnouncement arrived.
 		Create allScenariosSyncAnnouncement if true
 	"
-
-	((scenarios collect: [ :each | each isSynchronized ]) values
-		allSatisfy: [ :each | each ])
+	|allScenariosSyncAnnouncement|
+	(scenarios allSatisfy: [ :e | e isSynchronized ])
 		ifFalse: [ Transcript crShow: 'Scenarios NOT Synchronized'.
 			^ self ].
 	Transcript
@@ -63,8 +64,13 @@ BP4PController >> checkAllScenariosSync [
 			'ALL Scenarios Synchronized '
 				, Processor activeProcess effectiveProcess printString , ' '
 				, Processor activeProcess effectiveProcess name.
+
+	allScenariosSyncAnnouncement := BP4PAllScenariosSyncAnnouncement scenariosStates: scenarios values.
+	"Trace"
+	Transcript
+		crShow: 'Announced ' , allScenariosSyncAnnouncement printString.
 	announcer
-		announce: (BP4PAllScenariosSyncAnnouncement scenariosStates: scenarios values)
+		announce: allScenariosSyncAnnouncement
 ]
 
 { #category : #'private - initialization' }
@@ -126,7 +132,7 @@ BP4PController >> removeScenario: aBP4PEndScenarioAnnouncement [
 
 { #category : #'private - initialization' }
 BP4PController >> scenarios [
-	^ scenarios := scenarios ifNil: [ Dictionary new ]
+	^ scenarios ifNil: [scenarios := Dictionary new ]
 ]
 
 { #category : #api }
@@ -150,40 +156,34 @@ BP4PController >> syncScenario: aBP4PSynchronizedScenarioAnnouncement [
 	"	Change info from the announcement of scenario synchronized in the BP4PProgram to the map scenarios. "
 
 	| scenarioName |
-	scenarioName := aBP4PSynchronizedScenarioAnnouncement scenario.
-	scenarios
-		at: scenarioName
-		put:
-			((scenarios at: scenarioName)
-				requested: aBP4PSynchronizedScenarioAnnouncement requestedEvents;
-				waited: aBP4PSynchronizedScenarioAnnouncement waitedEvents;
-				blocked: aBP4PSynchronizedScenarioAnnouncement blockedEvents;
-				synchronized: true;
-				yourself).
-
-	"check if all the scenarios are sync in every change"
-	self checkAllScenariosSync.
-
 	"Trace"
 	Transcript
-		crShow: 'Received ' , aBP4PSynchronizedScenarioAnnouncement printString
+		crShow: 'Received ' , aBP4PSynchronizedScenarioAnnouncement printString.
+	scenarioName := aBP4PSynchronizedScenarioAnnouncement scenario.
+
+	(self scenarios at: scenarioName)
+		requested: aBP4PSynchronizedScenarioAnnouncement requestedEvents;
+		waited: aBP4PSynchronizedScenarioAnnouncement waitedEvents;
+		blocked: aBP4PSynchronizedScenarioAnnouncement blockedEvents;
+		synchronized: true.
+
+
+	"check if all the scenarios are sync in every change"
+	self checkAllScenariosSync
 ]
 
 { #category : #'private-actions' }
 BP4PController >> updateScenariosStates: aBP4PSelectedEventAnnouncement [
-	"	Change to usync scenariosStates whose scenario have this event requested or waited. "
+	"	Change to usync scenariosState whose scenario has this event requested or waited. "
 
 	| selectedEvent |
 	selectedEvent := aBP4PSelectedEventAnnouncement event.
-	selectedEvent = BP4PEvent none
+	selectedEvent isNone
 		ifFalse: [ scenarios
 				do: [ :scenarioState | 
-					(scenarioState
-						isProgressedWithEvent: aBP4PSelectedEventAnnouncement event)
+					(scenarioState isProgressedWithEvent: selectedEvent)
 						ifTrue: [ scenarioState unsynchronize ] ] ].
 	Transcript crShow: 'Announced changedScenariosStates'.
 	self announcer
-		announce:
-			(BP4PChangedScenariosStatesAnnouncement
-				event: aBP4PSelectedEventAnnouncement event)
+		announce: (BP4PChangedScenariosStatesAnnouncement event: selectedEvent)
 ]

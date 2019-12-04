@@ -6,7 +6,7 @@ Class {
 
 { #category : #initialize }
 Interleave >> run: aBP4PProgram [
-	| none addCold addHot continue|
+	| none addCold addHot continue |
 	continue := true.
 	none := BP4PEvent new.
 	addCold := BP4PEvent name: 'addCold'.
@@ -14,5 +14,5 @@ Interleave >> run: aBP4PProgram [
 	[ continue ]
 		whileTrue: [ aBP4PProgram syncRequested: none waited: addHot blocked: addCold.
 			aBP4PProgram syncRequested: none waited: addCold blocked: addHot.
-			continue := aBP4PProgram lastEvent name isNotEmpty ]
+						continue := aBP4PProgram lastEvent isNone not ]
 ]

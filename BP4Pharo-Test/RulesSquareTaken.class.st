@@ -1,3 +1,6 @@
+"
+Scenario for not allowing two symbols in the same square
+"
 Class {
 	#name : #RulesSquareTaken,
 	#superclass : #BP4PScenario,

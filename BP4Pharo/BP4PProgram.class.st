@@ -14,15 +14,16 @@ Class {
 { #category : #api }
 BP4PProgram >> add: aScenario [
 	| addedScenarioAnnouncement |
-	aScenario announcer: self announcer .
+	aScenario announcer: self announcer.
 	self scenarios add: aScenario.
 	addedScenarioAnnouncement := BP4PAddedScenarioAnnouncement
 		scenario: aScenario name
 		priority: aScenario priority.
-	scenarioAnnouncer announce: addedScenarioAnnouncement.
 	"Trace for show the announcement"
 	Transcript
-		crShow: 'Announced ' , addedScenarioAnnouncement printString
+		crShow: 'Announced ' , addedScenarioAnnouncement printString.
+	scenarioAnnouncer announce: addedScenarioAnnouncement.
+
 ]
 
 { #category : #initialization }
@@ -61,8 +62,9 @@ BP4PProgram >> lastEvent [
 { #category : #accessing }
 BP4PProgram >> lastEvent: aBP4PChangedScenariosStatesAnnouncement [
 	lastEvent := aBP4PChangedScenariosStatesAnnouncement event.
-	lastEvent = (BP4PEvent none)
-		ifFalse: [ ^ self ].
+	lastEvent isNone
+		ifFalse: [ self announcer announce:( BP4PLastEventSettedAnnouncement event: lastEvent ).
+			^ self ].
 	Transcript crShow: 'Program stopped'.
 	self stop
 ]
@@ -139,7 +141,7 @@ BP4PProgram >> syncRequested: rEvents waited: wEvents blocked: bEvents [
 								, scenarioProcess name ] ]
 		ifFalse: [ Transcript crShow: 'NOT Progress ' , scenario printString ] ].
 	self announcer
-		when: BP4PChangedScenariosStatesAnnouncement
+		when: BP4PLastEventSettedAnnouncement 
 		send: #value:
 		to: continueProcessSubscription.
 
@@ -149,9 +151,10 @@ BP4PProgram >> syncRequested: rEvents waited: wEvents blocked: bEvents [
 		requested: rEvents
 		waited: wEvents
 		blocked: bEvents.
-	self announcer announce: syncScenarioAnnouncement.
 	Transcript
 		crShow: 'Announced ' , syncScenarioAnnouncement printString.
+	self announcer announce: syncScenarioAnnouncement.
+
 	"	[ (Delay forSeconds: 10) wait.
 	continue ] whileFalse."
 	continue
