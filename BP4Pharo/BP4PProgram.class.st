@@ -3,27 +3,57 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'controller',
-		'scenarios',
 		'scenarioAnnouncer',
 		'processes',
 		'lastEvent'
 	],
+	#classVars : [
+		'DefaultProcessPriority',
+		'DefaultScenarioPriority'
+	],
 	#category : #BP4Pharo
 }
 
+{ #category : #private }
+BP4PProgram class >> defaultProcessPriority [
+	^ DefaultProcessPriority ifNil: [ DefaultProcessPriority := 20 ]
+]
+
+{ #category : #private }
+BP4PProgram class >> defaultScenarioPriority [
+	^ DefaultScenarioPriority ifNil: [ DefaultScenarioPriority := 10 ]
+]
+
+{ #category : #'class initialization' }
+BP4PProgram class >> initialize [
+	self defaultProcessPriority.
+	self defaultScenarioPriority 
+]
+
 { #category : #api }
 BP4PProgram >> add: aScenario [
+	^self add: aScenario priority: DefaultScenarioPriority
+]
+
+{ #category : #api }
+BP4PProgram >> add: aScenario priority: aPriority [
 	| addedScenarioAnnouncement |
 	aScenario announcer: self announcer.
-	self scenarios add: aScenario.
+	self processes
+		add:
+			aScenario
+				->
+					([ aScenario valuable value: self ] newProcess
+						priority: DefaultProcessPriority ;
+						name: aScenario name;
+						yourself).
 	addedScenarioAnnouncement := BP4PAddedScenarioAnnouncement
 		scenario: aScenario name
-		priority: aScenario priority.
+		priority: aPriority.
 	"Trace for show the announcement"
 	Transcript
 		crShow: 'Announced ' , addedScenarioAnnouncement printString.
-	scenarioAnnouncer announce: addedScenarioAnnouncement.
-
+	scenarioAnnouncer announce: addedScenarioAnnouncement
 ]
 
 { #category : #initialization }
@@ -33,7 +63,16 @@ BP4PProgram >> announcer [
 
 { #category : #initialization }
 BP4PProgram >> controller [
-	^ controller := controller ifNil: [ BP4PController checkIn: self announcer ]
+	^ controller
+		ifNil: [ controller := BP4PController checkIn: self announcer.
+			self processes
+				add:
+					controller
+						->
+							([ controller start ] newProcess
+								priority: DefaultProcessPriority ;
+								name: 'controller';
+								yourself) ]
 ]
 
 { #category : #api }
@@ -47,11 +86,8 @@ BP4PProgram >> createSubscriptions [
 { #category : #initialization }
 BP4PProgram >> initialize [
 	super initialize.
-	self
-		announcer;
-		scenarios;
-		controller;
-		processes
+	self class initialize.
+	self controller
 ]
 
 { #category : #accessing }
@@ -62,21 +98,14 @@ BP4PProgram >> lastEvent [
 { #category : #accessing }
 BP4PProgram >> lastEvent: aBP4PChangedScenariosStatesAnnouncement [
 	lastEvent := aBP4PChangedScenariosStatesAnnouncement event.
-	lastEvent isNone
-		ifFalse: [ self announcer announce:( BP4PLastEventSettedAnnouncement event: lastEvent ).
-			^ self ].
-	Transcript crShow: 'Program stopped'.
-	self stop
+ self announcer
+				announce: (BP4PLastEventSettedAnnouncement event: lastEvent).
+			
 ]
 
 { #category : #initialization }
 BP4PProgram >> processes [
 	^ processes ifNil: [ processes := Dictionary new ]
-]
-
-{ #category : #initialization }
-BP4PProgram >> scenarios [
-^ scenarios := scenarios ifNil: [OrderedCollection new].
 ]
 
 { #category : #api }
@@ -85,45 +114,40 @@ BP4PProgram >> start [
 
 	self createSubscriptions.
 
-	"start bpcontroller in a new process"
-	self processes
-		add:
-			self controller
-				-> ([ controller start ] forkAt: 20 named: 'controller').
 
-	"start every scenario add to the bprogram in a diferent process"
-	self scenarios
-		do: [ :scenario | 
-			self processes
-				add:
-					scenario
-						-> ([ scenario valuable value: self ] forkAt: 20 named: scenario name) ]
+	"Resumes all processes managed by the bprogam (controller and scenarios added)"
+	self processes do: [ :process | process resume ]
+]
+
+{ #category : #api }
+BP4PProgram >> startScenario: aScenario [
+
+
+	"Resumes the process for this scenarios"
+	(self processes at: aScenario) resume
 ]
 
 { #category : #api }
 BP4PProgram >> stop [
 	"Terminate all the processes "
-
+	"Initializes the scenarios class to reset iterator"
+	self processes
+		select: [ :e | e key isKindOf: BP4PScenario ]
+		thenDo: [ :e | e key class initialize ].
 	self processes do: [ :process | process terminate ].
 	processes := nil
 ]
 
 { #category : #api }
 BP4PProgram >> syncRequested: rEvents waited: wEvents blocked: bEvents [
-	| syncScenarioAnnouncement tempContext scenario continue outOfSyncScenarioAnnouncement continueProcessSubscription scenarioProcess |
-	"tempContext := thisContext."
+	| syncScenarioAnnouncement scenario continue outOfSyncScenarioAnnouncement continueProcessSubscription scenarioProcess |
 	continue := false.
-
-	"go through the contexts until it find the scenario to which it belongs
-	[ tempContext receiver isKindOf: BP4PScenario ]
-		whileFalse: [ tempContext := tempContext sender ].
-	scenario := tempContext receiver."
-	scenario := self processes
-		keyAtValue: Processor activeProcess effectiveProcess.
-	scenarioProcess := self processes at: scenario.
+	scenarioProcess := Processor activeProcess effectiveProcess.
+	scenario := self processes keyAtValue: scenarioProcess.
 
 	"Create subscription to change the state of the process that has the scenario execution in an async form by evaluate if the selectedEvent is in requested or waited. If is true, lets resume"
 	continueProcessSubscription := [ :selectedEvent | 
+
 	continue := rEvents , wEvents includesEvent: selectedEvent event.
 	continue
 		ifTrue: [ scenarioProcess = Processor activeProcess effectiveProcess
@@ -141,7 +165,7 @@ BP4PProgram >> syncRequested: rEvents waited: wEvents blocked: bEvents [
 								, scenarioProcess name ] ]
 		ifFalse: [ Transcript crShow: 'NOT Progress ' , scenario printString ] ].
 	self announcer
-		when: BP4PLastEventSettedAnnouncement 
+		when: BP4PLastEventSettedAnnouncement
 		send: #value:
 		to: continueProcessSubscription.
 
@@ -154,9 +178,6 @@ BP4PProgram >> syncRequested: rEvents waited: wEvents blocked: bEvents [
 	Transcript
 		crShow: 'Announced ' , syncScenarioAnnouncement printString.
 	self announcer announce: syncScenarioAnnouncement.
-
-	"	[ (Delay forSeconds: 10) wait.
-	continue ] whileFalse."
 	continue
 		ifFalse: [ Transcript crShow: 'Suspended process ' , scenarioProcess name.
 			scenarioProcess suspend ].

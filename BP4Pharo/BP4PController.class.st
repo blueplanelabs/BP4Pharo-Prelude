@@ -138,17 +138,10 @@ BP4PController >> scenarios [
 { #category : #api }
 BP4PController >> start [
 	"initially check if all the scenarios are sync"
-	
-	self checkAllScenariosSync
-	
-	"check if all bscenarios are synchronized and if is true publish event allscenariossync with all scenarios states
 
-	[ true ]
-		whileTrue: [ ((scenarios collect: [ :each | each isSynchronized ]) values
-				allSatisfy: [ :each | each ])
-				ifTrue: [ Transcript crShow: 'All Scenarios Synchronized'.
-					announcer
-						announce: (BP4PAllScenariosSyncAnnouncement scenariosStates: scenarios values) ] ]"
+	self checkAllScenariosSync
+
+
 ]
 
 { #category : #'private-actions' }
@@ -179,10 +172,11 @@ BP4PController >> updateScenariosStates: aBP4PSelectedEventAnnouncement [
 	| selectedEvent |
 	selectedEvent := aBP4PSelectedEventAnnouncement event.
 	selectedEvent isNone
-		ifFalse: [ scenarios
+		ifTrue: [ ^self ].
+	  scenarios
 				do: [ :scenarioState | 
 					(scenarioState isProgressedWithEvent: selectedEvent)
-						ifTrue: [ scenarioState unsynchronize ] ] ].
+						ifTrue: [ scenarioState unsynchronize ] ] .
 	Transcript crShow: 'Announced changedScenariosStates'.
 	self announcer
 		announce: (BP4PChangedScenariosStatesAnnouncement event: selectedEvent)

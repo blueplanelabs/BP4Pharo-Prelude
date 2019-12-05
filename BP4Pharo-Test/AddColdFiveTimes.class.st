@@ -4,12 +4,6 @@ Class {
 	#category : #'BP4Pharo-Test-AlterningTaps'
 }
 
-{ #category : #accessing }
-AddColdFiveTimes >> name [
-		^ name
-		ifNil: [ name := Set with: (self className withoutSuffix: ' class') ]
-]
-
 { #category : #initialize }
 AddColdFiveTimes >> run: aBP4PProgram [
 	| none addCold |

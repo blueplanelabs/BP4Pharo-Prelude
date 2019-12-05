@@ -8,40 +8,40 @@ Class {
 		'announcer'
 	],
 	#classInstVars : [
-		'DefaultPriority'
+		'Iterator'
 	],
 	#category : #BP4Pharo
 }
 
-{ #category : #creation }
-BP4PScenario class >> defaultPriority [
-	^ DefaultPriority ifNil: [ DefaultPriority := 10 ]
+{ #category : #private }
+BP4PScenario class >> increaseIterator [
+	Iterator := self iterator + 1
 ]
 
-{ #category : #creation }
+{ #category : #'class initialization' }
 BP4PScenario class >> initialize [
-	DefaultPriority := 20
+	Iterator := 0
+]
+
+{ #category : #private }
+BP4PScenario class >> iterator [
+	^Iterator ifNil: [ Iterator := 0 ]
 ]
 
 { #category : #creation }
-BP4PScenario class >> name: aScenarioName priority: aPriority [
-	"create a scenario with a name and a priority"
+BP4PScenario class >> name: aScenarioName [
+	"create a scenario with a name"
 
-	^ self new name: aScenarioName priority: aPriority
-]
-
-{ #category : #creation }
-BP4PScenario class >> name: aScenarioName priority: aPriority valuable: aBlock [
-	"create a scenario with a name, a priority and aBlock with a BP4PProgram as argument"
-
-	^ self new name: aScenarioName priority: aPriority valuable: aBlock
+	^ self new name: aScenarioName
 ]
 
 { #category : #creation }
 BP4PScenario class >> name: aScenarioName valuable: aBlock [
 	"create a scenario with a name, default priority and aBlock with a BP4PProgram as argument"
 
-	^ self new name: aScenarioName priority: self defaultPriority valuable: aBlock
+	^ self new
+		name: aScenarioName
+		valuable: aBlock
 ]
 
 { #category : #accessing }
@@ -55,28 +55,33 @@ BP4PScenario >> announcer: anObject [
 ]
 
 { #category : #accessing }
+BP4PScenario >> initialize [
+
+	
+	self name.
+	self class increaseIterator
+]
+
+{ #category : #accessing }
 BP4PScenario >> name [
 	^ name
+		ifNil: [ name := self className asString , self class iterator asString ]
 ]
 
 { #category : #initialize }
-BP4PScenario >> name: aScenarioName priority: aPriority [
-	"set name, priority of the scenario"
+BP4PScenario >> name: aScenarioName [
+	"set name"
 
-	name := aScenarioName.
-	priority := aPriority.
-
+	name := aScenarioName
 ]
 
 { #category : #initialize }
-BP4PScenario >> name: aScenarioName priority: aPriority valuable: aBlock [
-	"set name, priority and run of the scenario"
+BP4PScenario >> name: aScenarioName valuable: aBlock [
+	"set name and blockToRun of the scenario"
 
 	name := aScenarioName.
-	priority := aPriority.
-	"	runnable := aBlock
-	Probando si se puede cambiar el outerContext para poder referenciar al scenario"
-	blockToRun := aBlock 
+
+	blockToRun := aBlock
 ]
 
 { #category : #initialize }
