@@ -7,20 +7,31 @@ Class {
 	#name : #MoveEvent,
 	#superclass : #BP4PEvent,
 	#instVars : [
-		'x',
-		'y'
+		'position'
 	],
 	#category : #'BP4Pharo-Test-TicTacToe'
 }
 
 { #category : #'instance creation' }
-MoveEvent class >> x: aRowNumber y: aColumnNumber [
-	self new x: aRowNumber y: aColumnNumber
+MoveEvent class >> position: aPosition [
+	^ self new
+		position: aPosition 
+]
+
+{ #category : #comparing }
+MoveEvent >> = anObject [
+	anObject == self
+		ifTrue: [ ^ true ].
+	(anObject isNil
+		or: [ (anObject isKindOf: self class) not
+				or: [ (anObject position = self position) not ] ])
+		ifTrue: [ ^ false ].
+	^ true
 ]
 
 { #category : #'instance creation' }
 MoveEvent >> defaultName [
-	^  'Move(' , self x asString , ',' , self y asString , ')'
+	^ 'Move(' , position name, ')'
 ]
 
 { #category : #'instance creation' }
@@ -29,29 +40,12 @@ MoveEvent >> name [
 		ifNil: [ name := self defaultName ]
 ]
 
-{ #category : #accessing }
-MoveEvent >> x [
-	^ x
+{ #category : #api }
+MoveEvent >> position [
+	^ position
 ]
 
 { #category : #accessing }
-MoveEvent >> x: anObject [
-	x := anObject
-]
-
-{ #category : #'instance creation' }
-MoveEvent >> x: aRowNumber y: aColumnNumber [
-	self
-		x: aRowNumber;
-		y: aColumnNumber
-]
-
-{ #category : #accessing }
-MoveEvent >> y [
-	^ y
-]
-
-{ #category : #accessing }
-MoveEvent >> y: anObject [
-	y := anObject
+MoveEvent >> position: aPosition [
+	position := aPosition 
 ]

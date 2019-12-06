@@ -1,6 +1,6 @@
 Class {
 	#name : #AddHotFiveTimes,
-	#superclass : #BP4PScenario,
+	#superclass : #BP4PEnvironmentScenario,
 	#category : #'BP4Pharo-Test-AlterningTaps'
 }
 

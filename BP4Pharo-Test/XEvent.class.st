@@ -9,5 +9,5 @@ Class {
 
 { #category : #'instance creation' }
 XEvent >> defaultName [
-	^ 'X(' , self x asString , ',' , self y asString , ')'
+	^ 'X(' , position name, ')'
 ]

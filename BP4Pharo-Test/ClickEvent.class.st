@@ -5,30 +5,20 @@ Class {
 	#name : #ClickEvent,
 	#superclass : #BP4PEvent,
 	#instVars : [
-		'row',
-		'col'
+		'x',
+		'y'
 	],
 	#category : #'BP4Pharo-Test-TicTacToe'
 }
 
-{ #category : #'as yet unclassified' }
-ClickEvent class >> row: aRowNumber col: aColumnNumber [
-	self new row: aRowNumber col: aColumnNumber
-]
-
-{ #category : #accessing }
-ClickEvent >> col [
-	^ col
-]
-
-{ #category : #accessing }
-ClickEvent >> col: anObject [
-	col := anObject
+{ #category : #creation }
+ClickEvent class >> position: aPosition [
+	^ self new position: aPosition
 ]
 
 { #category : #accessing }
 ClickEvent >> defaultName [
-	^ 'Click(' , self col asString , ',' , self row asString , ')'
+	^ 'Click(' , x asString , ',' , y asString , ')'
 ]
 
 { #category : #accessing }
@@ -37,18 +27,12 @@ ClickEvent >> name [
 ]
 
 { #category : #accessing }
-ClickEvent >> row [
-	^ row
+ClickEvent >> position [
+	^Position x: x y: y
 ]
 
 { #category : #accessing }
-ClickEvent >> row: anObject [
-	row := anObject
-]
-
-{ #category : #'as yet unclassified' }
-ClickEvent >> row: aRowNumber col: aColumnNumber [
-	self
-		row: aRowNumber;
-		col: aColumnNumber
+ClickEvent >> position: aPosition [
+	x := aPosition x.
+	y := aPosition y
 ]

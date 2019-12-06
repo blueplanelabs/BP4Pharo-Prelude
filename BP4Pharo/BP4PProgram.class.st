@@ -80,6 +80,10 @@ BP4PProgram >> createSubscriptions [
 	self announcer
 		subscribe: BP4PChangedScenariosStatesAnnouncement
 		send: #lastEvent:
+		to: self.
+	self announcer
+		subscribe: BP4PEndScenarioAnnouncement
+		send: #removeProcess:
 		to: self
 ]
 
@@ -109,6 +113,21 @@ BP4PProgram >> processes [
 ]
 
 { #category : #api }
+BP4PProgram >> removeProcess: aBP4PEndScenarioAnnouncement [
+	"remove scenario ended in the map processes"
+
+	| endedScenarioName |
+	endedScenarioName := aBP4PEndScenarioAnnouncement scenario.
+	processes
+		keysAndValuesRemove: [ :scenario :process | process name = endedScenarioName ].
+	"check if all the scenarios are sync in every change"
+	"self checkAllScenariosSync."
+
+	"Trace"
+	Transcript crShow: 'Removed process for ' , endedScenarioName asString
+]
+
+{ #category : #api }
 BP4PProgram >> start [
 	"Create all the subscriptions needed"
 
@@ -130,11 +149,16 @@ BP4PProgram >> startScenario: aScenario [
 { #category : #api }
 BP4PProgram >> stop [
 	"Terminate all the processes "
+
 	"Initializes the scenarios class to reset iterator"
+
 	self processes
-		select: [ :e | e key isKindOf: BP4PScenario ]
-		thenDo: [ :e | e key class initialize ].
-	self processes do: [ :process | process terminate ].
+		keysAndValuesDo: [ :scenario :process | 
+			(scenario isKindOf: BP4PScenario)
+				ifTrue: [ scenario class initialize .
+					Transcript crShow: 'Initialize ', scenario class printString ].
+			process terminate .
+			Transcript crShow: 'Terminate ', process printString ].
 	processes := nil
 ]
 

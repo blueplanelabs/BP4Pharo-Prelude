@@ -9,5 +9,5 @@ Class {
 
 { #category : #'instance creation' }
 OEvent >> defaultName [
-	^ 'O(' , self x asString , ',' , self y asString , ')'
+	^ 'O(' , position name , ')'
 ]

@@ -7,6 +7,9 @@ Class {
 		'blockToRun',
 		'announcer'
 	],
+	#classVars : [
+		'none'
+	],
 	#classInstVars : [
 		'Iterator'
 	],
@@ -20,7 +23,32 @@ BP4PScenario class >> increaseIterator [
 
 { #category : #'class initialization' }
 BP4PScenario class >> initialize [
+	none := BP4PEvent none.
 	Iterator := 0
+]
+
+{ #category : #creation }
+BP4PScenario class >> instance [
+	"create a scenario with a automatic name"
+
+	"Fix name and increaseIterator for the next instance"
+
+	| scenario |
+	scenario := self new.
+	scenario name.
+	self increaseIterator.
+	^ scenario
+]
+
+{ #category : #creation }
+BP4PScenario class >> instanceWithValuable: aBlock [
+	"create a scenario with automatic name and aBlock with a BP4PProgram as argument"
+
+	| scenario |
+	scenario := self new.
+	scenario name: scenario name valuable: aBlock.
+	self increaseIterator.
+	^ scenario
 ]
 
 { #category : #private }
@@ -52,14 +80,6 @@ BP4PScenario >> announcer [
 { #category : #accessing }
 BP4PScenario >> announcer: anObject [
 	announcer := anObject
-]
-
-{ #category : #accessing }
-BP4PScenario >> initialize [
-
-	
-	self name.
-	self class increaseIterator
 ]
 
 { #category : #accessing }

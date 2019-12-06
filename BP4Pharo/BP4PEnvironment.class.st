@@ -5,16 +5,14 @@ Class {
 }
 
 { #category : #creation }
-BP4PEnvironment class >> send: aString toProgram: aBP4PProgram [
+BP4PEnvironment class >> send: anEvent toProgram: aBP4PProgram [
 	"Send a Event with aString as name to the aBP4PProgram"
 
-	| event scenario none |
-	"Create event"
-	event := BP4PEvent name: aString.
+	| scenario none |
 	none := BP4PEvent none.
 	"Create a scenario with event requested"
-	scenario := BP4PScenario
-		name: 'environment' , aString
-		valuable: [ :bp | bp syncRequested: event waited: none blocked: none ].
-	aBP4PProgram add: scenario
+	scenario := BP4PEnvironmentScenario
+		instanceWithValuable: [ :bp | bp syncRequested: anEvent waited: none blocked: none ].
+	aBP4PProgram add: scenario priority: 100.
+	aBP4PProgram startScenario: scenario
 ]
