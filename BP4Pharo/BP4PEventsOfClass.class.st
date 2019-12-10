@@ -56,7 +56,7 @@ BP4PEventsOfClass >> name: aString [
 	name := aString
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #printing }
 BP4PEventsOfClass >> printOn: aStream [
 	super printOn: aStream.
 	aStream nextPutAll: ' name '.

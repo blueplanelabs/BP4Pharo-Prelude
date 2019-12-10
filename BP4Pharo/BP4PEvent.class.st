@@ -63,7 +63,7 @@ BP4PEvent >> name: aString [
 BP4PEvent >> printOn: aStream [
 	super printOn: aStream.
 	aStream nextPutAll: ' name: '.
-	name printOn: aStream
+	self name printOn: aStream
 ]
 
 { #category : #accessing }

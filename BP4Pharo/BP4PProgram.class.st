@@ -155,10 +155,12 @@ BP4PProgram >> stop [
 	self processes
 		keysAndValuesDo: [ :scenario :process | 
 			(scenario isKindOf: BP4PScenario)
-				ifTrue: [ scenario class initialize .
-					Transcript crShow: 'Initialize ', scenario class printString ].
-			process terminate .
-			Transcript crShow: 'Terminate ', process printString ].
+				ifTrue: [ scenario class initialize.
+					Transcript crShow: 'Initialize ' , scenario class printString ].
+			process terminate.
+			Transcript crShow: 'Terminate ' , process printString .
+			].
+	processes removeAll.
 	processes := nil
 ]
 

@@ -45,14 +45,29 @@ BP4PScenarioState >> blockedEvents [
 
 { #category : #accessing }
 BP4PScenarioState >> isProgressedWithEvent: aBP4PEvent [
-	^self requestedEvents , self waitedEvents
-						includes: aBP4PEvent
+	^ self requestedEvents , self waitedEvents includesEvent: aBP4PEvent
 ]
 
 { #category : #api }
 BP4PScenarioState >> isSynchronized [
 
 	^ synchronized 
+]
+
+{ #category : #printing }
+BP4PScenarioState >> printOn: aStream [
+	aStream nextPut: Character cr.
+	super printOn: aStream.
+	aStream nextPutAll: ' Request: '.
+	self requestedEvents printOn: aStream.
+	aStream nextPutAll: ' Waited: '.
+	self waitedEvents printOn: aStream.
+	aStream nextPutAll: ' Blocked: '.
+	self blockedEvents printOn: aStream.
+	aStream nextPutAll: ' Priority: '.
+	self priority printOn: aStream.
+	aStream nextPutAll: ' Synchronized: '.
+	self isSynchronized printOn: aStream
 ]
 
 { #category : #accessing }
