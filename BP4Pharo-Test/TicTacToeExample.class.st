@@ -298,31 +298,10 @@ TicTacToeExample class >> posiblePositions [
 
 { #category : #running }
 TicTacToeExample class >> preventThridXProof [
-	| bp positions omoves xmoves |
-	"	p00 := Position x: 0 y: 0.
-	p01 := Position x: 0 y: 1.
-	p02 := Position x: 0 y: 2.
-	p10 := Position x: 1 y: 0.
-	p11 := Position x: 1 y: 1.
-	p12 := Position x: 1 y: 2.
-	p20 := Position x: 2 y: 0.
-	p21 := Position x: 2 y: 1.
-	p22 := Position x: 2 y: 2.
-	x00 := XEvent position: (Position x: 0 y: 0).
-	o00 := OEvent position: (Position x: 0 y: 0).
-	x01 := XEvent position: (Position x: 0 y: 1).
-	o01 := OEvent position: (Position x: 0 y: 1)."
-	"self axesSize: anInteger."
-	positions := OrderedCollection new.
-	omoves := OrderedCollection new.
-	xmoves := OrderedCollection new.
-	1 to: self axesSize do: [ :x | 
-		| col |
-		col := OrderedCollection new.
-		1 to: axesSize do: [ :y | col add: (Position x: x y: y) ].
-		positions add: col.
-		omoves add: (col collect: [ :p | OEvent position: p ]).
-		xmoves add: (col collect: [ :p | XEvent position: p ]) ].
+	| bp |
+
+
+
 	BP4PEnvironmentScenario initialize.
 	bp := BP4PProgram new.
 	bp
@@ -375,7 +354,13 @@ TicTacToeExample class >> preventThridXProof [
 
 { #category : #running }
 TicTacToeExample class >> run [
-self runAxesSize: self axesSize 
+	"TO RUN: write in Playground 
+bp:=TicTacToeExample preventThridXProof.
+Repeat in each X move(player)
+BP4PEnvironment send: ((xmoves at: 1) at: 1) toProgram: bp.
+bp stop."
+
+	self runAxesSize: self axesSize
 ]
 
 { #category : #running }
