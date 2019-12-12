@@ -108,8 +108,7 @@ BP4PScenario >> name: aScenarioName valuable: aBlock [
 BP4PScenario >> printOn: aStream [
 	super printOn: aStream.
 	aStream nextPutAll: ' with name '.
-	name printOn: aStream.
-
+	self name printOn: aStream
 ]
 
 { #category : #accessing }

@@ -1,16 +1,16 @@
 Class {
-	#name : #TicTacToeExample,
+	#name : #TicTacToeWithPossiblePositions,
 	#superclass : #Object,
 	#classInstVars : [
 		'possiblePositions',
 		'axesSize',
 		'segmentSize'
 	],
-	#category : #'BP4Pharo-Test-TicTacToe-Core'
+	#category : #'BP4Pharo-Test-TicTacToe-PossiblePositions'
 }
 
 { #category : #running }
-TicTacToeExample class >> addThridOProof [
+TicTacToeWithPossiblePositions class >> addThridOProof [
 	| bp |
 	BP4PEnvironmentScenario initialize.
 	bp := BP4PProgram new.
@@ -52,7 +52,7 @@ TicTacToeExample class >> addThridOProof [
 		priority: 5.
 	bp
 		add:
-			(StrategyDefaultOMoves
+			(StrategyDefaultOMovesPossiblePositions
 				initialize;
 				instance)
 		priority: 12.
@@ -75,13 +75,13 @@ TicTacToeExample class >> addThridOProof [
 ]
 
 { #category : #accessing }
-TicTacToeExample class >> axesSize [
+TicTacToeWithPossiblePositions class >> axesSize [
 	axesSize ifNil: [ axesSize := 3 ].
 	^axesSize copy
 ]
 
 { #category : #accessing }
-TicTacToeExample class >> axesSize: anInteger segmentSize: anotherInteger [
+TicTacToeWithPossiblePositions class >> axesSize: anInteger segmentSize: anotherInteger [
 	axesSize := anInteger.
 	segmentSize := anotherInteger.
 	possiblePositions := possiblePositions := Set new.
@@ -90,7 +90,7 @@ TicTacToeExample class >> axesSize: anInteger segmentSize: anotherInteger [
 ]
 
 { #category : #running }
-TicTacToeExample class >> defaultOMovesProof [
+TicTacToeWithPossiblePositions class >> defaultOMovesProof [
 	| bp  |
 	BP4PEnvironmentScenario initialize.
 	bp := BP4PProgram new.
@@ -132,7 +132,7 @@ TicTacToeExample class >> defaultOMovesProof [
 		priority: 5.
 	bp
 		add:
-			(StrategyDefaultOMoves
+			(StrategyDefaultOMovesPossiblePositions
 				initialize;
 				instance)
 		priority: 12.
@@ -143,7 +143,7 @@ TicTacToeExample class >> defaultOMovesProof [
 ]
 
 { #category : #running }
-TicTacToeExample class >> detectDrawProof [
+TicTacToeWithPossiblePositions class >> detectDrawProof [
 	| bp  positions omoves xmoves |
 
 	positions := OrderedCollection new.
@@ -218,7 +218,7 @@ TicTacToeExample class >> detectDrawProof [
 ]
 
 { #category : #running }
-TicTacToeExample class >> detectXWinProof [
+TicTacToeWithPossiblePositions class >> detectXWinProof [
 	| bp axeSize positions omoves xmoves |
 
 	axeSize := 3.
@@ -279,7 +279,7 @@ TicTacToeExample class >> detectXWinProof [
 ]
 
 { #category : #running }
-TicTacToeExample class >> enforceTurnProof [
+TicTacToeWithPossiblePositions class >> enforceTurnProof [
 	| bp x00 x01 x02 o01 o00  |
 
 	x00 := XEvent position: (Position x: 0 y: 0).
@@ -323,13 +323,13 @@ TicTacToeExample class >> enforceTurnProof [
 ]
 
 { #category : #accessing }
-TicTacToeExample class >> possiblePositions [
+TicTacToeWithPossiblePositions class >> possiblePositions [
 	^ possiblePositions copy
 
 ]
 
 { #category : #running }
-TicTacToeExample class >> preventThridXProof [
+TicTacToeWithPossiblePositions class >> preventThridXProof [
 	| bp |
 	BP4PEnvironmentScenario initialize.
 	bp := BP4PProgram new.
@@ -371,7 +371,7 @@ TicTacToeExample class >> preventThridXProof [
 		priority: 5.
 	bp
 		add:
-			(StrategyDefaultOMoves
+			(StrategyDefaultOMovesPossiblePositions
 				initialize;
 				instance)
 		priority: 12.
@@ -388,7 +388,7 @@ TicTacToeExample class >> preventThridXProof [
 ]
 
 { #category : #running }
-TicTacToeExample class >> run [
+TicTacToeWithPossiblePositions class >> run [
 	"TO RUN: write in Playground 
 bp:=TicTacToeExample preventThridXProof.
 Repeat in each X move(player)
@@ -399,7 +399,7 @@ bp stop."
 ]
 
 { #category : #running }
-TicTacToeExample class >> runAxesSize: anInteger [
+TicTacToeWithPossiblePositions class >> runAxesSize: anInteger [
 	| bp axeSize positions omoves xmoves x00 x01 x11 o01 o00 p00 p01 p02 p10 p11 p12 p20 p21 p22 |
 	"	p00 := Position x: 0 y: 0.
 	p01 := Position x: 0 y: 1.
@@ -479,12 +479,12 @@ TicTacToeExample class >> runAxesSize: anInteger [
 ]
 
 { #category : #accessing }
-TicTacToeExample class >> segmentSize [
+TicTacToeWithPossiblePositions class >> segmentSize [
 	segmentSize  ifNil: [ segmentSize  := 3 ].
 	^ segmentSize  copy
 ]
 
 { #category : #accessing }
-TicTacToeExample class >> takePosition: aPosition [
-	 possiblePositions remove: aPosition
+TicTacToeWithPossiblePositions class >> takePosition: aPosition [
+	possiblePositions remove: aPosition  ifAbsent: [  ]
 ]

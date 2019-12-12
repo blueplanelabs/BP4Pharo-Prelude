@@ -12,8 +12,8 @@ RulesDetectDrawPossiblePositions >> run: aBP4PProgram [
 	move := BP4PEventsOfClass class: MoveEvent.
 	all := BP4PEventsOfClass class: BP4PEvent.
 	draw := GameOverEvent name: 'draw'.
-	[ Transcript crShow: 'Possible Positions: ', TicTacToeExample possiblePositions asString.
-	TicTacToeExample possiblePositions isEmpty ]
+	[ Transcript crShow: 'Possible Positions: ', TicTacToeWithPossiblePositions possiblePositions asString.
+	TicTacToeWithPossiblePositions possiblePositions isEmpty ]
 		whileFalse: [ aBP4PProgram syncRequested: none waited: move blocked: none ].
 	aBP4PProgram syncRequested: draw waited: none blocked: move.
 	aBP4PProgram syncRequested: none waited: none blocked: all

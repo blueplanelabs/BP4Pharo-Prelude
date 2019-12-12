@@ -30,7 +30,7 @@ StrategyPreventThridXPossiblePositions >> run: aBP4PProgram [
 							tempSet1 remove: a.
 							tempSet1
 								detect: [ :b | 
-									TicTacToeExample possiblePositions
+									TicTacToeWithPossiblePositions possiblePositions
 										detect: [ :c | alienated := a isAlienatedWith: b and: c ]
 										ifFound: [ :c | selectedMove := (OEvent position: c ), selectedMove ]
 										ifNone: [  ].

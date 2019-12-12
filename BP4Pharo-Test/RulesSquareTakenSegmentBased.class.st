@@ -1,14 +1,11 @@
-"
-Scenario for not allowing two symbols in the same square
-"
 Class {
-	#name : #RulesSquareTakenPossiblePositions,
+	#name : #RulesSquareTakenSegmentBased,
 	#superclass : #BP4PEnvironmentScenario,
-	#category : #'BP4Pharo-Test-TicTacToe-PossiblePositions'
+	#category : #'BP4Pharo-Test-TicTacToe-SegmentBased'
 }
 
 { #category : #initialize }
-RulesSquareTakenPossiblePositions >> run: aBP4PProgram [
+RulesSquareTakenSegmentBased >> run: aBP4PProgram [
 	"Block further marking of a square already marked by X or O"
 
 	| move newScenario lastMove lastPosition |
@@ -22,7 +19,7 @@ RulesSquareTakenPossiblePositions >> run: aBP4PProgram [
 		startScenario: newScenario.
 	"Take the position in the posiblePositions of TicTacToe"
 	lastPosition := aBP4PProgram lastEvent position.
-	TicTacToeWithPossiblePositions takePosition: lastPosition.
+	TicTacToeWithSegment  takePosition: lastPosition.
 	"Block the concrete last move"
 	lastMove := MoveEvent position: lastPosition.
 	aBP4PProgram syncRequested: none waited: none blocked: lastMove

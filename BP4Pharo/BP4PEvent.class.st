@@ -28,6 +28,13 @@ BP4PEvent >> asEventSet [
 ]
 
 { #category : #accessing }
+BP4PEvent >> belongsTo: anEventsOfClass [
+	"Answer self is of the class defined by anEventsOfClass"
+
+	^ anEventsOfClass includes: self
+]
+
+{ #category : #accessing }
 BP4PEvent >> includes: anEventOrAnEventSet [
 	"answer if includes anEventOrAnEventSet"
 

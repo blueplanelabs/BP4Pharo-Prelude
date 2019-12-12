@@ -96,7 +96,8 @@ BP4PProgram >> initialize [
 
 { #category : #accessing }
 BP4PProgram >> lastEvent [
-	^ lastEvent copy
+	lastEvent ifNil: [ lastEvent := BP4PEvent none ] .
+	^lastEvent copy
 ]
 
 { #category : #accessing }

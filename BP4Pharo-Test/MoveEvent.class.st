@@ -29,6 +29,21 @@ MoveEvent >> = anObject [
 	^ true
 ]
 
+{ #category : #api }
+MoveEvent >> asMoveEvent [
+	^ MoveEvent position: position
+]
+
+{ #category : #api }
+MoveEvent >> asOEvent [
+	^ OEvent position: position
+]
+
+{ #category : #api }
+MoveEvent >> asXEvent [
+	^ XEvent position: position
+]
+
 { #category : #'instance creation' }
 MoveEvent >> defaultName [
 	^ 'Move(' , position name, ')'

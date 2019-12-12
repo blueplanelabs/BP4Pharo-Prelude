@@ -13,11 +13,6 @@ BP4PEventSet class >> name: aString [
 ]
 
 { #category : #accessing }
-BP4PEventSet class >> name: aString events: someEvents [
-	^ self new name: aString events: someEvents
-]
-
-{ #category : #accessing }
 BP4PEventSet class >> with: setOfEvents [
 	^ self new with: setOfEvents
 ]
@@ -81,11 +76,10 @@ BP4PEventSet >> isNone [
 { #category : #accessing }
 BP4PEventSet >> name [
 	"	^ name
-		ifNil: [ name := Set with: (self className withoutSuffix: ' class') ]"
+		ifNil: [ name := Set with: (self className withoutSuffix: ' class') ]
+		Probar con esto y quitar nameBySetOfEvents:"
 
-	(name isNil) |( name = '')
-		ifTrue: [ name := 'none' ].
-	^ name
+^ name := ',' join: (self set collect: [ :each | each name ])
 ]
 
 { #category : #accessing }
@@ -93,37 +87,34 @@ BP4PEventSet >> name: aString [
 	name := aString
 ]
 
-{ #category : #accessing }
-BP4PEventSet >> name: aSetOfStrings events: setOfEvents [
-	name := aSetOfStrings.
-	events := setOfEvents
-]
-
-{ #category : #'instance creation' }
-BP4PEventSet >> nameBySetOfEvents: setOfEvents. [
-	^ ',' join: (setOfEvents collect: [ :each | each name ]).
-]
-
 { #category : #printing }
 BP4PEventSet >> printOn: aStream [
 	super printOn: aStream.
 	aStream nextPutAll: ' name '.
-	name printOn: aStream
+	self name printOn: aStream
+]
+
+{ #category : #removing }
+BP4PEventSet >> remove: aEventOrEventSetOrEventOfClass [
+	events := self set difference: aEventOrEventSetOrEventOfClass set.
+
 ]
 
 { #category : #removing }
 BP4PEventSet >> removeNone [
-	events := self set select: [ :e | e isNone not ].
-	self name: (self nameBySetOfEvents: events)
+	self remove: BP4PEvent none.
 ]
 
 { #category : #accessing }
 BP4PEventSet >> set [
-	^ events ifNil: [ events := Set with: (BP4PEvent none) ]
+	events isEmptyOrNil
+		ifTrue: [ events := Set with: BP4PEvent none ].
+^		events
 ]
 
 { #category : #'instance creation' }
 BP4PEventSet >> with: setOfEvents [
-	name := self nameBySetOfEvents: setOfEvents.
+
+
 	events := setOfEvents
 ]
