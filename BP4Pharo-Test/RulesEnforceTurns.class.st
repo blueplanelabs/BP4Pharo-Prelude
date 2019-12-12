@@ -1,7 +1,7 @@
 Class {
 	#name : #RulesEnforceTurns,
 	#superclass : #BP4PEnvironmentScenario,
-	#category : #'BP4Pharo-Test-TicTacToe'
+	#category : #'BP4Pharo-Test-TicTacToe-Core'
 }
 
 { #category : #initialize }

@@ -8,7 +8,7 @@ Class {
 		'x',
 		'y'
 	],
-	#category : #'BP4Pharo-Test-TicTacToe'
+	#category : #'BP4Pharo-Test-TicTacToe-Core'
 }
 
 { #category : #creation }

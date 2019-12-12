@@ -4,7 +4,7 @@ An event that is fired when player X makes a move.
 Class {
 	#name : #XEvent,
 	#superclass : #MoveEvent,
-	#category : #'BP4Pharo-Test-TicTacToe'
+	#category : #'BP4Pharo-Test-TicTacToe-Core'
 }
 
 { #category : #'instance creation' }

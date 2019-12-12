@@ -1,33 +1,28 @@
 Class {
-	#name : #StrategyPreventThridX,
+	#name : #StrategyPreventThridXPossiblePositions,
 	#superclass : #BP4PEnvironmentScenario,
-	#category : #'BP4Pharo-Test-TicTacToe'
+	#category : #'BP4Pharo-Test-TicTacToe-PossiblePositions'
 }
 
 { #category : #initialize }
-StrategyPreventThridX >> run: aBP4PProgram [
+StrategyPreventThridXPossiblePositions >> run: aBP4PProgram [
 	"when two Xs are noticed in a line, add an O in that line (and prevent an immediate loss)."
 
-	| xmove omove xPositionsSet alienated selectedMove availableMoves |
-	availableMoves := TicTacToeExample posiblePositions copy.
+	| xmove xPositionsSet alienated selectedMove |
 	xPositionsSet := Set new.
 	xmove := BP4PEventsOfClass class: XEvent.
-	omove := BP4PEventsOfClass class: OEvent.
+	selectedMove := BP4PEvent none.
 
 	"Wait for the first X move"
 	aBP4PProgram syncRequested: none waited: xmove blocked: none.
 	xPositionsSet add: aBP4PProgram lastEvent position.
-	availableMoves remove: aBP4PProgram lastEvent position.
-	"Wait for the O move"
-	aBP4PProgram syncRequested: none waited: omove blocked: none.
-	availableMoves remove: aBP4PProgram lastEvent position.
 	[ true ]
 		whileTrue: [ "Wait for the second X move"
 			alienated := false.
 			[ alienated ]
 				whileFalse: [ aBP4PProgram syncRequested: none waited: xmove blocked: none.
+					"Check if there are some possible X move to achieve 3X"
 					xPositionsSet add: aBP4PProgram lastEvent position.
-					availableMoves remove: aBP4PProgram lastEvent position.
 					xPositionsSet
 						detect: [ :a | 
 							| tempSet1 |
@@ -35,16 +30,19 @@ StrategyPreventThridX >> run: aBP4PProgram [
 							tempSet1 remove: a.
 							tempSet1
 								detect: [ :b | 
-									availableMoves 
+									TicTacToeExample possiblePositions
 										detect: [ :c | alienated := a isAlienatedWith: b and: c ]
-										ifFound: [ :c | selectedMove := OEvent position: c ]
+										ifFound: [ :c | selectedMove := (OEvent position: c ), selectedMove ]
 										ifNone: [  ].
 									alienated ]
 								ifNone: [  ].
 							alienated ]
-						ifNone: [  ] ].
-			"Request the O move that avoid three X alienated"
-			aBP4PProgram syncRequested: selectedMove waited: none blocked: none.
-			availableMoves remove: aBP4PProgram lastEvent position.
-			Transcript crShow: 'Selected to avoid 3 X ' , selectedMove asString ]
+						ifNone: [  ].
+					alienated
+						ifTrue: [ "Request the O move that avoid three X alienated"
+							Transcript crShow: 'Selected to avoid 3 X ' , selectedMove asString.
+							aBP4PProgram
+								syncRequested: selectedMove
+								waited: none
+								blocked: none ] ] ]
 ]

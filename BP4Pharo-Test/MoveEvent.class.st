@@ -9,7 +9,7 @@ Class {
 	#instVars : [
 		'position'
 	],
-	#category : #'BP4Pharo-Test-TicTacToe'
+	#category : #'BP4Pharo-Test-TicTacToe-Core'
 }
 
 { #category : #'instance creation' }

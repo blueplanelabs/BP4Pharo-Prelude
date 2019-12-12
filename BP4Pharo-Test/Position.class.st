@@ -1,7 +1,7 @@
 Class {
 	#name : #Position,
 	#superclass : #Point,
-	#category : #'BP4Pharo-Test-TicTacToe'
+	#category : #'BP4Pharo-Test-TicTacToe-Core'
 }
 
 { #category : #testing }

@@ -1,11 +1,11 @@
 Class {
-	#name : #RulesDetectXWin,
+	#name : #RulesDetectXWinPossiblePositions,
 	#superclass : #BP4PEnvironmentScenario,
-	#category : #'BP4Pharo-Test-TicTacToe'
+	#category : #'BP4Pharo-Test-TicTacToe-PossiblePositions'
 }
 
 { #category : #initialize }
-RulesDetectXWin >> run: aBP4PProgram [
+RulesDetectXWinPossiblePositions >> run: aBP4PProgram [
 	"wait for placement of at least three X marks and is checking if they are alienated three by three, if true request XWin."
 
 	| xmove move xwin positionSet alienated |

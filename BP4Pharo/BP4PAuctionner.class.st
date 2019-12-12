@@ -25,8 +25,8 @@ BP4PAuctionner >> checkIn: anAnnouncer [
 { #category : #'private - initialization' }
 BP4PAuctionner >> chooseEventByPriorityStrategy: scenariosStates [
 	| selectedEvent orderedRequested orderedBlocked candidates |
-	"Sort scenariosStates by priority order"
-	scenariosStates sort: [ :a :b | a priority > b priority ].
+	"Sort scenariosStates by priority order (the smaller value the higher priority)"
+	scenariosStates sort: [ :a :b | a priority < b priority ].
 	orderedRequested := self
 		extractByPriorityFrom: scenariosStates
 		eventsType: #requestedEvents.

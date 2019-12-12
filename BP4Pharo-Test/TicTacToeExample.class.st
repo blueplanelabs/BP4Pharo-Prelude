@@ -2,54 +2,27 @@ Class {
 	#name : #TicTacToeExample,
 	#superclass : #Object,
 	#classInstVars : [
+		'possiblePositions',
 		'axesSize',
-		'posibleMoves'
+		'segmentSize'
 	],
-	#category : #'BP4Pharo-Test-TicTacToe'
+	#category : #'BP4Pharo-Test-TicTacToe-Core'
 }
 
-{ #category : #accessing }
-TicTacToeExample class >> axesSize [
-	^ axesSize ifNil: [ axesSize := 3 ]
-]
-
-{ #category : #accessing }
-TicTacToeExample class >> axesSize: anObject [
-	axesSize := anObject
-]
-
 { #category : #running }
-TicTacToeExample class >> defaultOMovesProof [
-	| bp positions omoves xmoves |
-	"	p00 := Position x: 0 y: 0.
-	p01 := Position x: 0 y: 1.
-	p02 := Position x: 0 y: 2.
-	p10 := Position x: 1 y: 0.
-	p11 := Position x: 1 y: 1.
-	p12 := Position x: 1 y: 2.
-	p20 := Position x: 2 y: 0.
-	p21 := Position x: 2 y: 1.
-	p22 := Position x: 2 y: 2.
-	x00 := XEvent position: (Position x: 0 y: 0).
-	o00 := OEvent position: (Position x: 0 y: 0).
-	x01 := XEvent position: (Position x: 0 y: 1).
-	o01 := OEvent position: (Position x: 0 y: 1)."
-	"self axesSize: anInteger."
-	positions := OrderedCollection new.
-	omoves := OrderedCollection new.
-	xmoves := OrderedCollection new.
-	1 to: self axesSize do: [ :x | 
-		| col |
-		col := OrderedCollection new.
-		1 to: axesSize do: [ :y | col add: (Position x: x y: y) ].
-		positions add: col.
-		omoves add: (col collect: [ :p | OEvent position: p ]).
-		xmoves add: (col collect: [ :p | XEvent position: p ]) ].
+TicTacToeExample class >> addThridOProof [
+	| bp |
 	BP4PEnvironmentScenario initialize.
 	bp := BP4PProgram new.
 	bp
 		add:
-			(RulesSquareTaken
+			(UserMove
+				initialize;
+				instance)
+		priority: 0.5.
+	bp
+		add:
+			(RulesSquareTakenPossiblePositions
 				initialize;
 				instance)
 		priority: 1.
@@ -58,32 +31,111 @@ TicTacToeExample class >> defaultOMovesProof [
 			(RulesEnforceTurns
 				initialize;
 				instance)
-		priority: 1.
+		priority: 2.
 	bp
 		add:
-			(RulesDetectXWin
+			(RulesDetectXWinPossiblePositions
 				initialize;
 				instance)
-		priority: 1.
+		priority: 3.
 	bp
 		add:
-			(RulesDetectOWin
+			(RulesDetectOWinPossiblePositions
 				initialize;
 				instance)
-		priority: 1.
+		priority: 4.
 	bp
 		add:
-			(RulesDetectDraw
+			(RulesDetectDrawPossiblePositions
 				initialize;
 				instance)
-		priority: 1.
+		priority: 5.
 	bp
 		add:
 			(StrategyDefaultOMoves
 				initialize;
 				instance)
-		priority: 1.
+		priority: 12.
+	bp
+		add:
+			(StrategyPreventThridXPossiblePositions
+				initialize;
+				instance)
+		priority: 7.
+	bp
+		add:
+			(StrategyAddThridOPossiblePositions
+				initialize;
+				instance)
+		priority: 6.
+	bp start.
 
+	"	bp stop."
+	^ bp
+]
+
+{ #category : #accessing }
+TicTacToeExample class >> axesSize [
+	axesSize ifNil: [ axesSize := 3 ].
+	^axesSize copy
+]
+
+{ #category : #accessing }
+TicTacToeExample class >> axesSize: anInteger segmentSize: anotherInteger [
+	axesSize := anInteger.
+	segmentSize := anotherInteger.
+	possiblePositions := possiblePositions := Set new.
+			1 to: self axesSize do:
+				[ :x | 1 to: self axesSize do: [ :y | possiblePositions add: (Position x: x y: y) ] ]
+]
+
+{ #category : #running }
+TicTacToeExample class >> defaultOMovesProof [
+	| bp  |
+	BP4PEnvironmentScenario initialize.
+	bp := BP4PProgram new.
+	bp
+		add:
+			(UserMove
+				initialize;
+				instance)
+		priority: 0.5.
+	bp
+		add:
+			(RulesSquareTakenPossiblePositions
+				initialize;
+				instance)
+		priority: 1.
+	bp
+		add:
+			(RulesEnforceTurns
+				initialize;
+				instance)
+		priority: 2.
+	bp
+		add:
+			(RulesDetectXWinPossiblePositions
+				initialize;
+				instance)
+		priority: 3.
+	bp
+		add:
+			(RulesDetectOWinPossiblePositions
+				initialize;
+				instance)
+		priority: 4.
+	bp
+		add:
+			(RulesDetectDrawPossiblePositions
+				initialize;
+				instance)
+		priority: 5.
+	bp
+		add:
+			(StrategyDefaultOMoves
+				initialize;
+				instance)
+		priority: 12.
 	bp start.
 
 	"	bp stop."
@@ -92,21 +144,8 @@ TicTacToeExample class >> defaultOMovesProof [
 
 { #category : #running }
 TicTacToeExample class >> detectDrawProof [
-	| bp axeSize positions omoves xmoves x00 x01 x11 o01 o00 p00 p01 p02 p10 p11 p12 p20 p21 p22 |
-	"	p00 := Position x: 0 y: 0.
-	p01 := Position x: 0 y: 1.
-	p02 := Position x: 0 y: 2.
-	p10 := Position x: 1 y: 0.
-	p11 := Position x: 1 y: 1.
-	p12 := Position x: 1 y: 2.
-	p20 := Position x: 2 y: 0.
-	p21 := Position x: 2 y: 1.
-	p22 := Position x: 2 y: 2.
-	x00 := XEvent position: (Position x: 0 y: 0).
-	o00 := OEvent position: (Position x: 0 y: 0).
-	x01 := XEvent position: (Position x: 0 y: 1).
-	o01 := OEvent position: (Position x: 0 y: 1)."
-	"self axesSize: anInteger."
+	| bp  positions omoves xmoves |
+
 	positions := OrderedCollection new.
 	omoves := OrderedCollection new.
 	xmoves := OrderedCollection new.
@@ -121,7 +160,13 @@ TicTacToeExample class >> detectDrawProof [
 	bp := BP4PProgram new.
 	bp
 		add:
-			(RulesSquareTaken
+			(UserMove
+				initialize;
+				instance)
+		priority: 0.5.
+	bp
+		add:
+			(RulesSquareTakenPossiblePositions
 				initialize;
 				instance)
 		priority: 1.
@@ -130,25 +175,25 @@ TicTacToeExample class >> detectDrawProof [
 			(RulesEnforceTurns
 				initialize;
 				instance)
-		priority: 1.
+		priority: 2.
 	bp
 		add:
-			(RulesDetectXWin
+			(RulesDetectXWinPossiblePositions
 				initialize;
 				instance)
-		priority: 1.
+		priority: 3.
 	bp
 		add:
-			(RulesDetectOWin
+			(RulesDetectOWinPossiblePositions
 				initialize;
 				instance)
-		priority: 1.
+		priority: 4.
 	bp
 		add:
-			(RulesDetectDraw
+			(RulesDetectDrawPossiblePositions
 				initialize;
 				instance)
-		priority: 1.
+		priority: 5.
 	bp start.
 	(Delay forSeconds: 1) wait.
 	BP4PEnvironment send: ((xmoves at: 2) at: 2) toProgram: bp.
@@ -174,20 +219,8 @@ TicTacToeExample class >> detectDrawProof [
 
 { #category : #running }
 TicTacToeExample class >> detectXWinProof [
-	| bp axeSize positions omoves xmoves x00 x01 x11 o01 o00 p00 p01 p02 p10 p11 p12 p20 p21 p22 |
-	"	p00 := Position x: 0 y: 0.
-	p01 := Position x: 0 y: 1.
-	p02 := Position x: 0 y: 2.
-	p10 := Position x: 1 y: 0.
-	p11 := Position x: 1 y: 1.
-	p12 := Position x: 1 y: 2.
-	p20 := Position x: 2 y: 0.
-	p21 := Position x: 2 y: 1.
-	p22 := Position x: 2 y: 2.
-	x00 := XEvent position: (Position x: 0 y: 0).
-	o00 := OEvent position: (Position x: 0 y: 0).
-	x01 := XEvent position: (Position x: 0 y: 1).
-	o01 := OEvent position: (Position x: 0 y: 1)."
+	| bp axeSize positions omoves xmoves |
+
 	axeSize := 3.
 	positions := OrderedCollection new.
 	omoves := OrderedCollection new.
@@ -203,7 +236,13 @@ TicTacToeExample class >> detectXWinProof [
 	bp := BP4PProgram new.
 	bp
 		add:
-			(RulesSquareTaken
+			(UserMove
+				initialize;
+				instance)
+		priority: 0.5.
+	bp
+		add:
+			(RulesSquareTakenPossiblePositions
 				initialize;
 				instance)
 		priority: 1.
@@ -212,14 +251,13 @@ TicTacToeExample class >> detectXWinProof [
 			(RulesEnforceTurns
 				initialize;
 				instance)
-		priority: 1.
+		priority: 2.
 	bp
 		add:
-			(RulesDetectXWin
+			(RulesDetectXWinPossiblePositions
 				initialize;
 				instance)
-		priority: 1.
-	bp start.
+		priority: 3.	bp start.
 	(Delay forSeconds: 1) wait.
 	BP4PEnvironment send: ((xmoves at: 1) at: 1) toProgram: bp.
 	(Delay forSeconds: 1) wait.
@@ -242,26 +280,23 @@ TicTacToeExample class >> detectXWinProof [
 
 { #category : #running }
 TicTacToeExample class >> enforceTurnProof [
-	| bp x00 x01 x02 o01 o00 p00 p01 p02 p10 p11 p12 p20 p21 p22 |
-	p00 := Position x: 0 y: 0.
-	p01 := Position x: 0 y: 1.
-	p02 := Position x: 0 y: 2.
-	p10 := Position x: 1 y: 0.
-	p11 := Position x: 1 y: 1.
-	p12 := Position x: 1 y: 2.
-	p20 := Position x: 2 y: 0.
-	p21 := Position x: 2 y: 1.
-	p22 := Position x: 2 y: 2.
+	| bp x00 x01 x02 o01 o00  |
+
 	x00 := XEvent position: (Position x: 0 y: 0).
 	x01 := XEvent position: (Position x: 0 y: 1).
 	x02 := XEvent position: (Position x: 0 y: 2).
 	o00 := OEvent position: (Position x: 0 y: 0).
-
 	o01 := OEvent position: (Position x: 0 y: 1).
 	bp := BP4PProgram new.
 	bp
 		add:
-			(RulesSquareTaken
+			(UserMove
+				initialize;
+				instance)
+		priority: 0.5.
+	bp
+		add:
+			(RulesSquareTakenPossiblePositions
 				initialize;
 				instance)
 		priority: 1.
@@ -270,7 +305,7 @@ TicTacToeExample class >> enforceTurnProof [
 			(RulesEnforceTurns
 				initialize;
 				instance)
-		priority: 1.
+		priority: 2.
 	bp start.
 	(Delay forSeconds: 1) wait.
 	BP4PEnvironment send: x00 toProgram: bp.
@@ -288,25 +323,25 @@ TicTacToeExample class >> enforceTurnProof [
 ]
 
 { #category : #accessing }
-TicTacToeExample class >> posiblePositions [
-	^ posibleMoves
-		ifNil: [ posibleMoves := Set new.
-			1 to: self axesSize do:
-				[ :x | 1 to: self axesSize do: [ :y | posibleMoves add: (Position x: x y: y) ] ].
-			posibleMoves  ]
+TicTacToeExample class >> possiblePositions [
+	^ possiblePositions copy
+
 ]
 
 { #category : #running }
 TicTacToeExample class >> preventThridXProof [
 	| bp |
-
-
-
 	BP4PEnvironmentScenario initialize.
 	bp := BP4PProgram new.
 	bp
 		add:
-			(RulesSquareTaken
+			(UserMove
+				initialize;
+				instance)
+		priority: 0.5.
+	bp
+		add:
+			(RulesSquareTakenPossiblePositions
 				initialize;
 				instance)
 		priority: 1.
@@ -315,37 +350,37 @@ TicTacToeExample class >> preventThridXProof [
 			(RulesEnforceTurns
 				initialize;
 				instance)
-		priority: 1.
+		priority: 2.
 	bp
 		add:
-			(RulesDetectXWin
+			(RulesDetectXWinPossiblePositions
 				initialize;
 				instance)
-		priority: 1.
+		priority: 3.
 	bp
 		add:
-			(RulesDetectOWin
+			(RulesDetectOWinPossiblePositions
 				initialize;
 				instance)
-		priority: 1.
+		priority: 4.
 	bp
 		add:
-			(RulesDetectDraw
+			(RulesDetectDrawPossiblePositions
 				initialize;
 				instance)
-		priority: 1.
+		priority: 5.
 	bp
 		add:
 			(StrategyDefaultOMoves
 				initialize;
 				instance)
-		priority: 1.
+		priority: 12.
 	bp
 		add:
-			(StrategyPreventThridX
+			(StrategyPreventThridXPossiblePositions
 				initialize;
 				instance)
-		priority: 20.
+		priority: 7.
 	bp start.
 
 	"	bp stop."
@@ -394,7 +429,7 @@ TicTacToeExample class >> runAxesSize: anInteger [
 	bp := BP4PProgram new.
 	bp
 		add:
-			(RulesSquareTaken
+			(RulesSquareTakenPossiblePositions
 				initialize;
 				instance)
 		priority: 1.
@@ -406,19 +441,19 @@ TicTacToeExample class >> runAxesSize: anInteger [
 		priority: 1.
 	bp
 		add:
-			(RulesDetectXWin
+			(RulesDetectXWinPossiblePositions
 				initialize;
 				instance)
 		priority: 1.
 	bp
 		add:
-			(RulesDetectOWin
+			(RulesDetectOWinPossiblePositions
 				initialize;
 				instance)
 		priority: 1.
 	bp
 		add:
-			(RulesDetectDraw 
+			(RulesDetectDrawPossiblePositions 
 				initialize;
 				instance)
 		priority: 1.
@@ -441,4 +476,15 @@ TicTacToeExample class >> runAxesSize: anInteger [
 	BP4PEnvironment send: ((omoves at: 2) at: 3) toProgram: bp.
 	"	bp stop."
 	^ bp
+]
+
+{ #category : #accessing }
+TicTacToeExample class >> segmentSize [
+	segmentSize  ifNil: [ segmentSize  := 3 ].
+	^ segmentSize  copy
+]
+
+{ #category : #accessing }
+TicTacToeExample class >> takePosition: aPosition [
+	 possiblePositions remove: aPosition
 ]
