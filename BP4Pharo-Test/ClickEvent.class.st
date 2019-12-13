@@ -5,8 +5,7 @@ Class {
 	#name : #ClickEvent,
 	#superclass : #BP4PEvent,
 	#instVars : [
-		'x',
-		'y'
+		'position'
 	],
 	#category : #'BP4Pharo-Test-TicTacToe-Core'
 }
@@ -18,7 +17,7 @@ ClickEvent class >> position: aPosition [
 
 { #category : #accessing }
 ClickEvent >> defaultName [
-	^ 'Click(' , x asString , ',' , y asString , ')'
+	^ 'Click(' , position name ,')'
 ]
 
 { #category : #accessing }
@@ -28,11 +27,10 @@ ClickEvent >> name [
 
 { #category : #accessing }
 ClickEvent >> position [
-	^Position x: x y: y
+	^ position
 ]
 
 { #category : #accessing }
 ClickEvent >> position: aPosition [
-	x := aPosition x.
-	y := aPosition y
+	position := aPosition .
 ]

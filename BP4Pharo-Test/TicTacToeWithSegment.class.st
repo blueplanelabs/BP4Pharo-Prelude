@@ -74,13 +74,13 @@ TicTacToeWithSegment class >> addThridOProof [
 	^ bp
 ]
 
-{ #category : #accessing }
+{ #category : #api }
 TicTacToeWithSegment class >> axesSize [
 	axesSize ifNil: [ axesSize := 3 ].
 	^axesSize copy
 ]
 
-{ #category : #accessing }
+{ #category : #initialization }
 TicTacToeWithSegment class >> axesSize: anInteger segmentSize: anotherInteger [
 	axesSize := anInteger.
 	segmentSize := anotherInteger.
@@ -218,6 +218,35 @@ TicTacToeWithSegment class >> detectDrawProof [
 ]
 
 { #category : #running }
+TicTacToeWithSegment class >> detectOWinSegmentInterruptedProof [
+	| bp segment |
+	segment := Set new
+		add: (Position x: 1 y: 1);
+		add: (Position x: 2 y: 1);
+		yourself.
+	BP4PEnvironmentScenario initialize.
+	bp := BP4PProgram new.
+	bp
+		add:
+			(RulesDetectOWinSegment
+				initialize;
+				instanceToSegment: segment)
+		priority: 3.
+	bp start.
+	(Delay forSeconds: 1) wait.
+	BP4PEnvironment
+		send: (OEvent position: (Position x: 1 y: 1))
+		toProgram: bp.
+	(Delay forSeconds: 1) wait.
+	BP4PEnvironment
+		send: (XEvent position: (Position x: 2 y: 1))
+		toProgram: bp.
+	(Delay forSeconds: 1) wait.
+	"	bp stop."
+	^ bp
+]
+
+{ #category : #running }
 TicTacToeWithSegment class >> detectOWinSegmentSuccessProof [
 	| bp segment |
 	segment := Set new
@@ -239,59 +268,6 @@ TicTacToeWithSegment class >> detectOWinSegmentSuccessProof [
 		send: (OEvent position: position)
 		toProgram: bp.
 	(Delay forSeconds: 1) wait].
-	"	bp stop."
-	^ bp
-]
-
-{ #category : #running }
-TicTacToeWithSegment class >> detectXWinProof [
-	| bp segment |
-	segment := Set new
-		add: (Position x: 1 y: 1);
-		add: (Position x: 2 y: 1);
-		yourself.
-	BP4PEnvironmentScenario initialize.
-	bp := BP4PProgram new.
-	bp
-		add:
-			(UserMove
-				initialize;
-				instance)
-		priority: 0.5.
-	bp
-		add:
-			(RulesSquareTakenPossiblePositions
-				initialize;
-				instance)
-		priority: 1.
-	bp
-		add:
-			(RulesEnforceTurns
-				initialize;
-				instance)
-		priority: 2.
-	bp
-		add:
-			(RulesDetectXWinSegment
-				initialize;
-				instanceToSegment: segment)
-		priority: 3.
-	bp
-		add:
-			(StrategyDefaultOMovesPossiblePositions 
-				initialize;
-				instance)
-		priority: 2.
-	bp start.
-	(Delay forSeconds: 1) wait.
-	BP4PEnvironment
-		send: (ClickEvent position: (Position x: 1 y: 1))
-		toProgram: bp.
-	(Delay forSeconds: 1) wait.
-	BP4PEnvironment
-		send: (ClickEvent position: (Position x: 2 y: 1))
-		toProgram: bp.
-	(Delay forSeconds: 1) wait.
 	"	bp stop."
 	^ bp
 ]
@@ -394,12 +370,70 @@ TicTacToeWithSegment class >> enforceTurnProof [
 	^ bp
 ]
 
-{ #category : #'as yet unclassified' }
-TicTacToeWithSegment class >> genateAvailabeSegmentsTo: aPosition [
-	1 to: self axesSize 
+{ #category : #running }
+TicTacToeWithSegment class >> functionalityGenerateWinScenariosProof [
+	| bp |
+	RulesDetectXWinSegment initialize.
+	RulesDetectOWinSegment initialize.
+	BP4PEnvironmentScenario initialize.
+	bp := BP4PProgram new.
+	bp
+		add:
+			(RulesSquareTakenSegment
+				initialize;
+				instance)
+		priority: 1.
+	bp
+		add:
+			(FunctionalityGenerateWinScenariosSegment
+				initialize;
+				instance)
+		priority: 3.
+	bp
+		add:
+			(TicTacToeActuatorSegment
+				initialize;
+				instance)
+		priority: 2.
+	bp start.
+
+	"	bp stop."
+	^ bp
 ]
 
-{ #category : #accessing }
+{ #category : #api }
+TicTacToeWithSegment class >> generateAvailabeSegmentsTo: aPosition [
+	"Get the segments that are fully available according to the possiblePositions on TicTacToe"
+	| segments |
+	segments := Set new.
+	1 to: self segmentSize do: [ :i | 
+		| horizontalSegment verticalSegment firstDiagonal secondDiagonal |
+		horizontalSegment := Set new.
+		verticalSegment := Set new.
+		firstDiagonal := Set new.
+		secondDiagonal := Set new.
+		1 to: self segmentSize do: [ :j | 
+			horizontalSegment add: (aPosition translateBy: (j - i) @ 0).
+			verticalSegment add: (aPosition translateBy: 0 @ (j - i)).
+			firstDiagonal add: (aPosition translateBy: (j - i) @ (j - i)).
+			secondDiagonal add: (aPosition translateBy: (i - j) @ (j - i)) ].
+		segments
+			add: horizontalSegment;
+			add: verticalSegment;
+			add: firstDiagonal;
+			add: secondDiagonal;
+			yourself ].
+	"Remove current position of the segments to check"
+	segments do: [ :segment | segment remove: aPosition asPoint ].
+	"Remove segments that are not fully available"
+	segments := segments
+		select: [ :segment | 
+			segment
+				= (TicTacToeWithSegment possiblePositions intersection: segment) ].
+	^ segments
+]
+
+{ #category : #api }
 TicTacToeWithSegment class >> possiblePositions [
 	^ possiblePositions copy
 
@@ -555,13 +589,50 @@ TicTacToeWithSegment class >> runAxesSize: anInteger [
 	^ bp
 ]
 
-{ #category : #accessing }
+{ #category : #api }
 TicTacToeWithSegment class >> segmentSize [
 	segmentSize  ifNil: [ segmentSize  := 3 ].
 	^ segmentSize  copy
 ]
 
-{ #category : #accessing }
+{ #category : #running }
+TicTacToeWithSegment class >> squareTakenSegmentProof [
+	| bp |
+	BP4PEnvironmentScenario initialize.
+	bp := BP4PProgram new.
+	bp
+		add:
+			(RulesSquareTakenSegment
+				initialize;
+				instance)
+		priority: 1.
+	bp
+		add:
+			(TicTacToeActuatorSegment
+				initialize;
+				instance)
+		priority: 2.
+	bp start.
+
+	BP4PEnvironment
+		send: (MoveEvent position: (Position x: 1 y: 1))
+		toProgram: bp.
+
+	BP4PEnvironment
+		send: (XEvent position: (Position x: 2 y: 2))
+		toProgram: bp.
+	BP4PEnvironment
+		send: (OEvent position: (Position x: 3 y: 3))
+		toProgram: bp.
+	"	bp stop."
+	^ bp
+]
+
+{ #category : #api }
 TicTacToeWithSegment class >> takePosition: aPosition [
-	possiblePositions remove: aPosition ifAbsent: [  ]
+	possiblePositions
+		remove: aPosition
+		ifAbsent: [ Transcript
+				crShow: 'Position to take not possible: ' , aPosition printString, ' in possiblePositions ', possiblePositions printString  ].
+	Transcript crShow: 'Taked position: ' , aPosition printString,' in possiblePositions ', possiblePositions printString
 ]

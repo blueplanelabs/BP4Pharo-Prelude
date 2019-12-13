@@ -30,16 +30,16 @@ RulesDetectXWinSegment >> run: aBP4PProgram [
 	If true request XWin.
 	If any O move in the positions of the segment interrupt the scenario"
 
-	| segmentMoves omove move xwin |
+	| segmentMoves  move xwin |
 	xwin := GameOverEvent name: 'xwin'.
 	move := BP4PEventsOfClass class: MoveEvent.
-	omove := BP4PEventsOfClass class: OEvent.
+
 	segmentMoves := BP4PEventSet
 		with: (segment collect: [ :position | MoveEvent position: position ]).
-	[segmentMoves isNone]
+	[ segmentMoves isNone ]
 		whileFalse: [ aBP4PProgram syncRequested: none waited: segmentMoves blocked: none.
 			"Interrupt if move is of type O event"
-			(aBP4PProgram lastEvent belongsTo: omove)
+			(aBP4PProgram lastEvent belongsTo: OEvent )
 				ifTrue: [ Transcript
 						crShow:
 							'Interrupted ' , self printString , ' by '
