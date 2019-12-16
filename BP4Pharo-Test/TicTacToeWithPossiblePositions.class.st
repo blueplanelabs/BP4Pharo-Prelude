@@ -52,10 +52,10 @@ TicTacToeWithPossiblePositions class >> addThridOProof [
 		priority: 5.
 	bp
 		add:
-			(StrategyDefaultOMovesPossiblePositions
+			(StrategyAddThridOPossiblePositions
 				initialize;
 				instance)
-		priority: 12.
+		priority: 6.
 	bp
 		add:
 			(StrategyPreventThridXPossiblePositions
@@ -64,10 +64,11 @@ TicTacToeWithPossiblePositions class >> addThridOProof [
 		priority: 7.
 	bp
 		add:
-			(StrategyAddThridOPossiblePositions
+			(StrategyDefaultOMovesPossiblePositions
 				initialize;
 				instance)
-		priority: 6.
+		priority: 12.
+
 	bp start.
 
 	"	bp stop."

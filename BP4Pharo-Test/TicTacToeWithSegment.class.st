@@ -218,6 +218,32 @@ TicTacToeWithSegment class >> detectDrawProof [
 ]
 
 { #category : #running }
+TicTacToeWithSegment class >> detectOWinSegmentCompletedProof [
+	| bp segment |
+	segment := Set new
+		add: (Position x: 1 y: 1);
+		add: (Position x: 2 y: 1);
+		yourself.
+	BP4PEnvironmentScenario initialize.
+	bp := BP4PProgram new.
+	bp
+		add:
+			(RulesDetectOWinSegment
+				initialize;
+				instanceToSegment: segment)
+		priority: 3.
+	bp start.
+		(Delay forSeconds: 1) wait.
+	segment do: [ :position |
+	BP4PEnvironment
+		send: (OEvent position: position)
+		toProgram: bp.
+	(Delay forSeconds: 1) wait].
+	"	bp stop."
+	^ bp
+]
+
+{ #category : #running }
 TicTacToeWithSegment class >> detectOWinSegmentInterruptedProof [
 	| bp segment |
 	segment := Set new
@@ -247,7 +273,7 @@ TicTacToeWithSegment class >> detectOWinSegmentInterruptedProof [
 ]
 
 { #category : #running }
-TicTacToeWithSegment class >> detectOWinSegmentSuccessProof [
+TicTacToeWithSegment class >> detectXWinSegmentCompletedProof [
 	| bp segment |
 	segment := Set new
 		add: (Position x: 1 y: 1);
@@ -257,17 +283,16 @@ TicTacToeWithSegment class >> detectOWinSegmentSuccessProof [
 	bp := BP4PProgram new.
 	bp
 		add:
-			(RulesDetectOWinSegment
+			(RulesDetectXWinSegment
 				initialize;
 				instanceToSegment: segment)
 		priority: 3.
 	bp start.
-		(Delay forSeconds: 1) wait.
-	segment do: [ :position |
-	BP4PEnvironment
-		send: (OEvent position: position)
-		toProgram: bp.
-	(Delay forSeconds: 1) wait].
+	(Delay forSeconds: 1) wait.
+	segment
+		do: [ :position | 
+			BP4PEnvironment send: (XEvent position: position) toProgram: bp.
+			(Delay forSeconds: 1) wait ].
 	"	bp stop."
 	^ bp
 ]
@@ -297,31 +322,6 @@ TicTacToeWithSegment class >> detectXWinSegmentInterruptedProof [
 		send: (OEvent position: (Position x: 2 y: 1))
 		toProgram: bp.
 	(Delay forSeconds: 1) wait.
-	"	bp stop."
-	^ bp
-]
-
-{ #category : #running }
-TicTacToeWithSegment class >> detectXWinSegmentSuccessProof [
-	| bp segment |
-	segment := Set new
-		add: (Position x: 1 y: 1);
-		add: (Position x: 2 y: 1);
-		yourself.
-	BP4PEnvironmentScenario initialize.
-	bp := BP4PProgram new.
-	bp
-		add:
-			(RulesDetectXWinSegment
-				initialize;
-				instanceToSegment: segment)
-		priority: 3.
-	bp start.
-	(Delay forSeconds: 1) wait.
-	segment
-		do: [ :position | 
-			BP4PEnvironment send: (XEvent position: position) toProgram: bp.
-			(Delay forSeconds: 1) wait ].
 	"	bp stop."
 	^ bp
 ]
@@ -371,7 +371,7 @@ TicTacToeWithSegment class >> enforceTurnProof [
 ]
 
 { #category : #running }
-TicTacToeWithSegment class >> functionalityGenerateWinScenariosProof [
+TicTacToeWithSegment class >> functionalityGenerateDetectWinScenariosProof [
 	| bp |
 	RulesDetectXWinSegment initialize.
 	RulesDetectOWinSegment initialize.
@@ -385,17 +385,48 @@ TicTacToeWithSegment class >> functionalityGenerateWinScenariosProof [
 		priority: 1.
 	bp
 		add:
-			(FunctionalityGenerateWinScenariosSegment
+			(TicTacToeActuatorSegment
+				initialize;
+				instance)
+		priority: 2.
+	bp
+		add:
+			(FunctionalityGenerateDetectWinScenariosSegment
 				initialize;
 				instance)
 		priority: 3.
+
+	bp start.
+
+	"	bp stop."
+	^ bp
+]
+
+{ #category : #running }
+TicTacToeWithSegment class >> functionalityGeneratePreventXWinScenariosProof [
+	| bp |
+	BP4PEnvironmentScenario initialize.
+	bp := BP4PProgram new.
+	bp
+		add:
+			(RulesSquareTakenSegment
+				initialize;
+				instance)
+		priority: 1.
 	bp
 		add:
 			(TicTacToeActuatorSegment
 				initialize;
 				instance)
 		priority: 2.
+	bp
+		add:
+			(FunctionalityGeneratePreventXWinScenariosSegment
+				initialize;
+				instance)
+		priority: 3.
 	bp start.
+	
 
 	"	bp stop."
 	^ bp
@@ -404,7 +435,9 @@ TicTacToeWithSegment class >> functionalityGenerateWinScenariosProof [
 { #category : #api }
 TicTacToeWithSegment class >> generateAvailabeSegmentsTo: aPosition [
 	"Get the segments that are fully available according to the possiblePositions on TicTacToe"
+
 	| segments |
+	(TicTacToeWithSegment possiblePositions includes: aPosition) ifFalse: [ ^nil ].
 	segments := Set new.
 	1 to: self segmentSize do: [ :i | 
 		| horizontalSegment verticalSegment firstDiagonal secondDiagonal |
@@ -431,6 +464,13 @@ TicTacToeWithSegment class >> generateAvailabeSegmentsTo: aPosition [
 			segment
 				= (TicTacToeWithSegment possiblePositions intersection: segment) ].
 	^ segments
+]
+
+{ #category : #api }
+TicTacToeWithSegment class >> numAvailabeSegmentsTo: aPosition [
+	"Return the number of segments that are fully available according to the possiblePositions on TicTacToe"
+	^(self generateAvailabeSegmentsTo: aPosition) size.
+
 ]
 
 { #category : #api }
@@ -495,6 +535,80 @@ TicTacToeWithSegment class >> preventThridXProof [
 	bp start.
 
 	"	bp stop."
+	^ bp
+]
+
+{ #category : #running }
+TicTacToeWithSegment class >> preventXWinSegmentCompletedProof [
+	| bp segment p1 p2 p3 p4 |
+	p1 := Position x: 1 y: 1.
+	p2 := Position x: 2 y: 1.
+	p3 := Position x: 3 y: 1.
+	p4 := Position x: 4 y: 1.
+	segment := Set new
+		add: p1;
+		add: p2;
+		add: p3;
+		add: p4;
+		yourself.
+	BP4PEnvironmentScenario initialize.
+	bp := BP4PProgram new.
+	bp
+		add:
+			(StrategyPreventXWinSegment
+				initialize;
+				instanceToSegment: segment)
+		priority: 3.
+	bp start.
+	(Delay forSeconds: 1) wait.
+	BP4PEnvironment send: (XEvent position: p1) toProgram: bp.
+	(Delay forSeconds: 1) wait.
+	BP4PEnvironment send: (XEvent position: p3) toProgram: bp.
+	(Delay forSeconds: 1) wait.
+	BP4PEnvironment send: (XEvent position: p4) toProgram: bp.
+	(Delay forSeconds: 1) wait.
+	bp lastEvent = (OEvent position: p2)
+		ifTrue: [ Transcript
+				crShow: '========================Correct Proof========================' ]
+		ifFalse: [ Transcript
+				crShow: '========================Incorrect Proof========================' ].
+	bp stop.
+	^ bp
+]
+
+{ #category : #running }
+TicTacToeWithSegment class >> preventXWinSegmentInterruptedProof [
+	| bp segment p1 p2 p3 p4 scenario |
+	p1 := Position x: 1 y: 1.
+	p2 := Position x: 2 y: 1.
+	p3 := Position x: 3 y: 1.
+	p4 := Position x: 4 y: 1.
+	segment := Set new
+		add: p1;
+		add: p2;
+		add: p3;
+		add: p4;
+		yourself.
+	scenario := StrategyPreventXWinSegment
+		initialize;
+		instanceToSegment: segment.
+	BP4PEnvironmentScenario initialize.
+	bp := BP4PProgram new.
+	bp add: scenario priority: 3.
+	bp start.
+	(Delay forSeconds: 1) wait.
+	BP4PEnvironment send: (XEvent position: p1) toProgram: bp.
+	(Delay forSeconds: 1) wait.
+	BP4PEnvironment send: (XEvent position: p2) toProgram: bp.
+	(Delay forSeconds: 1) wait.
+	BP4PEnvironment send: (OEvent position: p3) toProgram: bp.
+	(Delay forSeconds: 1) wait.
+	(bp processes keys includes: scenario)
+		ifFalse: [ Transcript
+				crShow: '========================Correct Proof========================' ]
+		ifTrue: [ Transcript
+				crShow: '========================Incorrect Proof========================' ].
+	bp stop.
 	^ bp
 ]
 

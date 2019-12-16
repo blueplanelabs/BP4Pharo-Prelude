@@ -120,14 +120,18 @@ BP4PController >> outOfSyncScenario: aBP4POutOfSyncScenarioAnnouncement [
 { #category : #'private-actions' }
 BP4PController >> removeScenario: aBP4PEndScenarioAnnouncement [
 	"remove scenario ended in the map scenarios"
-
-	scenarios removeKey: aBP4PEndScenarioAnnouncement scenario.
-	"check if all the scenarios are sync in every change"
-	"self checkAllScenariosSync."
-
 	"Trace"
 	Transcript
-		crShow: 'Removed in controller ' , aBP4PEndScenarioAnnouncement scenario asString 
+		crShow:
+			'Removed in controller '
+				, aBP4PEndScenarioAnnouncement scenario asString.
+
+	scenarios removeKey: aBP4PEndScenarioAnnouncement scenario.
+
+
+
+	"check if all the scenarios are sync in every change"
+	self checkAllScenariosSync.
 ]
 
 { #category : #'private - initialization' }

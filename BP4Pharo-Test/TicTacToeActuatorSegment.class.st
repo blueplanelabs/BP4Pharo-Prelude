@@ -22,7 +22,6 @@ TicTacToeActuatorSegment >> run: aBP4PProgram [
 			(aBP4PProgram lastEvent belongsTo: GenerateDetectWinScenariosEvent)
 				ifTrue:
 					[ "Generate the DetectXWin or DetectOWin with the possible segments available"
-					
 					lastPosition := aBP4PProgram lastEvent position.
 					typeOfMove := aBP4PProgram lastEvent type.
 					"Get the segments that are fully available according to the possiblePositions on TicTacToe"
@@ -37,5 +36,18 @@ TicTacToeActuatorSegment >> run: aBP4PProgram [
 							newScenario := scenarioType instanceToSegment: segment.
 							aBP4PProgram
 								add: newScenario priority: 10;
+								startScenario: newScenario ] ].
+			(aBP4PProgram lastEvent
+				belongsTo: GeneratePreventXWinScenariosEvent)
+				ifTrue:
+					[ "Generate the PreventXWin scenarios with the possible segments available"
+					lastPosition := aBP4PProgram lastEvent position.
+					segments := TicTacToeWithSegment
+						generateAvailabeSegmentsTo: lastPosition.
+					segments
+						do: [ :segment | 
+							newScenario := StrategyPreventXWinSegment instanceToSegment: segment.
+							aBP4PProgram
+								add: newScenario priority: 7;
 								startScenario: newScenario ] ] ]
 ]

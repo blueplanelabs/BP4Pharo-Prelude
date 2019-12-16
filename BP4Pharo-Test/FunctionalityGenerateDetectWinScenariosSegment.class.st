@@ -1,11 +1,11 @@
 Class {
-	#name : #FunctionalityGenerateWinScenariosSegment,
+	#name : #FunctionalityGenerateDetectWinScenariosSegment,
 	#superclass : #BP4PEnvironmentScenario,
 	#category : #'BP4Pharo-Test-TicTacToe-SegmentBased'
 }
 
 { #category : #initialize }
-FunctionalityGenerateWinScenariosSegment >> run: aBP4PProgram [
+FunctionalityGenerateDetectWinScenariosSegment >> run: aBP4PProgram [
 	"Generate DetectXWin or DetectOWin scenarios to be monitored with the possible segments for each move"
 
 	| move generateDetectWinScenarios newScenario|
