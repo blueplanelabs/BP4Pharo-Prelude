@@ -1,5 +1,5 @@
 Class {
-	#name : #GeneratePreventXWinScenariosEvent,
+	#name : #GenerateForceOWinScenariosEvent,
 	#superclass : #BP4PEvent,
 	#instVars : [
 		'position',
@@ -9,33 +9,33 @@ Class {
 }
 
 { #category : #'instance creation' }
-GeneratePreventXWinScenariosEvent class >> position: aPosition priority: aPriority [
+GenerateForceOWinScenariosEvent class >> position: aPosition priority: aPriority [
 	^ self new position: aPosition priority: aPriority 
 ]
 
 { #category : #'instance creation' }
-GeneratePreventXWinScenariosEvent >> defaultName [
-	^ 'PreventXWin(' , position name , ')'
+GenerateForceOWinScenariosEvent >> defaultName [
+	^ 'ForceOWin(' , position name , ')'
 ]
 
 { #category : #'instance creation' }
-GeneratePreventXWinScenariosEvent >> name [
+GenerateForceOWinScenariosEvent >> name [
 	^ name
 		ifNil: [ name := self defaultName ]
 ]
 
 { #category : #api }
-GeneratePreventXWinScenariosEvent >> position [
+GenerateForceOWinScenariosEvent >> position [
 	^ position
 ]
 
 { #category : #accessing }
-GeneratePreventXWinScenariosEvent >> position: aPosition priority: aPriority [
+GenerateForceOWinScenariosEvent >> position: aPosition priority: aPriority [
 	position := aPosition.
 	priority:= aPriority 
 ]
 
 { #category : #api }
-GeneratePreventXWinScenariosEvent >> priority [
+GenerateForceOWinScenariosEvent >> priority [
 	^ priority
 ]

@@ -371,6 +371,80 @@ TicTacToeWithSegment class >> enforceTurnProof [
 ]
 
 { #category : #running }
+TicTacToeWithSegment class >> forceOWinSegmentCompletedProof [
+	| bp segment p1 p2 p3 p4 |
+	p1 := Position x: 1 y: 1.
+	p2 := Position x: 2 y: 1.
+	p3 := Position x: 3 y: 1.
+	p4 := Position x: 4 y: 1.
+	segment := Set new
+		add: (Position x: 1 y: 1);
+		add: (Position x: 2 y: 1);
+		add: (Position x: 3 y: 1);
+		add: (Position x: 4 y: 1);
+		yourself.
+	BP4PEnvironmentScenario initialize.
+	bp := BP4PProgram new.
+	bp
+		add:
+			(StrategyForceOWinSegment
+				initialize;
+				instanceToSegment: segment)
+		priority: 3.
+	bp start.
+	(Delay forSeconds: 1) wait.
+	BP4PEnvironment send: (OEvent position: p1) toProgram: bp.
+	(Delay forSeconds: 1) wait.
+	BP4PEnvironment send: (OEvent position: p3) toProgram: bp.
+	(Delay forSeconds: 1) wait.
+	BP4PEnvironment send: (OEvent position: p4) toProgram: bp.
+	(Delay forSeconds: 1) wait.
+	bp lastEvent = (OEvent position: p2)
+		ifTrue: [ Transcript
+				crShow: '========================Correct Proof========================' ]
+		ifFalse: [ Transcript
+				crShow: '========================Incorrect Proof========================' ].
+	bp stop.
+	^ bp
+]
+
+{ #category : #running }
+TicTacToeWithSegment class >> forceOWinSegmentInterruptedProof [
+	| bp segment p1 p2 p3 p4 scenario |
+	p1 := Position x: 1 y: 1.
+	p2 := Position x: 2 y: 1.
+	p3 := Position x: 3 y: 1.
+	p4 := Position x: 4 y: 1.
+	segment := Set new
+		add: p1;
+		add: p2;
+		add: p3;
+		add: p4;
+		yourself.
+	scenario := StrategyForceOWinSegment
+		initialize;
+		instanceToSegment: segment.
+	BP4PEnvironmentScenario initialize.
+	bp := BP4PProgram new.
+	bp add: scenario priority: 3.
+	bp start.
+	(Delay forSeconds: 1) wait.
+	BP4PEnvironment send: (OEvent position: p1) toProgram: bp.
+	(Delay forSeconds: 1) wait.
+	BP4PEnvironment send: (OEvent position: p2) toProgram: bp.
+	(Delay forSeconds: 1) wait.
+	BP4PEnvironment send: (XEvent position: p3) toProgram: bp.
+	(Delay forSeconds: 1) wait.
+	(bp scenarios  includes: scenario)
+		ifFalse: [ Transcript
+				crShow: '========================Correct Proof========================' ]
+		ifTrue: [ Transcript
+				crShow: '========================Incorrect Proof========================' ].
+	bp stop.
+	^ bp
+]
+
+{ #category : #running }
 TicTacToeWithSegment class >> functionalityGenerateDetectWinScenariosProof [
 	| bp |
 	RulesDetectXWinSegment initialize.
@@ -399,6 +473,44 @@ TicTacToeWithSegment class >> functionalityGenerateDetectWinScenariosProof [
 	bp start.
 
 	"	bp stop."
+	^ bp
+]
+
+{ #category : #running }
+TicTacToeWithSegment class >> functionalityGenerateForceOWinScenariosProof [
+	| bp p1 scenarioNames |
+	p1 := Position x: 1 y: 1.
+	self axesSize: 4 segmentSize: 4.
+	scenarioNames := Set new
+		add: 'StrategyForceOWinSegment0';
+		add: 'StrategyForceOWinSegment1';
+		add: 'StrategyForceOWinSegment2';
+		yourself.
+	BP4PEnvironmentScenario initialize.
+	bp := BP4PProgram new.
+	bp
+		add:
+			(TicTacToeActuatorSegment
+				initialize;
+				instance)
+		priority: 2.
+	bp
+		add:
+			(FunctionalityGenerateForceOWinScenariosSegment
+				initialize;
+				instanceWithGeneratedScenariosPriority: 6)
+		priority: 3.
+	bp start.
+	(Delay forSeconds: 1) wait.
+	BP4PEnvironment send: (OEvent position: p1) toProgram: bp.
+	(Delay forSeconds: 1) wait.
+	((bp scenarios collect: [ :scenario | scenario name ]) asSet
+		includesAll: scenarioNames)
+		ifTrue: [ Transcript
+				crShow: '========================Correct Proof========================' ]
+		ifFalse: [ Transcript
+				crShow: '========================Incorrect Proof========================' ].
+	bp stop.
 	^ bp
 ]
 

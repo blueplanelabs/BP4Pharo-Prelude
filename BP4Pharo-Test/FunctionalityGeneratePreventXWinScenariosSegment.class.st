@@ -1,8 +1,31 @@
 Class {
 	#name : #FunctionalityGeneratePreventXWinScenariosSegment,
 	#superclass : #BP4PEnvironmentScenario,
+	#instVars : [
+		'generatedScenarioPriority'
+	],
 	#category : #'BP4Pharo-Test-TicTacToe-SegmentBased'
 }
+
+{ #category : #creation }
+FunctionalityGeneratePreventXWinScenariosSegment class >> instanceWithGeneratedScenariosPriority: aPriority [
+	"create a instance with a priority for the generated scenarios"
+
+	| scenario |
+	scenario := self instance.
+	scenario generatedScenarioPriority: aPriority.
+	^ scenario
+]
+
+{ #category : #accessing }
+FunctionalityGeneratePreventXWinScenariosSegment >> generatedScenarioPriority [ 
+^generatedScenarioPriority 
+]
+
+{ #category : #accessing }
+FunctionalityGeneratePreventXWinScenariosSegment >> generatedScenarioPriority: aPriority [
+	generatedScenarioPriority := aPriority 
+]
 
 { #category : #initialize }
 FunctionalityGeneratePreventXWinScenariosSegment >> run: aBP4PProgram [
@@ -19,7 +42,7 @@ FunctionalityGeneratePreventXWinScenariosSegment >> run: aBP4PProgram [
 		startScenario: newScenario.
 	"Request a GeneratePreventXWinScenariosEvent"
 	generatePreventXWinScenarios := GeneratePreventXWinScenariosEvent
-		position: aBP4PProgram lastEvent position.
+		position: aBP4PProgram lastEvent position priority: self generatedScenarioPriority .
 	aBP4PProgram
 		syncRequested: generatePreventXWinScenarios
 		waited: none

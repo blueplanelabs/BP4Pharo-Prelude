@@ -3,16 +3,15 @@ Class {
 	#superclass : #BP4PEvent,
 	#instVars : [
 		'position',
-		'type'
+		'type',
+		'priority'
 	],
 	#category : #'BP4Pharo-Test-TicTacToe-SegmentBased'
 }
 
 { #category : #'instance creation' }
-GenerateDetectWinScenariosEvent class >> position: aPosition type: aXEventClassOrYEventClass [
-	^ self new
-		position: aPosition
-		type: aXEventClassOrYEventClass
+GenerateDetectWinScenariosEvent class >> position: aPosition type: aXEventClassOrYEventClass priority: aPriority [
+	^ self new position: aPosition type: aXEventClassOrYEventClass priority: aPriority 
 ]
 
 { #category : #'instance creation' }
@@ -32,17 +31,18 @@ GenerateDetectWinScenariosEvent >> position [
 ]
 
 { #category : #accessing }
-GenerateDetectWinScenariosEvent >> position: aPosition type: aXEventClassOrYEventClass [
+GenerateDetectWinScenariosEvent >> position: aPosition type: aXEventClassOrYEventClass priority: aPriority [
 	position := aPosition.
-	type:= aXEventClassOrYEventClass
+	type := aXEventClassOrYEventClass.
+	priority:= aPriority 
+]
+
+{ #category : #accessing }
+GenerateDetectWinScenariosEvent >> priority [
+	^ priority
 ]
 
 { #category : #accessing }
 GenerateDetectWinScenariosEvent >> type [
 	^type
-]
-
-{ #category : #accessing }
-GenerateDetectWinScenariosEvent >> type: anObject [
-	type := anObject
 ]

@@ -39,12 +39,13 @@ BP4PProgram >> add: aScenario [
 BP4PProgram >> add: aScenario priority: aPriority [
 	| addedScenarioAnnouncement |
 	aScenario announcer: self announcer.
+	aScenario priority: aPriority .
 	self processes
 		add:
 			aScenario
 				->
 					([ aScenario valuable value: self ] newProcess
-						priority: DefaultProcessPriority ;
+						priority: DefaultProcessPriority;
 						name: aScenario name;
 						yourself).
 	addedScenarioAnnouncement := BP4PAddedScenarioAnnouncement
@@ -126,6 +127,13 @@ BP4PProgram >> removeProcess: aBP4PEndScenarioAnnouncement [
 
 	"Trace"
 	Transcript crShow: 'Removed process for ' , endedScenarioName asString
+]
+
+{ #category : #api }
+BP4PProgram >> scenarios [
+	"Return the scenarios in the BP4PProgram"
+
+	^self processes keys select: [ :e | e isKindOf: BP4PScenario  ]
 ]
 
 { #category : #api }
