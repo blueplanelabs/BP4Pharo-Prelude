@@ -93,7 +93,11 @@ BP4PAuctionner >> selectEvent: aBP4PAllScenariosSyncAnnouncement [
 	selectedEvent isNone
 		ifTrue: [ Transcript crShow: 'ALL SCENARIOS SYNC AND NONE EVENT REQUESTED' ].
 	"Trace for show selected Event"
-	Transcript crShow: '===============================Selected Event ' , selectedEvent printString, '====================================='.
+	Transcript
+		crShow:
+			'===============================Selected Event '
+				, selectedEvent printString
+				, '====================================='.
 	announcer
-		announce: (BP4PSelectedEventAnnouncement event: selectedEvent)
+		announce: selectedEvent
 ]

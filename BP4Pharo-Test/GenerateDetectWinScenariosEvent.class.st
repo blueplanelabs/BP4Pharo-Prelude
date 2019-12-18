@@ -16,7 +16,7 @@ GenerateDetectWinScenariosEvent class >> position: aPosition type: aXEventClassO
 
 { #category : #'instance creation' }
 GenerateDetectWinScenariosEvent >> defaultName [
-	^ 'DetectWin((' , position name , '),' , type name , ')'
+	^ 'DetectWin((' , position name , '),' , type name , ' , ', priority asString ,')'
 ]
 
 { #category : #'instance creation' }

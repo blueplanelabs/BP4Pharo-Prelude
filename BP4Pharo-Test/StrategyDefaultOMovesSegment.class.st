@@ -1,27 +1,43 @@
 Class {
 	#name : #StrategyDefaultOMovesSegment,
 	#superclass : #BP4PEnvironmentScenario,
+	#instVars : [
+		'defaultPositions'
+	],
 	#category : #'BP4Pharo-Test-TicTacToe-SegmentBased'
 }
+
+{ #category : #accessing }
+StrategyDefaultOMovesSegment >> defaultPositions [
+^defaultPositions ifNil: [ defaultPositions  := TicTacToeWithSegment possiblePositions
+		asOrderedCollection.
+	defaultPositions
+		sort: [ :a :b | 
+			(TicTacToeWithSegment numAvailabeSegmentsTo: a)
+				> (TicTacToeWithSegment numAvailabeSegmentsTo: b) ]. ]
+
+]
+
+{ #category : #initialize }
+StrategyDefaultOMovesSegment >> printOn: aStream [
+	super printOn: aStream.
+	aStream nextPutAll: ' with '.
+	self defaultPositions  printOn: aStream
+]
 
 { #category : #initialize }
 StrategyDefaultOMovesSegment >> run: aBP4PProgram [
 	"Request all possible moves - as default moves in the following order of center, corners and edges."
 
-	| desiredPositions move |
+	|  move |
 	move := BP4PEventsOfClass class: MoveEvent.
-	desiredPositions := TicTacToeWithSegment possiblePositions
-		asOrderedCollection.
-	[ desiredPositions isEmpty ]
+
+	[ self defaultPositions  isEmpty ]
 		whileFalse:
 			[ "Request a O move by default priority and wait any move. Remove the selected move from the desiredPositions"
-			desiredPositions
-				sort: [ :a :b | 
-					(TicTacToeWithSegment numAvailabeSegmentsTo: a)
-						> (TicTacToeWithSegment numAvailabeSegmentsTo: b) ].
 			aBP4PProgram
-				syncRequested: (OEvent position: desiredPositions first)
+				syncRequested: (OEvent position: self defaultPositions  first)
 				waited: move
 				blocked: none.
-			desiredPositions remove: aBP4PProgram lastEvent position ]
+			self defaultPositions  remove: aBP4PProgram lastEvent position ]
 ]

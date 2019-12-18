@@ -19,6 +19,11 @@ Position >> asPoint [
 	^ Point x: x y: y
 ]
 
+{ #category : #comparing }
+Position >> asSymbol [
+	^('position_' , self name) asSymbol
+]
+
 { #category : #testing }
 Position >> isAlienatedWith: aPosition and: anotherPosition [
 	^ (self triangleArea: aPosition with: anotherPosition) isZero

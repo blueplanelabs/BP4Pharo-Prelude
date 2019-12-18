@@ -1,6 +1,6 @@
 Class {
 	#name : #BP4PEventSetInterface,
-	#superclass : #Object,
+	#superclass : #Announcement,
 	#instVars : [
 		'name'
 	],

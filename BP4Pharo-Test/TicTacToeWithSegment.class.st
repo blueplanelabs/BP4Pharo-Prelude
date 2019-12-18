@@ -549,7 +549,8 @@ TicTacToeWithSegment class >> generateAvailabeSegmentsTo: aPosition [
 	"Get the segments that are fully available according to the possiblePositions on TicTacToe"
 
 	| segments |
-	(TicTacToeWithSegment possiblePositions includes: aPosition) ifFalse: [ ^nil ].
+"	(TicTacToeWithSegment possiblePositions includes: aPosition)
+		ifFalse: [ ^ nil ]."
 	segments := Set new.
 	1 to: self segmentSize do: [ :i | 
 		| horizontalSegment verticalSegment firstDiagonal secondDiagonal |
@@ -726,13 +727,67 @@ TicTacToeWithSegment class >> preventXWinSegmentInterruptedProof [
 
 { #category : #running }
 TicTacToeWithSegment class >> run [
-	"TO RUN: write in Playground 
-bp:=TicTacToeExample preventThridXProof.
-Repeat in each X move(player)
-BP4PEnvironment send: ((xmoves at: 1) at: 1) toProgram: bp.
-bp stop."
+	| bp |
+	BP4PEnvironmentScenario initialize.
+	bp := BP4PProgram new.
+	bp
+		add:
+			(UserMove
+				initialize;
+				instance)
+		priority: 0.5.
+	bp
+		add:
+			(RulesSquareTakenSegment
+				initialize;
+				instance)
+		priority: 1.
+	bp
+		add:
+			(TicTacToeActuatorSegment
+				initialize;
+				instance)
+		priority: 2.
+	bp
+		add:
+			(RulesEnforceTurns
+				initialize;
+				instance)
+		priority: 3.
+	bp
+		add:
+			(FunctionalityGenerateDetectWinScenariosSegment
+				initialize;
+				instanceWithGeneratedScenariosPriority: 10)
+		priority: 4.
+	bp
+		add:
+			(RulesDetectDrawSegment
+				initialize;
+				instance)
+		priority: 5.
+	bp
+		add:
+			(StrategyDefaultOMovesSegment
+				initialize;
+				instance)
+		priority: 12.
+	"	bp
+		add:
+			(StrategyPreventThridXPossiblePositions
+				initialize;
+				instance)
+		priority: 7.
+	bp
+		add:
+			(StrategyAddThridOPossiblePositions
+				initialize;
+				instance)
+		priority: 6."
+	bp start.
 
-	self runAxesSize: self axesSize
+	"	bp stop."
+	^ bp
 ]
 
 { #category : #running }

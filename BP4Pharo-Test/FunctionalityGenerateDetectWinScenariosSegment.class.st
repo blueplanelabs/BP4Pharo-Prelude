@@ -8,7 +8,7 @@ Class {
 }
 
 { #category : #creation }
-FunctionalityGenerateDetectWinScenariosSegment class >> instanceWithGeneratedScenariosPriority: aPriority [
+FunctionalityGenerateDetectWinScenariosSegment class >> instanceWithGeneratedScenariosPriority:  aPriority [
 	"create a instance with a priority for the generated scenarios"
 
 	| scenario |
@@ -36,7 +36,7 @@ FunctionalityGenerateDetectWinScenariosSegment >> run: aBP4PProgram [
 	"Wait for any move for a given square"
 	aBP4PProgram syncRequested: none waited: move blocked: none.
 	"Add a new scenario like this to wait and block again a new move. PRECHART"
-	newScenario := self class instance.
+	newScenario := self class instance generatedScenarioPriority: self generatedScenarioPriority .
 	aBP4PProgram
 		add: newScenario priority: self priority;
 		startScenario: newScenario.
@@ -44,7 +44,7 @@ FunctionalityGenerateDetectWinScenariosSegment >> run: aBP4PProgram [
 	generateDetectWinScenarios := GenerateDetectWinScenariosEvent
 		position: aBP4PProgram lastEvent position
 		type: aBP4PProgram lastEvent class
-		priority: self generatedScenarioPriority .
+		priority: self generatedScenarioPriority.
 	aBP4PProgram
 		syncRequested: generateDetectWinScenarios
 		waited: none

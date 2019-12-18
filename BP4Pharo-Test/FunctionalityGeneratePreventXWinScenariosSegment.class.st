@@ -36,13 +36,14 @@ FunctionalityGeneratePreventXWinScenariosSegment >> run: aBP4PProgram [
 	"Wait for any move for a given square"
 	aBP4PProgram syncRequested: none waited: xmove blocked: none.
 	"Add a new scenario like this to wait and block again a new move. PRECHART"
-	newScenario := self class instance.
+	newScenario := self class instance generatedScenarioPriority: self generatedScenarioPriority .
 	aBP4PProgram
 		add: newScenario priority: 7;
 		startScenario: newScenario.
 	"Request a GeneratePreventXWinScenariosEvent"
 	generatePreventXWinScenarios := GeneratePreventXWinScenariosEvent
-		position: aBP4PProgram lastEvent position priority: self generatedScenarioPriority .
+		position: aBP4PProgram lastEvent position
+		priority: self generatedScenarioPriority.
 	aBP4PProgram
 		syncRequested: generatePreventXWinScenarios
 		waited: none

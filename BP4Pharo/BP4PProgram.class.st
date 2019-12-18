@@ -174,6 +174,13 @@ BP4PProgram >> stop [
 ]
 
 { #category : #api }
+BP4PProgram >> subscribe: aBP4PEventClass do: aValuable [
+	self announcer
+		subscribe: aBP4PEventClass
+		do: aValuable
+]
+
+{ #category : #api }
 BP4PProgram >> syncRequested: rEvents waited: wEvents blocked: bEvents [
 	| syncScenarioAnnouncement scenario continue outOfSyncScenarioAnnouncement continueProcessSubscription scenarioProcess |
 	continue := false.

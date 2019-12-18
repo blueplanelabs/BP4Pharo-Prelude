@@ -88,33 +88,12 @@ BP4PController >> createSubscriptions [
 		subscribe: BP4PSynchronizedScenarioAnnouncement
 		send: #syncScenario:
 		to: self.
-	announcer
-		subscribe: BP4POutOfSyncScenarioAnnouncement
-		send: #outOfSyncScenario:
-		to: self.
+
 	announcer
 		subscribe: BP4PEndScenarioAnnouncement
 		send: #removeScenario:
 		to: self.
-	announcer
-		subscribe: BP4PSelectedEventAnnouncement
-		send: #updateScenariosStates:
-		to: self
-]
-
-{ #category : #'private-actions' }
-BP4PController >> outOfSyncScenario: aBP4POutOfSyncScenarioAnnouncement [
-	"change the synchronized value of scenario to false in the map scenarios"
-
-	| scenarioName |
-	scenarioName := aBP4POutOfSyncScenarioAnnouncement scenario.
-	scenarios
-		at: scenarioName
-		put: ((scenarios at: scenarioName) synchronized: false).
-		
-	"Trace"
-	Transcript
-		crShow: 'Received ' , aBP4POutOfSyncScenarioAnnouncement printString
+	announcer subscribe: BP4PEvent send: #updateScenariosStates: to: self
 ]
 
 { #category : #'private-actions' }
@@ -170,18 +149,18 @@ BP4PController >> syncScenario: aBP4PSynchronizedScenarioAnnouncement [
 ]
 
 { #category : #'private-actions' }
-BP4PController >> updateScenariosStates: aBP4PSelectedEventAnnouncement [
+BP4PController >> updateScenariosStates: aBP4PEvent [
 	"	Change to usync scenariosState whose scenario has this event requested or waited. "
 
-	| selectedEvent |
-	selectedEvent := aBP4PSelectedEventAnnouncement event.
-	selectedEvent isNone
-		ifTrue: [ ^self ].
-	  scenarios
-				do: [ :scenarioState | 
-					(scenarioState isProgressedWithEvent: selectedEvent)
-						ifTrue: [ scenarioState unsynchronize ] ] .
+
+
+	aBP4PEvent isNone
+		ifTrue: [ ^ self ].
+	scenarios
+		do: [ :scenarioState | 
+			(scenarioState isProgressedWithEvent: aBP4PEvent)
+				ifTrue: [ scenarioState unsynchronize ] ].
 	Transcript crShow: 'Announced changedScenariosStates'.
 	self announcer
-		announce: (BP4PChangedScenariosStatesAnnouncement event: selectedEvent)
+		announce: (BP4PChangedScenariosStatesAnnouncement event: aBP4PEvent)
 ]

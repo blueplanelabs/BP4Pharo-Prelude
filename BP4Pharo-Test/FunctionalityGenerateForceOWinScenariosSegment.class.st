@@ -36,9 +36,9 @@ FunctionalityGenerateForceOWinScenariosSegment >> run: aBP4PProgram [
 	"Wait for any Oevent"
 	aBP4PProgram syncRequested: none waited: omove blocked: none.
 	"Add a new scenario like this to wait again a new OEvent. PRECHART"
-	newScenario := self class instance.
+	newScenario := self class instance generatedScenarioPriority: self generatedScenarioPriority .
 	aBP4PProgram
-		add: newScenario priority: self priority ;
+		add: newScenario priority: self priority;
 		startScenario: newScenario.
 	"Request a GenerateForceOWinScenariosEvent"
 	generateForceOWinScenarios := GenerateForceOWinScenariosEvent

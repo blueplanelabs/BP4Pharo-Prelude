@@ -8,7 +8,8 @@ Class {
 		'segmentField',
 		'creationButton',
 		'finishButton',
-		'screen'
+		'screen',
+		'bp'
 	],
 	#category : #'BP4Pharo-Test-TicTacToe-GUI'
 }
@@ -53,6 +54,22 @@ TicTacToeCreationForm >> axesLabel: anObject [
 ]
 
 { #category : #accessing }
+TicTacToeCreationForm >> bp [
+	^ bp
+]
+
+{ #category : #accessing }
+TicTacToeCreationForm >> bp: anObject [
+	bp := anObject
+]
+
+{ #category : #'private ' }
+TicTacToeCreationForm >> createdGameLabelText [
+	^ 'Created TicTacToe with Axes Size: ' , self axesField text
+						, ' , Segment Size: ' , self segmentField text
+]
+
+{ #category : #accessing }
 TicTacToeCreationForm >> creationButton [
 	^ creationButton
 ]
@@ -60,6 +77,11 @@ TicTacToeCreationForm >> creationButton [
 { #category : #accessing }
 TicTacToeCreationForm >> creationButton: anObject [
 	creationButton := anObject
+]
+
+{ #category : #'private ' }
+TicTacToeCreationForm >> defaultLabelText [
+^'Waiting to Create a TicTacToe ...'.
 ]
 
 { #category : #api }
@@ -80,10 +102,7 @@ TicTacToeCreationForm >> finishButton: anObject [
 { #category : #initialization }
 TicTacToeCreationForm >> initializePresenter [
 	creationButton
-		action: [ screen
-				label:
-					'Created TicTacToe with Axes Size: ' , axesField text , ' , Segment Size: '
-						, segmentField text.
+		action: [ screen label: self createdGameLabelText.
 			axesLabel disable.
 			axesField disable.
 			segmentLabel disable.
@@ -92,8 +111,17 @@ TicTacToeCreationForm >> initializePresenter [
 			finishButton enable.
 			TicTacToeWithSegment
 				axesSize: axesField text asInteger
-				segmentSize: segmentField text asInteger ].
-	finishButton action: [  ]
+				segmentSize: segmentField text asInteger.
+			self bp: TicTacToeWithSegment run ].
+	finishButton
+		action: [ screen label: self defaultLabelText.
+			axesLabel enable.
+			axesField enable.
+			segmentLabel enable.
+			segmentField enable.
+			creationButton enable.
+			finishButton disable.
+			bp stop ]
 ]
 
 { #category : #initialization }
@@ -117,7 +145,7 @@ TicTacToeCreationForm >> initializeWidgets [
 	finishButton
 		label: 'Finish';
 		disable.
-	screen label: 'Waiting to Create a TicTacToe ...'.
+	screen label: self defaultLabelText.
 
 	"specification of order of focus"
 	self focusOrder
@@ -158,4 +186,14 @@ TicTacToeCreationForm >> segmentLabel [
 { #category : #accessing }
 TicTacToeCreationForm >> segmentLabel: anObject [
 	segmentLabel := anObject
+]
+
+{ #category : #initialization }
+TicTacToeCreationForm >> whenGameCreatedDo: aBlock [
+creationButton whenActionPerformedDo: aBlock
+]
+
+{ #category : #initialization }
+TicTacToeCreationForm >> whenGameFinishedDo: aBlock [
+	finishButton whenActionPerformedDo: aBlock
 ]
