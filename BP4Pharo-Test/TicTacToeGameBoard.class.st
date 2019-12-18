@@ -41,8 +41,6 @@ TicTacToeGameBoard >> gameTokens: anObject [
 
 { #category : #initialization }
 TicTacToeGameBoard >> initializeWidgets [
-
-
 	self gameTokens
 		do: [ :position | 
 			| presenter |
@@ -51,7 +49,7 @@ TicTacToeGameBoard >> initializeWidgets [
 				action: [ BP4PEnvironment
 						send: (ClickEvent position: position)
 						toProgram: self bp ].
-			self assign: presenter to: position name asSymbol ]
+			self assign: presenter to: ('position_',position name) asSymbol ]
 ]
 
 { #category : #accessing }
@@ -59,12 +57,11 @@ TicTacToeGameBoard >> layout [
 	| row index |
 	index := 1.
 	row := SpecRowLayout composed.
-	self gameTokens do: [ :position | row add: position name asSymbol  ].
-"	1 to: TicTacToeWithSegment axesSize do: [ :i | 
+	1 to: TicTacToeWithSegment axesSize do: [ :i | 
 		row
 			newColumn: [ :column | 
 				1 to: TicTacToeWithSegment axesSize do: [ :j | 
-					column add: (self gameTokens at: index) name asSymbol.
-					index := index + 1 ] ] ]."
+					column add: ('position_',(self gameTokens at: index) name) asSymbol.
+					index := index + 1 ] ] ].
 	^ row
 ]

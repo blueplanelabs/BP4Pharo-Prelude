@@ -26,7 +26,7 @@ Position >> isAlienatedWith: aPosition and: anotherPosition [
 
 { #category : #comparing }
 Position >> name [
-	^x asString , ',' , y asString
+	^ x asString , '_' , y asString
 ]
 
 { #category : #transforming }
