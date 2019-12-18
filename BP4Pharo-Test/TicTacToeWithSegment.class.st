@@ -772,18 +772,19 @@ TicTacToeWithSegment class >> run [
 				initialize;
 				instance)
 		priority: 12.
-	"	bp
-		add:
-			(StrategyPreventThridXPossiblePositions
-				initialize;
-				instance)
-		priority: 7.
 	bp
 		add:
-			(StrategyAddThridOPossiblePositions
+			(FunctionalityGenerateForceOWinScenariosSegment
 				initialize;
-				instance)
-		priority: 6."
+				instanceWithGeneratedScenariosPriority: 10)
+		priority: 6.
+		bp
+		add:
+			(FunctionalityGeneratePreventXWinScenariosSegment 
+				initialize;
+				instanceWithGeneratedScenariosPriority: 11)
+		priority: 7.
+
 	bp start.
 
 	"	bp stop."
