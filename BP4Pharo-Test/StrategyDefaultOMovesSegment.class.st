@@ -1,6 +1,6 @@
 Class {
 	#name : #StrategyDefaultOMovesSegment,
-	#superclass : #BP4PEnvironmentScenario,
+	#superclass : #BP4PScenario,
 	#instVars : [
 		'defaultPositions'
 	],

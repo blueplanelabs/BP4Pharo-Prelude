@@ -1,6 +1,6 @@
 Class {
 	#name : #StrategyPreventXWinSegment,
-	#superclass : #BP4PEnvironmentScenario,
+	#superclass : #BP4PScenario,
 	#instVars : [
 		'segment'
 	],
@@ -21,7 +21,9 @@ StrategyPreventXWinSegment class >> instanceToSegment: aSegment [
 StrategyPreventXWinSegment >> printOn: aStream [
 	super printOn: aStream.
 	aStream nextPutAll: ' for segment '.
-	self segment printOn: aStream
+	self firstSegment printOn: aStream.
+	aStream nextPutAll: ' and segment '.
+	self secondSegment printOn: aStream.
 ]
 
 { #category : #initialize }

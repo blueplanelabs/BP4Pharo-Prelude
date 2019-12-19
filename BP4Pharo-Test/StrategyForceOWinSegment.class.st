@@ -1,6 +1,6 @@
 Class {
 	#name : #StrategyForceOWinSegment,
-	#superclass : #BP4PEnvironmentScenario,
+	#superclass : #BP4PScenario,
 	#instVars : [
 		'segment'
 	],

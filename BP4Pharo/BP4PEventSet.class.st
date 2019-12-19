@@ -69,6 +69,11 @@ BP4PEventSet >> includesEvent: anEvent [
 ]
 
 { #category : #accessing }
+BP4PEventSet >> isEmpty [
+	^ self set isEmpty or: [self set allSatisfy: [ :e | e isNone ]]
+]
+
+{ #category : #accessing }
 BP4PEventSet >> isNone [
 	^ self set allSatisfy: [ :e | e isNone ]
 ]
@@ -110,6 +115,11 @@ BP4PEventSet >> set [
 	events isEmptyOrNil
 		ifTrue: [ events := Set with: BP4PEvent none ].
 ^		events
+]
+
+{ #category : #accessing }
+BP4PEventSet >> size [
+	^ self set size
 ]
 
 { #category : #'instance creation' }

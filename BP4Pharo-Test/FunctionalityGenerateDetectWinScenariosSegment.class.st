@@ -1,6 +1,6 @@
 Class {
 	#name : #FunctionalityGenerateDetectWinScenariosSegment,
-	#superclass : #BP4PEnvironmentScenario,
+	#superclass : #BP4PScenario,
 	#instVars : [
 		'generatedScenarioPriority'
 	],
@@ -36,7 +36,7 @@ FunctionalityGenerateDetectWinScenariosSegment >> run: aBP4PProgram [
 	"Wait for any move for a given square"
 	aBP4PProgram syncRequested: none waited: move blocked: none.
 	"Add a new scenario like this to wait and block again a new move. PRECHART"
-	newScenario := self class instance generatedScenarioPriority: self generatedScenarioPriority .
+	newScenario := self class instanceWithGeneratedScenariosPriority: self generatedScenarioPriority.
 	aBP4PProgram
 		add: newScenario priority: self priority;
 		startScenario: newScenario.

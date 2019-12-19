@@ -1,6 +1,6 @@
 Class {
 	#name : #RulesDetectXWinSegment,
-	#superclass : #BP4PEnvironmentScenario,
+	#superclass : #BP4PScenario,
 	#instVars : [
 		'segment'
 	],

@@ -910,6 +910,161 @@ TicTacToeWithSegment class >> squareTakenSegmentProof [
 	^ bp
 ]
 
+{ #category : #running }
+TicTacToeWithSegment class >> strategyPreventXForkTwoIntersectedSegmentsCompletedProof [
+	| bp segment1 segment2 p1 p2 p3 p4 p5 p6 p7 p8 |
+	TicTacToeWithSegment axesSize: 5 segmentSize: 5.
+	"firstSegment"
+	p1 := Position x: 1 y: 1.
+	p2 := Position x: 2 y: 1.
+	p3 := Position x: 3 y: 1.
+	p4 := Position x: 4 y: 1.
+	segment1 := Set new
+		add: p1;
+		add: p2;
+		add: p3;
+		add: p4;
+		yourself.
+	"secondSegment"
+	p5 := Position x: 3 y: 1.
+	p6 := Position x: 3 y: 2.
+	p7 := Position x: 3 y: 3.
+	p8 := Position x: 3 y: 4.
+	segment2 := Set new
+		add: p5;
+		add: p6;
+		add: p7;
+		add: p8;
+		yourself.
+	BP4PEnvironmentScenario initialize.
+	bp := BP4PProgram new.
+	bp
+		add:
+			(StrategyPreventXForkTwoIntersectedSegments
+				initialize;
+				instanceToSegment: segment1 andSegment: segment2)
+		priority: 3.
+	bp start.
+	(Delay forSeconds: 1) wait.
+	BP4PEnvironment send: (XEvent position: p1) toProgram: bp.
+	(Delay forSeconds: 1) wait.
+	BP4PEnvironment send: (XEvent position: p6) toProgram: bp.
+	(Delay forSeconds: 1) wait.
+	BP4PEnvironment send: (XEvent position: p2) toProgram: bp.
+	(Delay forSeconds: 1) wait.
+	BP4PEnvironment send: (XEvent position: p7) toProgram: bp.
+	(Delay forSeconds: 3) wait.
+	bp lastEvent = (OEvent position: p3)
+		ifTrue: [ Transcript
+				crShow: '========================Correct Proof========================' ]
+		ifFalse: [ Transcript
+				crShow: '========================Incorrect Proof========================' ].
+	bp stop.
+	^ bp
+]
+
+{ #category : #running }
+TicTacToeWithSegment class >> strategyPreventXForkTwoIntersectedSegmentsInterruptedByMoveIntersectionProof [
+	| bp segment1 segment2 p1 p2 p3 p4 p5 p6 p7 p8 scenario |
+	TicTacToeWithSegment axesSize: 5 segmentSize: 5.
+	"firstSegment"
+	p1 := Position x: 1 y: 1.
+	p2 := Position x: 2 y: 1.
+	p3 := Position x: 3 y: 1.
+	p4 := Position x: 4 y: 1.
+	segment1 := Set new
+		add: p1;
+		add: p2;
+		add: p3;
+		add: p4;
+		yourself.
+	"secondSegment"
+	p5 := Position x: 3 y: 1.
+	p6 := Position x: 3 y: 2.
+	p7 := Position x: 3 y: 3.
+	p8 := Position x: 3 y: 4.
+	segment2 := Set new
+		add: p5;
+		add: p6;
+		add: p7;
+		add: p8;
+		yourself.
+	BP4PEnvironmentScenario initialize.
+	bp := BP4PProgram new.
+	scenario := StrategyPreventXForkTwoIntersectedSegments
+		initialize;
+		instanceToSegment: segment1 andSegment: segment2.
+	bp add: scenario priority: 3.
+	bp start.
+	(Delay forSeconds: 1) wait.
+	BP4PEnvironment send: (XEvent position: p1) toProgram: bp.
+	(Delay forSeconds: 1) wait.
+	BP4PEnvironment send: (XEvent position: p6) toProgram: bp.
+	(Delay forSeconds: 1) wait.
+	BP4PEnvironment send: (XEvent position: p3) toProgram: bp.
+	(Delay forSeconds: 1) wait.
+	BP4PEnvironment send: (XEvent position: p7) toProgram: bp.
+	(Delay forSeconds: 3) wait.
+	(bp processes keys includes: scenario)
+		ifFalse: [ Transcript
+				crShow: '========================Correct Proof========================' ]
+		ifTrue: [ Transcript
+				crShow: '========================Incorrect Proof========================' ].
+	bp stop.
+	^ bp
+]
+
+{ #category : #running }
+TicTacToeWithSegment class >> strategyPreventXForkTwoIntersectedSegmentsInterruptedByOProof [
+	| bp segment1 segment2 p1 p2 p3 p4 p5 p6 p7 p8 scenario |
+	TicTacToeWithSegment axesSize: 5 segmentSize: 5.
+	"firstSegment"
+	p1 := Position x: 1 y: 1.
+	p2 := Position x: 2 y: 1.
+	p3 := Position x: 3 y: 1.
+	p4 := Position x: 4 y: 1.
+	segment1 := Set new
+		add: p1;
+		add: p2;
+		add: p3;
+		add: p4;
+		yourself.
+	"secondSegment"
+	p5 := Position x: 3 y: 1.
+	p6 := Position x: 3 y: 2.
+	p7 := Position x: 3 y: 3.
+	p8 := Position x: 3 y: 4.
+	segment2 := Set new
+		add: p5;
+		add: p6;
+		add: p7;
+		add: p8;
+		yourself.
+	BP4PEnvironmentScenario initialize.
+	bp := BP4PProgram new.
+	scenario := StrategyPreventXForkTwoIntersectedSegments
+		initialize;
+		instanceToSegment: segment1 andSegment: segment2.
+	bp add: scenario priority: 3.
+	bp start.
+	(Delay forSeconds: 1) wait.
+	BP4PEnvironment send: (XEvent position: p1) toProgram: bp.
+	(Delay forSeconds: 1) wait.
+	BP4PEnvironment send: (XEvent position: p6) toProgram: bp.
+	(Delay forSeconds: 1) wait.
+	BP4PEnvironment send: (XEvent position: p2) toProgram: bp.
+	(Delay forSeconds: 1) wait.
+	BP4PEnvironment send: (XEvent position: p7) toProgram: bp.
+	(Delay forSeconds: 3) wait.
+	(bp processes keys includes: scenario)
+		ifFalse: [ Transcript
+				crShow: '========================Correct Proof========================' ]
+		ifTrue: [ Transcript
+				crShow: '========================Incorrect Proof========================' ].
+	bp stop.
+	^ bp
+]
+
 { #category : #api }
 TicTacToeWithSegment class >> takePosition: aPosition [
 	possiblePositions
