@@ -15,7 +15,7 @@ GenerateForceOWinScenariosEvent class >> position: aPosition priority: aPriority
 
 { #category : #'instance creation' }
 GenerateForceOWinScenariosEvent >> defaultName [
-	^ 'ForceOWin(' , position name , ')'
+	^ 'ForceOWin(' , position name , ' , ', priority asString , ')'
 ]
 
 { #category : #'instance creation' }

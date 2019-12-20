@@ -21,9 +21,8 @@ StrategyPreventXWinSegment class >> instanceToSegment: aSegment [
 StrategyPreventXWinSegment >> printOn: aStream [
 	super printOn: aStream.
 	aStream nextPutAll: ' for segment '.
-	self firstSegment printOn: aStream.
-	aStream nextPutAll: ' and segment '.
-	self secondSegment printOn: aStream.
+	self segment printOn: aStream.
+
 ]
 
 { #category : #initialize }

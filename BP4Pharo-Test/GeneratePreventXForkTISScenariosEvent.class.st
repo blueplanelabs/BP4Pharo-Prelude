@@ -16,7 +16,8 @@ GeneratePreventXForkTISScenariosEvent class >> position: aPosition segments: aSe
 
 { #category : #'instance creation' }
 GeneratePreventXForkTISScenariosEvent >> defaultName [
-	^ 'PreventXWin(' , position name , ')'
+	^ 'PreventXFork(position:' , position name , ',segments:' , segments asString , ',priority:'
+		, priority asString , ')'
 ]
 
 { #category : #'instance creation' }

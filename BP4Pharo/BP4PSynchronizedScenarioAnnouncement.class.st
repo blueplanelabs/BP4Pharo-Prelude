@@ -27,7 +27,7 @@ BP4PSynchronizedScenarioAnnouncement >> blockedEvents [
 BP4PSynchronizedScenarioAnnouncement >> printOn: aStream [
 	super printOn: aStream.
 	aStream nextPutAll: ' with scenario '.
-	scenario printOn: aStream.
+	scenario  printOn: aStream.
 	aStream nextPutAll: ' request '.
 	requestedEvents printOn: aStream.
 	aStream nextPutAll: ' wait '.

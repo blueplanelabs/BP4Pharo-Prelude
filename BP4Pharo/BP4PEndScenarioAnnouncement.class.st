@@ -18,7 +18,7 @@ BP4PEndScenarioAnnouncement class >> scenario: aScenarioName [
 BP4PEndScenarioAnnouncement >> printOn: aStream [
 	super printOn: aStream.
 	aStream nextPutAll: ' with scenario '.
-	scenarioName printOn: aStream
+	scenarioName  printOn: aStream
 ]
 
 { #category : #accessing }

@@ -15,7 +15,7 @@ GeneratePreventXWinScenariosEvent class >> position: aPosition priority: aPriori
 
 { #category : #'instance creation' }
 GeneratePreventXWinScenariosEvent >> defaultName [
-	^ 'PreventXWin(' , position name , ')'
+	^ 'PreventXWin(' , position name , ' , ' , priority asString , ')'
 ]
 
 { #category : #'instance creation' }

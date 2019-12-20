@@ -772,7 +772,7 @@ TicTacToeWithSegment class >> run [
 				initialize;
 				instance)
 		priority: 30.
-	bp
+"	bp
 		add:
 			(FunctionalityGenerateForceOWinScenariosSegment
 				initialize;
@@ -783,12 +783,12 @@ TicTacToeWithSegment class >> run [
 			(FunctionalityGeneratePreventXWinScenariosSegment
 				initialize;
 				instanceWithGeneratedScenariosPriority: 21)
-		priority: 11.
-	bp 
-		add: 
-			(FunctionalityGeneratePreventXForkTISScenariosSegment 
+		priority: 11."
+	bp
+		add:
+			(FunctionalityGeneratePreventXForkTISScenariosSegment
 				initialize;
-				instanceWithGeneratedScenariosPriority:22)
+				instanceWithGeneratedScenariosPriority: 22)
 		priority: 12.
 	bp start.
 

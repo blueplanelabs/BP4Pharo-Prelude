@@ -31,7 +31,7 @@ FunctionalityGeneratePreventXForkTISScenariosSegment >> generatedScenarioPriorit
 FunctionalityGeneratePreventXForkTISScenariosSegment >> run: aBP4PProgram [
 	"Generate PreventXForkTwoIntersectedSegments scenarios to be monitored with the available segments intersected for each X move and following X moves"
 
-	| move xmove originalXMove newScenario originalXSegments generatePreventXForkTISScenarios |
+	| move xmove originalXMove originalXSegments newScenario generatePreventXForkTISScenarios |
 	move := BP4PEventsOfClass class: MoveEvent.
 	xmove := BP4PEventsOfClass class: XEvent.
 	"Wait for any X move"
@@ -47,12 +47,12 @@ FunctionalityGeneratePreventXForkTISScenariosSegment >> run: aBP4PProgram [
 	originalXSegments := TicTacToeWithSegment
 		generateAvailabeSegmentsTo: originalXMove position.
 	"Wait for following moves until no segments size>=2"
-	(originalXSegments anySatisfy: [ :segment | segment size >= 2 ])
+	[ originalXSegments anySatisfy: [ :segment | segment size >= 2 ] ]
 		whileTrue: [ aBP4PProgram syncRequested: none waited: move blocked: none.
 			"If O move update the available original X segments. Some segment can have been anulated"
 			(aBP4PProgram lastEvent belongsTo: OEvent)
-				ifTrue: [ originalXSegments := TicTacToeWithSegment
-						generateAvailabeSegmentsTo: originalXMove position ].
+				ifTrue: [ originalXSegments := originalXSegments
+						select: [ :segment | segment noneSatisfy: [ :p | p=aBP4PProgram lastEvent position] ] ].
 			"If X move update the positions of available original segments and request GeneratePreventXForkTISScenariosEvent"
 			(aBP4PProgram lastEvent belongsTo: XEvent)
 				ifTrue: [ originalXSegments

@@ -189,23 +189,20 @@ BP4PProgram >> syncRequested: rEvents waited: wEvents blocked: bEvents [
 
 	"Create subscription to change the state of the process that has the scenario execution in an async form by evaluate if the selectedEvent is in requested or waited. If is true, lets resume"
 	continueProcessSubscription := [ :selectedEvent | 
-
 	continue := rEvents , wEvents includesEvent: selectedEvent event.
 	continue
 		ifTrue: [ scenarioProcess = Processor activeProcess effectiveProcess
 				ifFalse: [ "This is not the process of the scenario execution. Resumes it"
 					Transcript
 						crShow:
-							'Resumed process ' , scenarioProcess printString , ' '
-								, scenarioProcess name.
+							'Resumed ' , scenarioProcess printString , ' scenario: ' , scenario printString.
 					scenarioProcess resume ]
 				ifTrue: [ "This is the same process of the scenario execution"
 					"scenarioProcess isSuspended"
 					Transcript
 						crShow:
-							'Progress process ' , scenarioProcess printString , ' '
-								, scenarioProcess name ] ]
-		ifFalse: [ Transcript crShow: 'NOT Progress ' , scenario printString ] ].
+							'Progress ' , scenarioProcess printString , ' scenario: ' , scenario printString ] ]
+		ifFalse: [ Transcript crShow: 'NOT Progress ' ,scenarioProcess printString , ' scenario: ', scenario printString ] ].
 	self announcer
 		when: BP4PLastEventSettedAnnouncement
 		send: #value:
