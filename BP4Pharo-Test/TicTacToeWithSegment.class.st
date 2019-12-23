@@ -742,7 +742,7 @@ TicTacToeWithSegment class >> run [
 				initialize;
 				instance)
 		priority: 1.
-	bp
+		bp
 		add:
 			(TicTacToeActuatorSegment
 				initialize;
@@ -754,7 +754,7 @@ TicTacToeWithSegment class >> run [
 				initialize;
 				instance)
 		priority: 3.
-	bp
+		bp
 		add:
 			(FunctionalityGenerateDetectWinScenariosSegment
 				initialize;
@@ -772,7 +772,7 @@ TicTacToeWithSegment class >> run [
 				initialize;
 				instance)
 		priority: 30.
-"	bp
+		bp
 		add:
 			(FunctionalityGenerateForceOWinScenariosSegment
 				initialize;
@@ -783,7 +783,7 @@ TicTacToeWithSegment class >> run [
 			(FunctionalityGeneratePreventXWinScenariosSegment
 				initialize;
 				instanceWithGeneratedScenariosPriority: 21)
-		priority: 11."
+		priority: 11.
 	bp
 		add:
 			(FunctionalityGeneratePreventXForkTISScenariosSegment

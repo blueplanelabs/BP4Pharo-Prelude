@@ -50,6 +50,19 @@ BP4PController >> auctionner [
 ]
 
 { #category : #'private-actions' }
+BP4PController >> changeScenarioPriority: aBP4PChangedScenarioPriorityAnnouncement [
+	""
+
+	(self scenarios
+		at: aBP4PChangedScenarioPriorityAnnouncement scenario)
+		priority: aBP4PChangedScenarioPriorityAnnouncement priority.
+
+	"Trace"
+	Transcript
+		crShow: 'Received ' , aBP4PChangedScenarioPriorityAnnouncement printString
+]
+
+{ #category : #'private-actions' }
 BP4PController >> checkAllScenariosSync [
 	"	Check if all the scenarios are sync.
 		Called when each synchronizedScenarioAnnouncement arrived.
@@ -85,10 +98,13 @@ BP4PController >> createSubscriptions [
 		send: #addScenario:
 		to: self.
 	announcer
+		subscribe: BP4PChangedScenarioPriorityAnnouncement
+		send: #changeScenarioPriority:
+		to: self.
+	announcer
 		subscribe: BP4PSynchronizedScenarioAnnouncement
 		send: #syncScenario:
 		to: self.
-
 	announcer
 		subscribe: BP4PEndScenarioAnnouncement
 		send: #removeScenario:

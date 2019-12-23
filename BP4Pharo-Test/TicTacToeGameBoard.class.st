@@ -41,10 +41,10 @@ TicTacToeGameBoard >> bp: anObject [
 TicTacToeGameBoard >> createSubscriptions [
 	self bp
 		subscribe: XEvent
-		do: [ :xevent | (self widgets at: xevent position asSymbol) label: 'X' ].
+		do: [ :xevent | (xevent position asSymbol value: self) label: 'X' ].
 	self bp
 		subscribe: OEvent
-		do: [ :oevent | (self widgets at: oevent position asSymbol) label: 'O' ]
+		do: [ :oevent | (oevent position asSymbol value: self) label: 'O' ]
 ]
 
 { #category : #api }

@@ -88,6 +88,24 @@ BP4PProgram >> createSubscriptions [
 		to: self
 ]
 
+{ #category : #api }
+BP4PProgram >> increasePriority: aPriorityIncrease toScenario: aScenario [
+	| changedScenarioPriority newPriority |
+	"Remember bigger priority smaller value"
+	newPriority := aScenario priority - aPriorityIncrease.
+	self processes
+		keysDo: [ :k | 
+			k = aScenario
+				ifTrue: [ aScenario priority: newPriority ] ].
+	changedScenarioPriority := BP4PChangedScenarioPriorityAnnouncement
+		scenario: aScenario name
+		priority: newPriority.
+	"Trace for show the announcement"
+	Transcript
+		crShow: 'Announced ' , changedScenarioPriority printString.
+	scenarioAnnouncer announce: changedScenarioPriority
+]
+
 { #category : #initialization }
 BP4PProgram >> initialize [
 	super initialize.
