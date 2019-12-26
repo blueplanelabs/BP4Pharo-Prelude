@@ -16,6 +16,12 @@ TicTacToePlayground class >> defaultSpec [
 	yourself
 ]
 
+{ #category : #playing }
+TicTacToePlayground class >> play [ 
+<script>
+TicTacToePlayground new openWithSpec 
+]
+
 { #category : #accessing }
 TicTacToePlayground >> creation [
 	^ creation
@@ -67,6 +73,11 @@ TicTacToePlayground >> initializeWidgets [
 	
 	"widget configuration"
  
+]
+
+{ #category : #api }
+TicTacToePlayground >> title [ 
+^'TicTacToe'
 ]
 
 { #category : #accessing }

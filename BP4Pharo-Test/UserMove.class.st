@@ -8,10 +8,16 @@ Class {
 UserMove >> run: aBP4PProgram [
 	"Handle ClickEvent."
 
-	| click xmove |
+	| click xmove newScenario|
 	click := BP4PEventsOfClass class: ClickEvent.
-	[ true ] whileTrue: [
 	aBP4PProgram syncRequested: none waited: click blocked: none.
-	xmove := XEvent position: aBP4PProgram lastEvent position.
-	aBP4PProgram syncRequested: xmove waited: none blocked: none]
+	"Add a new scenario like this to wait again a new ClickEvent. PRECHART"
+	newScenario := self class
+		instance.
+	aBP4PProgram
+		add: newScenario priority: self priority;
+		startScenario: newScenario.
+	"Request a XEvent in the ClickEventPosition"
+			xmove := XEvent position: aBP4PProgram lastEvent position.
+			aBP4PProgram syncRequested: xmove waited: none blocked: none.
 ]

@@ -90,6 +90,44 @@ TicTacToeWithSegment class >> axesSize: anInteger segmentSize: anotherInteger [
 ]
 
 { #category : #running }
+TicTacToeWithSegment class >> completeSegmentCompletedProof [
+	| bp segment p1 p2 p3 p4 |
+	p1 := Position x: 1 y: 1.
+	p2 := Position x: 2 y: 1.
+	p3 := Position x: 3 y: 1.
+	p4 := Position x: 4 y: 1.
+	segment := Set new
+		add: (Position x: 1 y: 1);
+		add: (Position x: 2 y: 1);
+		add: (Position x: 3 y: 1);
+		add: (Position x: 4 y: 1);
+		yourself.
+	BP4PEnvironmentScenario initialize.
+	bp := BP4PProgram new.
+	bp
+		add:
+			(StrategyCompleteOSegment
+				initialize;
+				instanceToSegment: segment)
+		priority: 3.
+	bp start.
+	(Delay forSeconds: 1) wait.
+	BP4PEnvironment send: (OEvent position: p1) toProgram: bp.
+	(Delay forSeconds: 1) wait.
+	BP4PEnvironment send: (OEvent position: p3) toProgram: bp.
+	(Delay forSeconds: 1) wait.
+	BP4PEnvironment send: (OEvent position: p4) toProgram: bp.
+	(Delay forSeconds: 1) wait.
+(	(bp lastEvent = (OEvent position: p2)) and: [ (bp scenarioPriority: self) = 3-(0.01*3) ])
+		ifTrue: [ Transcript
+				crShow: '========================Correct Proof========================' ]
+		ifFalse: [ Transcript
+				crShow: '========================Incorrect Proof========================' ].
+	bp stop.
+	^ bp
+]
+
+{ #category : #running }
 TicTacToeWithSegment class >> defaultOMovesProof [
 	| bp  |
 	BP4PEnvironmentScenario initialize.
@@ -742,7 +780,7 @@ TicTacToeWithSegment class >> run [
 				initialize;
 				instance)
 		priority: 1.
-		bp
+	bp
 		add:
 			(TicTacToeActuatorSegment
 				initialize;
@@ -754,7 +792,7 @@ TicTacToeWithSegment class >> run [
 				initialize;
 				instance)
 		priority: 3.
-		bp
+	bp
 		add:
 			(FunctionalityGenerateDetectWinScenariosSegment
 				initialize;
@@ -766,13 +804,8 @@ TicTacToeWithSegment class >> run [
 				initialize;
 				instance)
 		priority: 5.
+
 	bp
-		add:
-			(StrategyDefaultOMovesSegment
-				initialize;
-				instance)
-		priority: 30.
-		bp
 		add:
 			(FunctionalityGenerateForceOWinScenariosSegment
 				initialize;
@@ -790,6 +823,12 @@ TicTacToeWithSegment class >> run [
 				initialize;
 				instanceWithGeneratedScenariosPriority: 22)
 		priority: 12.
+	bp
+		add:
+			(StrategyDefaultOMovesSegment
+				initialize;
+				instance)
+		priority: 30.
 	bp start.
 
 	"	bp stop."

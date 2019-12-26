@@ -65,6 +65,19 @@ TicTacToeActuatorSegment >> run: aBP4PProgram [
 							aBP4PProgram
 								add: newScenario priority: priorityToGenerate;
 								startScenario: newScenario ] ].
+			(lastEvent belongsTo: GenerateCompleteOSegmentScenariosEvent )
+				ifTrue:
+					[ "Generate the CompleteOSegment scenarios with the possible segments avaible"
+					lastPosition := lastEvent position.
+					priorityToGenerate := lastEvent priority.
+					segments := TicTacToeWithSegment
+						generateAvailabeSegmentsTo: lastPosition.
+					segments
+						do: [ :segment | 
+							newScenario := StrategyCompleteOSegment  instanceToSegment: segment.
+							aBP4PProgram
+								add: newScenario priority: priorityToGenerate;
+								startScenario: newScenario ] ].
 			(lastEvent belongsTo: GeneratePreventXForkTISScenariosEvent)
 				ifTrue:
 					[ "Generate the PreventXForkTwoIntersectedSegments possible with segments and worked position received"
@@ -82,6 +95,7 @@ TicTacToeActuatorSegment >> run: aBP4PProgram [
 												instanceToSegment: oxs
 												andSegment: wxs.
 											priorityToGenerate := lastEvent priority.
-											aBP4PProgram add: newScenario priority: priorityToGenerate	;
-												startScenario: newScenario "intersectedSegments add: (Array with: oxs with: wxs)" ] ] ] ] ]
+											aBP4PProgram
+												add: newScenario priority: priorityToGenerate;
+												startScenario: newScenario	"intersectedSegments add: (Array with: oxs with: wxs)" ] ] ] ] ]
 ]

@@ -148,6 +148,18 @@ BP4PProgram >> removeProcess: aBP4PEndScenarioAnnouncement [
 ]
 
 { #category : #api }
+BP4PProgram >> scenarioPriority: aScenario [
+	"Return the priority of a scenario in the bprogram"
+	
+
+	self processes
+		keysDo: [ :k | 
+			k = aScenario
+				ifTrue: [ ^aScenario priority ] ].
+
+]
+
+{ #category : #api }
 BP4PProgram >> scenarios [
 	"Return the scenarios in the BP4PProgram"
 
