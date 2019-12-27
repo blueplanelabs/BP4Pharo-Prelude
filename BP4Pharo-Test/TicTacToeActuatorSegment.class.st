@@ -37,7 +37,7 @@ TicTacToeActuatorSegment >> run: aBP4PProgram [
 						do: [ :segment | 
 							newScenario := scenarioType instanceToSegment: segment.
 							aBP4PProgram
-								add: newScenario priority: priorityToGenerate;
+								addScenario: newScenario withPriority: priorityToGenerate;
 								startScenario: newScenario ] ].
 			(lastEvent belongsTo: GeneratePreventXWinScenariosEvent)
 				ifTrue:
@@ -50,7 +50,7 @@ TicTacToeActuatorSegment >> run: aBP4PProgram [
 						do: [ :segment | 
 							newScenario := StrategyPreventXWinSegment instanceToSegment: segment.
 							aBP4PProgram
-								add: newScenario priority: priorityToGenerate;
+								addScenario: newScenario withPriority: priorityToGenerate;
 								startScenario: newScenario ] ].
 			(lastEvent belongsTo: GenerateForceOWinScenariosEvent)
 				ifTrue:
@@ -63,7 +63,7 @@ TicTacToeActuatorSegment >> run: aBP4PProgram [
 						do: [ :segment | 
 							newScenario := StrategyForceOWinSegment instanceToSegment: segment.
 							aBP4PProgram
-								add: newScenario priority: priorityToGenerate;
+								addScenario: newScenario withPriority: priorityToGenerate;
 								startScenario: newScenario ] ].
 			(lastEvent belongsTo: GenerateCompleteOSegmentScenariosEvent )
 				ifTrue:
@@ -76,7 +76,7 @@ TicTacToeActuatorSegment >> run: aBP4PProgram [
 						do: [ :segment | 
 							newScenario := StrategyCompleteOSegment  instanceToSegment: segment.
 							aBP4PProgram
-								add: newScenario priority: priorityToGenerate;
+								addScenario: newScenario withPriority: priorityToGenerate;
 								startScenario: newScenario ] ].
 			(lastEvent belongsTo: GeneratePreventXForkTISScenariosEvent)
 				ifTrue:
@@ -96,6 +96,6 @@ TicTacToeActuatorSegment >> run: aBP4PProgram [
 												andSegment: wxs.
 											priorityToGenerate := lastEvent priority.
 											aBP4PProgram
-												add: newScenario priority: priorityToGenerate;
+												addScenario: newScenario withPriority: priorityToGenerate;
 												startScenario: newScenario	"intersectedSegments add: (Array with: oxs with: wxs)" ] ] ] ] ]
 ]

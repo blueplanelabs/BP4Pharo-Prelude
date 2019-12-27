@@ -39,7 +39,7 @@ FunctionalityGeneratePreventXWinScenariosSegment >> run: aBP4PProgram [
 	newScenario := self class
 		instanceWithGeneratedScenariosPriority: self generatedScenarioPriority.
 	aBP4PProgram
-		add: newScenario priority: self priority;
+		addScenario: newScenario withPriority: self priority;
 		startScenario: newScenario.
 	"Request a GeneratePreventXWinScenariosEvent"
 	generatePreventXWinScenarios := GeneratePreventXWinScenariosEvent

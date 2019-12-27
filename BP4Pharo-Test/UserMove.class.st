@@ -15,7 +15,7 @@ UserMove >> run: aBP4PProgram [
 	newScenario := self class
 		instance.
 	aBP4PProgram
-		add: newScenario priority: self priority;
+		addScenario: newScenario withPriority: self priority;
 		startScenario: newScenario.
 	"Request a XEvent in the ClickEventPosition"
 			xmove := XEvent position: aBP4PProgram lastEvent position.

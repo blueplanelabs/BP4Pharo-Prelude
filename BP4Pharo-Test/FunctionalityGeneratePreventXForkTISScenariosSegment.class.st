@@ -40,7 +40,7 @@ FunctionalityGeneratePreventXForkTISScenariosSegment >> run: aBP4PProgram [
 	newScenario := self class
 		instanceWithGeneratedScenariosPriority: self generatedScenarioPriority.
 	aBP4PProgram
-		add: newScenario priority: self priority;
+		addScenario: newScenario withPriority: self priority;
 		startScenario: newScenario.
 	"Keep the available segments for the original X move position"
 	originalXMove := aBP4PProgram lastEvent.

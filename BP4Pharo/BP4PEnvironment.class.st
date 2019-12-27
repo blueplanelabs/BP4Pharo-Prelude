@@ -13,6 +13,6 @@ BP4PEnvironment class >> send: anEvent toProgram: aBP4PProgram [
 	"Create a scenario with event requested"
 	scenario := BP4PEnvironmentScenario
 		instanceWithValuable: [ :bp | bp syncRequested: anEvent waited: none blocked: none ].
-	aBP4PProgram add: scenario priority: 100.
+	aBP4PProgram addScenario: scenario withPriority: 100.
 	aBP4PProgram startScenario: scenario
 ]

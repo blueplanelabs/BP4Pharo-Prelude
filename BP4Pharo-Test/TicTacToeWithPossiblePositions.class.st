@@ -15,59 +15,59 @@ TicTacToeWithPossiblePositions class >> addThridOProof [
 	BP4PEnvironmentScenario initialize.
 	bp := BP4PProgram new.
 	bp
-		add:
+		addScenario:
 			(UserMove
 				initialize;
 				instance)
-		priority: 0.5.
+		withPriority: 0.5.
 	bp
-		add:
+		addScenario:
 			(RulesSquareTakenPossiblePositions
 				initialize;
 				instance)
-		priority: 1.
+		withPriority: 1.
 	bp
-		add:
+		addScenario:
 			(RulesEnforceTurns
 				initialize;
 				instance)
-		priority: 2.
+		withPriority: 2.
 	bp
-		add:
+		addScenario:
 			(RulesDetectXWinPossiblePositions
 				initialize;
 				instance)
-		priority: 3.
+		withPriority: 3.
 	bp
-		add:
+		addScenario:
 			(RulesDetectOWinPossiblePositions
 				initialize;
 				instance)
-		priority: 4.
+		withPriority: 4.
 	bp
-		add:
+		addScenario:
 			(RulesDetectDrawPossiblePositions
 				initialize;
 				instance)
-		priority: 5.
+		withPriority: 5.
 	bp
-		add:
+		addScenario:
 			(StrategyAddThridOPossiblePositions
 				initialize;
 				instance)
-		priority: 6.
+		withPriority: 6.
 	bp
-		add:
+		addScenario:
 			(StrategyPreventThridXPossiblePositions
 				initialize;
 				instance)
-		priority: 7.
+		withPriority: 7.
 	bp
-		add:
+		addScenario:
 			(StrategyDefaultOMovesPossiblePositions
 				initialize;
 				instance)
-		priority: 12.
+		withPriority: 12.
 
 	bp start.
 
@@ -96,47 +96,47 @@ TicTacToeWithPossiblePositions class >> defaultOMovesProof [
 	BP4PEnvironmentScenario initialize.
 	bp := BP4PProgram new.
 	bp
-		add:
+		addScenario:
 			(UserMove
 				initialize;
 				instance)
-		priority: 0.5.
+		withPriority: 0.5.
 	bp
-		add:
+		addScenario:
 			(RulesSquareTakenPossiblePositions
 				initialize;
 				instance)
-		priority: 1.
+		withPriority: 1.
 	bp
-		add:
+		addScenario:
 			(RulesEnforceTurns
 				initialize;
 				instance)
-		priority: 2.
+		withPriority: 2.
 	bp
-		add:
+		addScenario:
 			(RulesDetectXWinPossiblePositions
 				initialize;
 				instance)
-		priority: 3.
+		withPriority: 3.
 	bp
-		add:
+		addScenario:
 			(RulesDetectOWinPossiblePositions
 				initialize;
 				instance)
-		priority: 4.
+		withPriority: 4.
 	bp
-		add:
+		addScenario:
 			(RulesDetectDrawPossiblePositions
 				initialize;
 				instance)
-		priority: 5.
+		withPriority: 5.
 	bp
-		add:
+		addScenario:
 			(StrategyDefaultOMovesPossiblePositions
 				initialize;
 				instance)
-		priority: 12.
+		withPriority: 12.
 	bp start.
 
 	"	bp stop."
@@ -160,41 +160,41 @@ TicTacToeWithPossiblePositions class >> detectDrawProof [
 	BP4PEnvironmentScenario initialize.
 	bp := BP4PProgram new.
 	bp
-		add:
+		addScenario:
 			(UserMove
 				initialize;
 				instance)
-		priority: 0.5.
+		withPriority: 0.5.
 	bp
-		add:
+		addScenario:
 			(RulesSquareTakenPossiblePositions
 				initialize;
 				instance)
-		priority: 1.
+		withPriority: 1.
 	bp
-		add:
+		addScenario:
 			(RulesEnforceTurns
 				initialize;
 				instance)
-		priority: 2.
+		withPriority: 2.
 	bp
-		add:
+		addScenario:
 			(RulesDetectXWinPossiblePositions
 				initialize;
 				instance)
-		priority: 3.
+		withPriority: 3.
 	bp
-		add:
+		addScenario:
 			(RulesDetectOWinPossiblePositions
 				initialize;
 				instance)
-		priority: 4.
+		withPriority: 4.
 	bp
-		add:
+		addScenario:
 			(RulesDetectDrawPossiblePositions
 				initialize;
 				instance)
-		priority: 5.
+		withPriority: 5.
 	bp start.
 	(Delay forSeconds: 1) wait.
 	BP4PEnvironment send: ((xmoves at: 2) at: 2) toProgram: bp.
@@ -236,29 +236,29 @@ TicTacToeWithPossiblePositions class >> detectXWinProof [
 	BP4PEnvironmentScenario initialize.
 	bp := BP4PProgram new.
 	bp
-		add:
+		addScenario:
 			(UserMove
 				initialize;
 				instance)
-		priority: 0.5.
+		withPriority: 0.5.
 	bp
-		add:
+		addScenario:
 			(RulesSquareTakenPossiblePositions
 				initialize;
 				instance)
-		priority: 1.
+		withPriority: 1.
 	bp
-		add:
+		addScenario:
 			(RulesEnforceTurns
 				initialize;
 				instance)
-		priority: 2.
+		withPriority: 2.
 	bp
-		add:
+		addScenario:
 			(RulesDetectXWinPossiblePositions
 				initialize;
 				instance)
-		priority: 3.	bp start.
+		withPriority: 3.	bp start.
 	(Delay forSeconds: 1) wait.
 	BP4PEnvironment send: ((xmoves at: 1) at: 1) toProgram: bp.
 	(Delay forSeconds: 1) wait.
@@ -290,23 +290,23 @@ TicTacToeWithPossiblePositions class >> enforceTurnProof [
 	o01 := OEvent position: (Position x: 0 y: 1).
 	bp := BP4PProgram new.
 	bp
-		add:
+		addScenario:
 			(UserMove
 				initialize;
 				instance)
-		priority: 0.5.
+		withPriority: 0.5.
 	bp
-		add:
+		addScenario:
 			(RulesSquareTakenPossiblePositions
 				initialize;
 				instance)
-		priority: 1.
+		withPriority: 1.
 	bp
-		add:
+		addScenario:
 			(RulesEnforceTurns
 				initialize;
 				instance)
-		priority: 2.
+		withPriority: 2.
 	bp start.
 	(Delay forSeconds: 1) wait.
 	BP4PEnvironment send: x00 toProgram: bp.
@@ -335,53 +335,53 @@ TicTacToeWithPossiblePositions class >> preventThridXProof [
 	BP4PEnvironmentScenario initialize.
 	bp := BP4PProgram new.
 	bp
-		add:
+		addScenario:
 			(UserMove
 				initialize;
 				instance)
-		priority: 0.5.
+		withPriority: 0.5.
 	bp
-		add:
+		addScenario:
 			(RulesSquareTakenPossiblePositions
 				initialize;
 				instance)
-		priority: 1.
+		withPriority: 1.
 	bp
-		add:
+		addScenario:
 			(RulesEnforceTurns
 				initialize;
 				instance)
-		priority: 2.
+		withPriority: 2.
 	bp
-		add:
+		addScenario:
 			(RulesDetectXWinPossiblePositions
 				initialize;
 				instance)
-		priority: 3.
+		withPriority: 3.
 	bp
-		add:
+		addScenario:
 			(RulesDetectOWinPossiblePositions
 				initialize;
 				instance)
-		priority: 4.
+		withPriority: 4.
 	bp
-		add:
+		addScenario:
 			(RulesDetectDrawPossiblePositions
 				initialize;
 				instance)
-		priority: 5.
+		withPriority: 5.
 	bp
-		add:
+		addScenario:
 			(StrategyDefaultOMovesPossiblePositions
 				initialize;
 				instance)
-		priority: 12.
+		withPriority: 12.
 	bp
-		add:
+		addScenario:
 			(StrategyPreventThridXPossiblePositions
 				initialize;
 				instance)
-		priority: 7.
+		withPriority: 7.
 	bp start.
 
 	"	bp stop."
@@ -429,35 +429,35 @@ TicTacToeWithPossiblePositions class >> runAxesSize: anInteger [
 	BP4PEnvironmentScenario initialize.
 	bp := BP4PProgram new.
 	bp
-		add:
+		addScenario:
 			(RulesSquareTakenPossiblePositions
 				initialize;
 				instance)
-		priority: 1.
+		withPriority: 1.
 	bp
-		add:
+		addScenario:
 			(RulesEnforceTurns
 				initialize;
 				instance)
-		priority: 1.
+		withPriority: 1.
 	bp
-		add:
+		addScenario:
 			(RulesDetectXWinPossiblePositions
 				initialize;
 				instance)
-		priority: 1.
+		withPriority: 1.
 	bp
-		add:
+		addScenario:
 			(RulesDetectOWinPossiblePositions
 				initialize;
 				instance)
-		priority: 1.
+		withPriority: 1.
 	bp
-		add:
+		addScenario:
 			(RulesDetectDrawPossiblePositions 
 				initialize;
 				instance)
-		priority: 1.
+		withPriority: 1.
 	bp start.
 	(Delay forSeconds: 1) wait.
 	BP4PEnvironment send: ((xmoves at: 1) at: 1) toProgram: bp.

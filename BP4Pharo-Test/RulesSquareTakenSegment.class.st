@@ -15,7 +15,7 @@ RulesSquareTakenSegment >> run: aBP4PProgram [
 	"Add a new scenario like this to wait and block again a new move. PRECHART"
 	newScenario := self class instance.
 	aBP4PProgram
-		add: newScenario priority: self priority ;
+		addScenario: newScenario withPriority: self priority ;
 		startScenario: newScenario.
 	"Take the position in the posiblePositions of TicTacToe"
 	lastPosition := aBP4PProgram lastEvent position.

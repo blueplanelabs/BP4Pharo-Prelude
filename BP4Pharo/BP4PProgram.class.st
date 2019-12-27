@@ -32,11 +32,11 @@ BP4PProgram class >> initialize [
 
 { #category : #api }
 BP4PProgram >> add: aScenario [
-	^self add: aScenario priority: DefaultScenarioPriority
+	^self addScenario: aScenario withPriority: DefaultScenarioPriority
 ]
 
 { #category : #api }
-BP4PProgram >> add: aScenario priority: aPriority [
+BP4PProgram >> addScenario: aScenario withPriority: aPriority [
 	| addedScenarioAnnouncement |
 	aScenario announcer: self announcer.
 	aScenario priority: aPriority .
@@ -86,6 +86,18 @@ BP4PProgram >> createSubscriptions [
 		subscribe: BP4PEndScenarioAnnouncement
 		send: #removeProcess:
 		to: self
+]
+
+{ #category : #api }
+BP4PProgram >> getPriorityOfScenario: aScenario [
+	"Return the priority of a scenario in the bprogram"
+	
+
+	self processes
+		keysDo: [ :k | 
+			k = aScenario
+				ifTrue: [ ^aScenario priority ] ].
+
 ]
 
 { #category : #api }
@@ -145,18 +157,6 @@ BP4PProgram >> removeProcess: aBP4PEndScenarioAnnouncement [
 
 	"Trace"
 	Transcript crShow: 'Removed process for ' , endedScenarioName asString
-]
-
-{ #category : #api }
-BP4PProgram >> scenarioPriority: aScenario [
-	"Return the priority of a scenario in the bprogram"
-	
-
-	self processes
-		keysDo: [ :k | 
-			k = aScenario
-				ifTrue: [ ^aScenario priority ] ].
-
 ]
 
 { #category : #api }

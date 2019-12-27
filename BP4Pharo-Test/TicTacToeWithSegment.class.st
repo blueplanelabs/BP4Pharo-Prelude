@@ -15,59 +15,59 @@ TicTacToeWithSegment class >> addThridOProof [
 	BP4PEnvironmentScenario initialize.
 	bp := BP4PProgram new.
 	bp
-		add:
+		addScenario:
 			(UserMove
 				initialize;
 				instance)
-		priority: 0.5.
+		withPriority: 0.5.
 	bp
-		add:
+		addScenario:
 			(RulesSquareTakenPossiblePositions
 				initialize;
 				instance)
-		priority: 1.
+		withPriority: 1.
 	bp
-		add:
+		addScenario:
 			(RulesEnforceTurns
 				initialize;
 				instance)
-		priority: 2.
+		withPriority: 2.
 	bp
-		add:
+		addScenario:
 			(RulesDetectXWinPossiblePositions
 				initialize;
 				instance)
-		priority: 3.
+		withPriority: 3.
 	bp
-		add:
+		addScenario:
 			(RulesDetectOWinPossiblePositions
 				initialize;
 				instance)
-		priority: 4.
+		withPriority: 4.
 	bp
-		add:
+		addScenario:
 			(RulesDetectDrawPossiblePositions
 				initialize;
 				instance)
-		priority: 5.
+		withPriority: 5.
 	bp
-		add:
+		addScenario:
 			(StrategyDefaultOMovesPossiblePositions
 				initialize;
 				instance)
-		priority: 12.
+		withPriority: 12.
 	bp
-		add:
+		addScenario:
 			(StrategyPreventThridXPossiblePositions
 				initialize;
 				instance)
-		priority: 7.
+		withPriority: 7.
 	bp
-		add:
+		addScenario:
 			(StrategyAddThridOPossiblePositions
 				initialize;
 				instance)
-		priority: 6.
+		withPriority: 6.
 	bp start.
 
 	"	bp stop."
@@ -90,90 +90,52 @@ TicTacToeWithSegment class >> axesSize: anInteger segmentSize: anotherInteger [
 ]
 
 { #category : #running }
-TicTacToeWithSegment class >> completeSegmentCompletedProof [
-	| bp segment p1 p2 p3 p4 |
-	p1 := Position x: 1 y: 1.
-	p2 := Position x: 2 y: 1.
-	p3 := Position x: 3 y: 1.
-	p4 := Position x: 4 y: 1.
-	segment := Set new
-		add: (Position x: 1 y: 1);
-		add: (Position x: 2 y: 1);
-		add: (Position x: 3 y: 1);
-		add: (Position x: 4 y: 1);
-		yourself.
-	BP4PEnvironmentScenario initialize.
-	bp := BP4PProgram new.
-	bp
-		add:
-			(StrategyCompleteOSegment
-				initialize;
-				instanceToSegment: segment)
-		priority: 3.
-	bp start.
-	(Delay forSeconds: 1) wait.
-	BP4PEnvironment send: (OEvent position: p1) toProgram: bp.
-	(Delay forSeconds: 1) wait.
-	BP4PEnvironment send: (OEvent position: p3) toProgram: bp.
-	(Delay forSeconds: 1) wait.
-	BP4PEnvironment send: (OEvent position: p4) toProgram: bp.
-	(Delay forSeconds: 1) wait.
-(	(bp lastEvent = (OEvent position: p2)) and: [ (bp scenarioPriority: self) = 3-(0.01*3) ])
-		ifTrue: [ Transcript
-				crShow: '========================Correct Proof========================' ]
-		ifFalse: [ Transcript
-				crShow: '========================Incorrect Proof========================' ].
-	bp stop.
-	^ bp
-]
-
-{ #category : #running }
 TicTacToeWithSegment class >> defaultOMovesProof [
 	| bp  |
 	BP4PEnvironmentScenario initialize.
 	bp := BP4PProgram new.
 	bp
-		add:
+		addScenario:
 			(UserMove
 				initialize;
 				instance)
-		priority: 0.5.
+		withPriority: 0.5.
 	bp
-		add:
+		addScenario:
 			(RulesSquareTakenPossiblePositions
 				initialize;
 				instance)
-		priority: 1.
+		withPriority: 1.
 	bp
-		add:
+		addScenario:
 			(RulesEnforceTurns
 				initialize;
 				instance)
-		priority: 2.
+		withPriority: 2.
 	bp
-		add:
+		addScenario:
 			(RulesDetectXWinPossiblePositions
 				initialize;
 				instance)
-		priority: 3.
+		withPriority: 3.
 	bp
-		add:
+		addScenario:
 			(RulesDetectOWinPossiblePositions
 				initialize;
 				instance)
-		priority: 4.
+		withPriority: 4.
 	bp
-		add:
+		addScenario:
 			(RulesDetectDrawPossiblePositions
 				initialize;
 				instance)
-		priority: 5.
+		withPriority: 5.
 	bp
-		add:
+		addScenario:
 			(StrategyDefaultOMovesPossiblePositions
 				initialize;
 				instance)
-		priority: 12.
+		withPriority: 12.
 	bp start.
 
 	"	bp stop."
@@ -197,41 +159,41 @@ TicTacToeWithSegment class >> detectDrawProof [
 	BP4PEnvironmentScenario initialize.
 	bp := BP4PProgram new.
 	bp
-		add:
+		addScenario:
 			(UserMove
 				initialize;
 				instance)
-		priority: 0.5.
+		withPriority: 0.5.
 	bp
-		add:
+		addScenario:
 			(RulesSquareTakenPossiblePositions
 				initialize;
 				instance)
-		priority: 1.
+		withPriority: 1.
 	bp
-		add:
+		addScenario:
 			(RulesEnforceTurns
 				initialize;
 				instance)
-		priority: 2.
+		withPriority: 2.
 	bp
-		add:
+		addScenario:
 			(RulesDetectXWinPossiblePositions
 				initialize;
 				instance)
-		priority: 3.
+		withPriority: 3.
 	bp
-		add:
+		addScenario:
 			(RulesDetectOWinPossiblePositions
 				initialize;
 				instance)
-		priority: 4.
+		withPriority: 4.
 	bp
-		add:
+		addScenario:
 			(RulesDetectDrawPossiblePositions
 				initialize;
 				instance)
-		priority: 5.
+		withPriority: 5.
 	bp start.
 	(Delay forSeconds: 1) wait.
 	BP4PEnvironment send: ((xmoves at: 2) at: 2) toProgram: bp.
@@ -265,11 +227,11 @@ TicTacToeWithSegment class >> detectOWinSegmentCompletedProof [
 	BP4PEnvironmentScenario initialize.
 	bp := BP4PProgram new.
 	bp
-		add:
+		addScenario:
 			(RulesDetectOWinSegment
 				initialize;
 				instanceToSegment: segment)
-		priority: 3.
+		withPriority: 3.
 	bp start.
 		(Delay forSeconds: 1) wait.
 	segment do: [ :position |
@@ -291,11 +253,11 @@ TicTacToeWithSegment class >> detectOWinSegmentInterruptedProof [
 	BP4PEnvironmentScenario initialize.
 	bp := BP4PProgram new.
 	bp
-		add:
+		addScenario:
 			(RulesDetectOWinSegment
 				initialize;
 				instanceToSegment: segment)
-		priority: 3.
+		withPriority: 3.
 	bp start.
 	(Delay forSeconds: 1) wait.
 	BP4PEnvironment
@@ -320,11 +282,11 @@ TicTacToeWithSegment class >> detectXWinSegmentCompletedProof [
 	BP4PEnvironmentScenario initialize.
 	bp := BP4PProgram new.
 	bp
-		add:
+		addScenario:
 			(RulesDetectXWinSegment
 				initialize;
 				instanceToSegment: segment)
-		priority: 3.
+		withPriority: 3.
 	bp start.
 	(Delay forSeconds: 1) wait.
 	segment
@@ -345,11 +307,11 @@ TicTacToeWithSegment class >> detectXWinSegmentInterruptedProof [
 	BP4PEnvironmentScenario initialize.
 	bp := BP4PProgram new.
 	bp
-		add:
+		addScenario:
 			(RulesDetectXWinSegment
 				initialize;
 				instanceToSegment: segment)
-		priority: 3.
+		withPriority: 3.
 	bp start.
 	(Delay forSeconds: 1) wait.
 	BP4PEnvironment
@@ -375,23 +337,23 @@ TicTacToeWithSegment class >> enforceTurnProof [
 	o01 := OEvent position: (Position x: 0 y: 1).
 	bp := BP4PProgram new.
 	bp
-		add:
+		addScenario:
 			(UserMove
 				initialize;
 				instance)
-		priority: 0.5.
+		withPriority: 0.5.
 	bp
-		add:
+		addScenario:
 			(RulesSquareTakenPossiblePositions
 				initialize;
 				instance)
-		priority: 1.
+		withPriority: 1.
 	bp
-		add:
+		addScenario:
 			(RulesEnforceTurns
 				initialize;
 				instance)
-		priority: 2.
+		withPriority: 2.
 	bp start.
 	(Delay forSeconds: 1) wait.
 	BP4PEnvironment send: x00 toProgram: bp.
@@ -424,11 +386,11 @@ TicTacToeWithSegment class >> forceOWinSegmentCompletedProof [
 	BP4PEnvironmentScenario initialize.
 	bp := BP4PProgram new.
 	bp
-		add:
+		addScenario:
 			(StrategyForceOWinSegment
 				initialize;
 				instanceToSegment: segment)
-		priority: 3.
+		withPriority: 3.
 	bp start.
 	(Delay forSeconds: 1) wait.
 	BP4PEnvironment send: (OEvent position: p1) toProgram: bp.
@@ -464,7 +426,7 @@ TicTacToeWithSegment class >> forceOWinSegmentInterruptedProof [
 		instanceToSegment: segment.
 	BP4PEnvironmentScenario initialize.
 	bp := BP4PProgram new.
-	bp add: scenario priority: 3.
+	bp addScenario: scenario withPriority: 3.
 	bp start.
 	(Delay forSeconds: 1) wait.
 	BP4PEnvironment send: (OEvent position: p1) toProgram: bp.
@@ -490,23 +452,23 @@ TicTacToeWithSegment class >> functionalityGenerateDetectWinScenariosProof [
 	BP4PEnvironmentScenario initialize.
 	bp := BP4PProgram new.
 	bp
-		add:
+		addScenario:
 			(RulesSquareTakenSegment
 				initialize;
 				instance)
-		priority: 1.
+		withPriority: 1.
 	bp
-		add:
+		addScenario:
 			(TicTacToeActuatorSegment
 				initialize;
 				instance)
-		priority: 2.
+		withPriority: 2.
 	bp
-		add:
+		addScenario:
 			(FunctionalityGenerateDetectWinScenariosSegment
 				initialize;
 				instance)
-		priority: 3.
+		withPriority: 3.
 
 	bp start.
 
@@ -527,17 +489,17 @@ TicTacToeWithSegment class >> functionalityGenerateForceOWinScenariosProof [
 	BP4PEnvironmentScenario initialize.
 	bp := BP4PProgram new.
 	bp
-		add:
+		addScenario:
 			(TicTacToeActuatorSegment
 				initialize;
 				instance)
-		priority: 2.
+		withPriority: 2.
 	bp
-		add:
+		addScenario:
 			(FunctionalityGenerateForceOWinScenariosSegment
 				initialize;
 				instanceWithGeneratedScenariosPriority: 6)
-		priority: 3.
+		withPriority: 3.
 	bp start.
 	(Delay forSeconds: 1) wait.
 	BP4PEnvironment send: (OEvent position: p1) toProgram: bp.
@@ -558,23 +520,23 @@ TicTacToeWithSegment class >> functionalityGeneratePreventXWinScenariosProof [
 	BP4PEnvironmentScenario initialize.
 	bp := BP4PProgram new.
 	bp
-		add:
+		addScenario:
 			(RulesSquareTakenSegment
 				initialize;
 				instance)
-		priority: 1.
+		withPriority: 1.
 	bp
-		add:
+		addScenario:
 			(TicTacToeActuatorSegment
 				initialize;
 				instance)
-		priority: 2.
+		withPriority: 2.
 	bp
-		add:
+		addScenario:
 			(FunctionalityGeneratePreventXWinScenariosSegment
 				initialize;
 				instance)
-		priority: 3.
+		withPriority: 3.
 	bp start.
 	
 
@@ -636,53 +598,53 @@ TicTacToeWithSegment class >> preventThridXProof [
 	BP4PEnvironmentScenario initialize.
 	bp := BP4PProgram new.
 	bp
-		add:
+		addScenario:
 			(UserMove
 				initialize;
 				instance)
-		priority: 0.5.
+		withPriority: 0.5.
 	bp
-		add:
+		addScenario:
 			(RulesSquareTakenPossiblePositions
 				initialize;
 				instance)
-		priority: 1.
+		withPriority: 1.
 	bp
-		add:
+		addScenario:
 			(RulesEnforceTurns
 				initialize;
 				instance)
-		priority: 2.
+		withPriority: 2.
 	bp
-		add:
+		addScenario:
 			(RulesDetectXWinPossiblePositions
 				initialize;
 				instance)
-		priority: 3.
+		withPriority: 3.
 	bp
-		add:
+		addScenario:
 			(RulesDetectOWinPossiblePositions
 				initialize;
 				instance)
-		priority: 4.
+		withPriority: 4.
 	bp
-		add:
+		addScenario:
 			(RulesDetectDrawPossiblePositions
 				initialize;
 				instance)
-		priority: 5.
+		withPriority: 5.
 	bp
-		add:
+		addScenario:
 			(StrategyDefaultOMovesPossiblePositions
 				initialize;
 				instance)
-		priority: 12.
+		withPriority: 12.
 	bp
-		add:
+		addScenario:
 			(StrategyPreventThridXPossiblePositions
 				initialize;
 				instance)
-		priority: 7.
+		withPriority: 7.
 	bp start.
 
 	"	bp stop."
@@ -705,11 +667,11 @@ TicTacToeWithSegment class >> preventXWinSegmentCompletedProof [
 	BP4PEnvironmentScenario initialize.
 	bp := BP4PProgram new.
 	bp
-		add:
+		addScenario:
 			(StrategyPreventXWinSegment
 				initialize;
 				instanceToSegment: segment)
-		priority: 3.
+		withPriority: 3.
 	bp start.
 	(Delay forSeconds: 1) wait.
 	BP4PEnvironment send: (XEvent position: p1) toProgram: bp.
@@ -745,7 +707,7 @@ TicTacToeWithSegment class >> preventXWinSegmentInterruptedProof [
 		instanceToSegment: segment.
 	BP4PEnvironmentScenario initialize.
 	bp := BP4PProgram new.
-	bp add: scenario priority: 3.
+	bp addScenario: scenario withPriority: 3.
 	bp start.
 	(Delay forSeconds: 1) wait.
 	BP4PEnvironment send: (XEvent position: p1) toProgram: bp.
@@ -769,66 +731,66 @@ TicTacToeWithSegment class >> run [
 	BP4PEnvironmentScenario initialize.
 	bp := BP4PProgram new.
 	bp
-		add:
+		addScenario:
 			(UserMove
 				initialize;
 				instance)
-		priority: 0.5.
+		withPriority: 0.5.
 	bp
-		add:
+		addScenario:
 			(RulesSquareTakenSegment
 				initialize;
 				instance)
-		priority: 1.
+		withPriority: 1.
 	bp
-		add:
+		addScenario:
 			(TicTacToeActuatorSegment
 				initialize;
 				instance)
-		priority: 2.
+		withPriority: 2.
 	bp
-		add:
+		addScenario:
 			(RulesEnforceTurns
 				initialize;
 				instance)
-		priority: 3.
+		withPriority: 3.
 	bp
-		add:
+		addScenario:
 			(FunctionalityGenerateDetectWinScenariosSegment
 				initialize;
 				instanceWithGeneratedScenariosPriority: 6)
-		priority: 4.
+		withPriority: 4.
 	bp
-		add:
+		addScenario:
 			(RulesDetectDrawSegment
 				initialize;
 				instance)
-		priority: 5.
+		withPriority: 5.
 
 	bp
-		add:
+		addScenario:
 			(FunctionalityGenerateForceOWinScenariosSegment
 				initialize;
 				instanceWithGeneratedScenariosPriority: 20)
-		priority: 10.
+		withPriority: 10.
 	bp
-		add:
+		addScenario:
 			(FunctionalityGeneratePreventXWinScenariosSegment
 				initialize;
 				instanceWithGeneratedScenariosPriority: 21)
-		priority: 11.
+		withPriority: 11.
 	bp
-		add:
+		addScenario:
 			(FunctionalityGeneratePreventXForkTISScenariosSegment
 				initialize;
 				instanceWithGeneratedScenariosPriority: 22)
-		priority: 12.
+		withPriority: 12.
 	bp
-		add:
+		addScenario:
 			(StrategyDefaultOMovesSegment
 				initialize;
 				instance)
-		priority: 30.
+		withPriority: 30.
 	bp start.
 
 	"	bp stop."
@@ -865,35 +827,35 @@ TicTacToeWithSegment class >> runAxesSize: anInteger [
 	BP4PEnvironmentScenario initialize.
 	bp := BP4PProgram new.
 	bp
-		add:
+		addScenario:
 			(RulesSquareTakenPossiblePositions
 				initialize;
 				instance)
-		priority: 1.
+		withPriority: 1.
 	bp
-		add:
+		addScenario:
 			(RulesEnforceTurns
 				initialize;
 				instance)
-		priority: 1.
+		withPriority: 1.
 	bp
-		add:
+		addScenario:
 			(RulesDetectXWinPossiblePositions
 				initialize;
 				instance)
-		priority: 1.
+		withPriority: 1.
 	bp
-		add:
+		addScenario:
 			(RulesDetectOWinPossiblePositions
 				initialize;
 				instance)
-		priority: 1.
+		withPriority: 1.
 	bp
-		add:
+		addScenario:
 			(RulesDetectDrawPossiblePositions 
 				initialize;
 				instance)
-		priority: 1.
+		withPriority: 1.
 	bp start.
 	(Delay forSeconds: 1) wait.
 	BP4PEnvironment send: ((xmoves at: 1) at: 1) toProgram: bp.
@@ -927,17 +889,17 @@ TicTacToeWithSegment class >> squareTakenSegmentProof [
 	BP4PEnvironmentScenario initialize.
 	bp := BP4PProgram new.
 	bp
-		add:
+		addScenario:
 			(RulesSquareTakenSegment
 				initialize;
 				instance)
-		priority: 1.
+		withPriority: 1.
 	bp
-		add:
+		addScenario:
 			(TicTacToeActuatorSegment
 				initialize;
 				instance)
-		priority: 2.
+		withPriority: 2.
 	bp start.
 
 	BP4PEnvironment
@@ -951,6 +913,41 @@ TicTacToeWithSegment class >> squareTakenSegmentProof [
 		send: (OEvent position: (Position x: 3 y: 3))
 		toProgram: bp.
 	"	bp stop."
+	^ bp
+]
+
+{ #category : #running }
+TicTacToeWithSegment class >> strategyCompleteOSegmentCompletedProof [
+	| bp segment p1 p2 p3 p4 scenario success |
+	TicTacToeWithSegment axesSize: 5 segmentSize: 5.
+	p1 := Position x: 1 y: 1.
+	p2 := Position x: 2 y: 1.
+	p3 := Position x: 3 y: 1.
+	p4 := Position x: 4 y: 1.
+	segment := Set new
+		add: (Position x: 1 y: 1);
+		add: (Position x: 2 y: 1);
+		add: (Position x: 3 y: 1);
+		add: (Position x: 4 y: 1);
+		yourself.
+	BP4PEnvironmentScenario initialize.
+	bp := BP4PProgram new.
+	scenario := StrategyCompleteOSegment
+		initialize;
+		instanceToSegment: segment.
+	bp addScenario: scenario withPriority: 3.
+	bp start.
+	bp announcer
+		subscribe: BP4PEndScenarioAnnouncement
+		do: [ :event | 
+			((bp getPriorityOfScenario: event scenario) round: 2) = (3 - (0.01 * 4))
+				ifTrue: [ Transcript
+						crShow: '========================Correct Proof========================' ]
+				ifFalse: [ Transcript
+						crShow: '========================Incorrect Proof========================' ] ].
+
+	"and: [ ((bp scenarioPriority: self) = 3) - (0.01 * 3) ]
+	bp stop."
 	^ bp
 ]
 
@@ -983,11 +980,11 @@ TicTacToeWithSegment class >> strategyPreventXForkTwoIntersectedSegmentsComplete
 	BP4PEnvironmentScenario initialize.
 	bp := BP4PProgram new.
 	bp
-		add:
+		addScenario:
 			(StrategyPreventXForkTwoIntersectedSegments
 				initialize;
 				instanceToSegment: segment1 andSegment: segment2)
-		priority: 3.
+		withPriority: 3.
 	bp start.
 	(Delay forSeconds: 1) wait.
 	BP4PEnvironment send: (XEvent position: p1) toProgram: bp.
@@ -1038,7 +1035,7 @@ TicTacToeWithSegment class >> strategyPreventXForkTwoIntersectedSegmentsInterrup
 	scenario := StrategyPreventXForkTwoIntersectedSegments
 		initialize;
 		instanceToSegment: segment1 andSegment: segment2.
-	bp add: scenario priority: 3.
+	bp addScenario: scenario withPriority: 3.
 	bp start.
 	(Delay forSeconds: 1) wait.
 	BP4PEnvironment send: (XEvent position: p1) toProgram: bp.
@@ -1089,7 +1086,7 @@ TicTacToeWithSegment class >> strategyPreventXForkTwoIntersectedSegmentsInterrup
 	scenario := StrategyPreventXForkTwoIntersectedSegments
 		initialize;
 		instanceToSegment: segment1 andSegment: segment2.
-	bp add: scenario priority: 3.
+	bp addScenario: scenario withPriority: 3.
 	bp start.
 	(Delay forSeconds: 1) wait.
 	BP4PEnvironment send: (XEvent position: p1) toProgram: bp.
