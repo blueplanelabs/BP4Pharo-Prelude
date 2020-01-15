@@ -9,18 +9,18 @@ Class {
 }
 
 { #category : #'as yet unclassified' }
-Route class >> instanceForDrone: aDrone CheckPoints: aCheckPointLinkedList [
+Route class >> instanceForCheckPoints: aCheckPointLinkedList [
 	"create a Route scenario for these CheckPoints"
 
 	| scenario |
 	scenario := self instance.
-	scenario instanceForDrone: aDrone checkPoints: aCheckPointLinkedList.
+	scenario instanceForCheckPoints: aCheckPointLinkedList.
 	^ scenario
 ]
 
 { #category : #accessing }
-Route >> instanceForDrone: aDrone checkPoints: aCheckPointCollection [
-	drone:= aDrone.
+Route >> instanceForCheckPoints: aCheckPointCollection [
+
 	checkPoints := aCheckPointCollection
 ]
 

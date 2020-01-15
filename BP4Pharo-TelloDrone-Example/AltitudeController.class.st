@@ -24,9 +24,9 @@ AltitudeController >> altitudeFunction: anAltitudeFunction [
 
 { #category : #initialize }
 AltitudeController >> run: aBP4PProgram [
-	| changedLocation fitAltitude traveledDistance takeoff |
+	| changedLocation fitAltitude traveledDistance land |
 	changedLocation := BP4PEventsOfClass class: ChangedLocationEvent.
-	takeoff := BP4PEventsOfClass class: TakeoffEvent.
+	land := BP4PEventsOfClass class: LandEvent .
 	[ aBP4PProgram lastEvent belongsTo: TakeoffEvent ]
 		whileFalse: [ aBP4PProgram
 				syncRequested: none
@@ -37,6 +37,6 @@ AltitudeController >> run: aBP4PProgram [
 				altitudeVariation: (altFunction value: traveledDistance).
 			aBP4PProgram
 				syncRequested: fitAltitude
-				waited: takeoff
+				waited: land
 				blocked: none ]
 ]

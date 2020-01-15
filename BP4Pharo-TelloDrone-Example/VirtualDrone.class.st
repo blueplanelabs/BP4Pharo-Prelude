@@ -4,15 +4,16 @@ Class {
 	#instVars : [
 		'location',
 		'altitude',
-		'velocity',
-		'defaultVelocity',
 		'cruiseAltitude',
 		'originalLocation',
 		'course',
 		'defaultCourse',
 		'traveledDistance',
 		'altitudeVariation',
-		'defaultStepDistance'
+		'defaultStepTraveledDistance',
+		'stepTraveledDistance',
+		'traveledVelocity',
+		'defaultTraveledVelocity'
 	],
 	#category : #'BP4Pharo-TelloDrone-Example'
 }
@@ -47,7 +48,8 @@ VirtualDrone >> createSubscriptionsToBProgram: aBP4PProgram [
 		do: [ :fitCourseEvent | course := fitCourseEvent course ].
 	aBP4PProgram
 		subscribe: FitAltitudeEvent
-		do: [ :fitAltitudeEvent | altitudeVariation := fitAltitudeEvent altitudeVariation ].
+		do:
+			[ :fitAltitudeEvent | altitudeVariation := fitAltitudeEvent altitudeVariation ].
 	aBP4PProgram
 		subscribe: RequestedMoveEvent
 		do: [ :requestedMove | 
@@ -58,7 +60,7 @@ VirtualDrone >> createSubscriptionsToBProgram: aBP4PProgram [
 			course = self defaultCourse
 				ifFalse: [ self
 						traveledDistance: self traveledDistance + self stepTraveledDistance ].
-			time := self defaultStepDistance / self velocity.
+			time := self stepTraveledDistance / self traveledVelocity.
 			[ (Delay forSeconds: time) wait.
 			changedLocation := ChangedLocationEvent
 				location: self location
@@ -82,16 +84,16 @@ VirtualDrone >> defaultCourse [
 ]
 
 { #category : #accessing }
-VirtualDrone >> defaultStepDistance [
-	defaultStepDistance 
-		ifNil: [ defaultStepDistance  := 10 ].
-	^ defaultStepDistance  copy
+VirtualDrone >> defaultStepTraveledDistance [
+	defaultStepTraveledDistance 
+		ifNil: [ defaultStepTraveledDistance  := 10 ].
+	^ defaultStepTraveledDistance  copy
 ]
 
 { #category : #accessing }
-VirtualDrone >> defaultVelocity [
-	defaultVelocity ifNil: [ defaultVelocity := 5 ].
-	^defaultVelocity copy
+VirtualDrone >> defaultTraveledVelocity [
+	defaultTraveledVelocity ifNil: [ defaultTraveledVelocity := 5 ].
+	^defaultTraveledVelocity copy
 ]
 
 { #category : #accessing }
@@ -113,8 +115,9 @@ VirtualDrone >> originalLocation [
 
 { #category : #'as yet unclassified' }
 VirtualDrone >> stepTraveledDistance [
-	^( ((self defaultStepDistance) squared) - ((self altitudeVariation) squared))
-		sqrt
+	stepTraveledDistance
+		ifNil: [ stepTraveledDistance := self defaultStepTraveledDistance ].
+	^ stepTraveledDistance
 ]
 
 { #category : #accessing }
@@ -128,7 +131,7 @@ VirtualDrone >> traveledDistance: aDistance [
 ]
 
 { #category : #accessing }
-VirtualDrone >> velocity [
-	velocity ifNil: [ velocity := self defaultVelocity ].
-	^ velocity copy
+VirtualDrone >> traveledVelocity [
+	traveledVelocity ifNil: [ traveledVelocity := self defaultTraveledVelocity ].
+	^ traveledVelocity copy
 ]
