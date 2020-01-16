@@ -13,11 +13,10 @@ DroneApplication class >> run [
 	vdrone createSubscriptionsToBProgram: bp.
 	checkPoints := LinkedList
 		withAll:
-			{(0 @ 0).
-			(200 @ 0).
+			{(200 @ 0).
 			(200 @ 200).
 			(0 @ 200).
-			(0 @ 0)}.
+			(0@0) }.
 	altitudeVariationByStepFunction := [ :distanceTravaled | 40 * (distanceTravaled * Float pi * 2 / 100) sin ].
 	bp
 		addScenario:
