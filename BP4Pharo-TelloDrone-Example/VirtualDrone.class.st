@@ -23,7 +23,7 @@ Class {
 }
 
 { #category : #example }
-VirtualDrone class >> example [
+VirtualDrone class >> exampleBlackBox [
 	| bp box |
 	bp := DroneApplication run.
 	bp subscribe: LandEvent do: [ :land | bp stop ].
@@ -32,6 +32,32 @@ VirtualDrone class >> example [
 		openWithSpec;
 		bp: bp;
 		createSubscriptions
+]
+
+{ #category : #'as yet unclassified' }
+VirtualDrone class >> exampleMap [
+	| bp location canvas border shape |
+	bp := DroneApplication run.
+	bp
+		subscribe: ChangedLocationEvent
+		do: [ :cle | location := cle location ].
+	location := 10 @ 10.
+	canvas := RSCanvas new.
+	canvas extent: 100 @ 100.
+	border := RSBorder new width: 4.
+	shape := RSEllipse new
+		border: border;
+		color: Color black;
+		extent: 25 asPoint;
+		yourself.
+	canvas add: shape.
+	canvas newAnimation repeat
+		onStepDo: [ :t | 
+			shape matrix
+				loadIdentity;
+				translateBy: location ].
+	canvas open.
+
 ]
 
 { #category : #'class initialization' }
