@@ -197,8 +197,7 @@ BP4PProgram >> stop [
 				ifTrue: [ scenario class initialize.
 					Transcript crShow: 'Initialize ' , scenario class printString ].
 			process terminate.
-			Transcript crShow: 'Terminate ' , process printString .
-			].
+			Transcript crShow: 'Terminate ' , process name ].
 	processes removeAll.
 	processes := nil
 ]
