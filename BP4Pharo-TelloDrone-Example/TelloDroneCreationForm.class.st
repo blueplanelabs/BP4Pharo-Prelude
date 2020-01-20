@@ -104,9 +104,13 @@ TelloDroneCreationForm >> initializePresenter [
 			stopButton disable.
 			checkPointLabel disable.
 			xLabel disable.
-			xInput text: '';disable.
+			xInput
+				text: '';
+				disable.
 			yLabel disable.
-			yInput text: '';disable.
+			yInput
+				text: '';
+				disable.
 			addButton disable.
 			finishButton disable.
 			checkPoints := nil ].
@@ -114,7 +118,8 @@ TelloDroneCreationForm >> initializePresenter [
 		whenTextIsAccepted: [ xLabel disable.
 			xInput disable.
 			yLabel enable.
-			yInput enable ].
+			yInput enable.
+			finishButton disable ].
 	yInput
 		whenTextIsAccepted: [ yLabel disable.
 			yInput disable.
@@ -126,7 +131,10 @@ TelloDroneCreationForm >> initializePresenter [
 				text: '';
 				enable.
 			yInput text: ''.
-			addButton disable ]
+			finishButton enable.
+			addButton disable ].
+	finishButton action: [ xLabel disable.
+			xInput disable ].
 ]
 
 { #category : #initialization }
