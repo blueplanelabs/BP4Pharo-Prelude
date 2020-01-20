@@ -211,12 +211,12 @@ TelloDroneCreationForm >> title [
 ]
 
 { #category : #initialization }
-TelloDroneCreationForm >> whenGameCreatedDo: aBlock [
-creationButton whenActionPerformedDo: aBlock
+TelloDroneCreationForm >> whenGameFinishedDo: aBlock [
+	finishButton whenActionPerformedDo: aBlock
 ]
 
 { #category : #initialization }
-TelloDroneCreationForm >> whenGameFinishedDo: aBlock [
+TelloDroneCreationForm >> whenTelloDroneCreatedDo: aBlock [
 	finishButton whenActionPerformedDo: aBlock
 ]
 

@@ -32,15 +32,21 @@ TelloDronePlayground >> form: anObject [
 ]
 
 { #category : #initialization }
-TelloDronePlayground >> initializeWidgets [
+TelloDronePlayground >> initializePresenter [
+	form whenTelloDroneCreatedDo: [scenarioManager enable].
+	scenarioManager
+		whenScenarioSelectedDo: [ :scenario | Transcript crShow: 'Selected:' , scenario ].
+]
 
+{ #category : #initialization }
+TelloDronePlayground >> initializeWidgets [
 	"widget instantiation"
 
-	form := self instantiate: TelloDroneCreationForm .
+	form := self instantiate: TelloDroneCreationForm.
 	scenarioManager := self instantiate: TelloDroneScenarioManager.
 
 	"widget configuration"
-
+	scenarioManager disable.
 
 	"specification of order of focus"
 	self focusOrder

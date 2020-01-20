@@ -26,6 +26,16 @@ TelloDroneScenarioToManage >> checkBox: anObject [
 	checkBox := anObject
 ]
 
+{ #category : #protocol }
+TelloDroneScenarioToManage >> disable [
+	checkBox disable
+]
+
+{ #category : #protocol }
+TelloDroneScenarioToManage >> enable [
+	checkBox enable
+]
+
 { #category : #api }
 TelloDroneScenarioToManage >> extent [
 	^ 400 @ self class toolbarHeight
@@ -69,4 +79,9 @@ TelloDroneScenarioToManage >> scenario: aScenarioClass [
 { #category : #api }
 TelloDroneScenarioToManage >> title [
 	^ 'ScenarioToManage'
+]
+
+{ #category : #enumerating }
+TelloDroneScenarioToManage >> whenActivatedDo: aBlock [
+	checkBox whenActivatedDo: [ aBlock value: scenario ]
 ]

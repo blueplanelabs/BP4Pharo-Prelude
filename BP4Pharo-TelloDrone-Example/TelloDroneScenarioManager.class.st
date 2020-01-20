@@ -27,6 +27,18 @@ TelloDroneScenarioManager >> altitude: anObject [
 	altitude := anObject
 ]
 
+{ #category : #protocol }
+TelloDroneScenarioManager >> disable [
+	altitude disable.
+	landing disable
+]
+
+{ #category : #protocol }
+TelloDroneScenarioManager >> enable [ 
+	altitude enable.
+	landing enable
+]
+
 { #category : #api }
 TelloDroneScenarioManager >> extent [
 	^ 400 @ (altitude extent y+ landing extent y)
@@ -62,4 +74,10 @@ TelloDroneScenarioManager >> landing: anObject [
 { #category : #api }
 TelloDroneScenarioManager >> title [
 	^ 'ScenarioManager'
+]
+
+{ #category : #initialization }
+TelloDroneScenarioManager >> whenScenarioSelectedDo: aBlock [
+	altitude whenActivatedDo:  aBlock .
+	landing whenActivatedDo: aBlock 
 ]
