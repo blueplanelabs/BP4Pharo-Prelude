@@ -56,7 +56,7 @@ DroneApplication class >> exampleAltitude [
 DroneApplication class >> exampleBlackBox [
 	| bp box |
 	bp := DroneApplication run.
-	bp subscribe: LandEvent do: [ :land | bp stop ].
+
 	box := TelloDroneBlackBox new.
 	box
 		openWithSpec;
