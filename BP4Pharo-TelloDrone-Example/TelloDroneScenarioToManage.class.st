@@ -26,6 +26,16 @@ TelloDroneScenarioToManage >> checkBox: anObject [
 	checkBox := anObject
 ]
 
+{ #category : #api }
+TelloDroneScenarioToManage >> extent [
+	^ 400 @ self class toolbarHeight
+]
+
+{ #category : #accessing }
+TelloDroneScenarioToManage >> height [ 
+	^ self extent y
+]
+
 { #category : #initialization }
 TelloDroneScenarioToManage >> initializeWidgets [
 	"widget instantiation"
@@ -51,7 +61,12 @@ TelloDroneScenarioToManage >> scenario [
 ]
 
 { #category : #accessing }
-TelloDroneScenarioToManage >> scenario: aBP4PScenario [
-	scenario := aBP4PScenario.
-	self label: aBP4PScenario name asString.
+TelloDroneScenarioToManage >> scenario: aScenarioClass [
+	scenario := aScenarioClass .
+	self label: aScenarioClass name asString 
+]
+
+{ #category : #api }
+TelloDroneScenarioToManage >> title [
+	^ 'ScenarioToManage'
 ]

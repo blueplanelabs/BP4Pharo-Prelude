@@ -205,6 +205,11 @@ TelloDroneCreationForm >> stopButton: anObject [
 	stopButton := anObject
 ]
 
+{ #category : #api }
+TelloDroneCreationForm >> title [ 
+	^ 'CreationForm'
+]
+
 { #category : #initialization }
 TelloDroneCreationForm >> whenGameCreatedDo: aBlock [
 creationButton whenActionPerformedDo: aBlock
