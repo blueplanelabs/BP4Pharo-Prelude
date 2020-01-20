@@ -3,7 +3,16 @@ Class {
 	#superclass : #ComposablePresenter,
 	#instVars : [
 		'startButton',
-		'stopButton'
+		'stopButton',
+		'checkPointLabel',
+		'xLabel',
+		'xInput',
+		'yLabel',
+		'yInput',
+		'addButton',
+		'finishButton',
+		'checkPoints',
+		'bp'
 	],
 	#category : #'BP4Pharo-TelloDrone-Example-TelloDrone-GUI'
 }
@@ -13,18 +22,46 @@ TelloDroneCreationForm class >> defaultSpec [
 	^ SpecColumnLayout composed
 		newRow: [ :row | 
 			row
-				add: #axesLabel;
-				add: #axesField;
-				add: #segmentLabel;
-				add: #segmentField ]
+				add: #startButton;
+				add: #stopButton ]
 			height: self toolbarHeight;
 		newRow: [ :row | 
 			row
-				add: #creationButton;
-				add: #finishButton ]
+				add: #checkPointLabel;
+				add: #xLabel;
+				add: #xInput;
+				add: #yLabel;
+				add: #yInput;
+				add: #addButton ]
 			height: self toolbarHeight;
-		newRow: [ :row | row add: #screen ] height: self toolbarHeight;
+		newRow: [ :row | row add: #finishButton ]
+			height: self toolbarHeight;
 		yourself
+]
+
+{ #category : #accessing }
+TelloDroneCreationForm >> addButton [
+	^ addButton
+]
+
+{ #category : #accessing }
+TelloDroneCreationForm >> addButton: anObject [
+	addButton := anObject
+]
+
+{ #category : #accessing }
+TelloDroneCreationForm >> checkPointLabel [
+	^ checkPointLabel 
+]
+
+{ #category : #accessing }
+TelloDroneCreationForm >> checkPointLabel: anObject [
+	checkPointLabel := anObject
+]
+
+{ #category : #accessing }
+TelloDroneCreationForm >> checkPoints [
+	^ checkPoints ifNil: [ checkPoints := OrderedCollection new ] 
 ]
 
 { #category : #'private ' }
@@ -43,63 +80,101 @@ TelloDroneCreationForm >> extent [
 	^ 400 @ (3 * self class toolbarHeight)
 ]
 
+{ #category : #accessing }
+TelloDroneCreationForm >> finishButton [
+	^ finishButton
+]
+
+{ #category : #accessing }
+TelloDroneCreationForm >> finishButton: anObject [
+	finishButton := anObject
+]
+
 { #category : #initialization }
 TelloDroneCreationForm >> initializePresenter [
-	creationButton
-		action: [ screen label: self createdGameLabelText.
-			axesLabel disable.
-			axesField disable.
-			segmentLabel disable.
-			segmentField disable.
-			creationButton disable.
-			finishButton enable.
-			TicTacToeWithSegment
-				axesSize: axesField text asInteger
-				segmentSize: segmentField text asInteger.
-			self bp: TicTacToeWithSegment run ].
-	finishButton
-		action: [ screen label: self defaultLabelText.
-			axesLabel enable.
-			axesField enable.
-			segmentLabel enable.
-			segmentField enable.
-			creationButton enable.
+	startButton
+		action: [ startButton disable.
+			stopButton enable.
+			checkPointLabel enable.
+			xLabel enable.
+			xInput enable.
+			finishButton enable ].
+	stopButton
+		action: [ startButton enable.
+			stopButton disable.
+			checkPointLabel disable.
+			xLabel disable.
+			xInput text: '';disable.
+			yLabel disable.
+			yInput text: '';disable.
+			addButton disable.
 			finishButton disable.
-			bp stop ]
+			checkPoints := nil ].
+	xInput
+		whenTextIsAccepted: [ xLabel disable.
+			xInput disable.
+			yLabel enable.
+			yInput enable ].
+	yInput
+		whenTextIsAccepted: [ yLabel disable.
+			yInput disable.
+			addButton enable ].
+	addButton
+		action: [ self checkPoints add: xInput text asInteger @ yInput text asInteger.
+			xLabel enable.
+			xInput
+				text: '';
+				enable.
+			yInput text: ''.
+			addButton disable ]
 ]
 
 { #category : #initialization }
 TelloDroneCreationForm >> initializeWidgets [
 	"widget instantiation"
 
-	axesLabel := self newLabel.
-	axesField := self newTextInput.
-	segmentLabel := self newLabel.
-	segmentField := self newTextInput.
-	creationButton := self newButton.
+	startButton := self newButton.
+	stopButton := self newButton.
+	checkPointLabel := self newLabel.
+	xLabel := self newLabel.
+	xInput := self newTextInput.
+	yLabel := self newLabel.
+	yInput := self newTextInput.
+	addButton := self newButton.
 	finishButton := self newButton.
-	screen := self newLabel.
 
 	"widget configuration"
-	axesLabel label: 'Axes Size:'.
-	axesField acceptOnCR: true.
-	segmentLabel label: 'Segment Size:'.
-	segmentField acceptOnCR: true.
-	creationButton label: 'OK'.
-	finishButton
-		label: 'Finish';
+	startButton label: 'START'.
+	stopButton
+		label: 'STOP';
 		disable.
-	screen label: self defaultLabelText.
+	checkPointLabel
+		label: 'CheckPoint: ';
+		disable.
+	xLabel
+		label: 'X: ';
+		disable.
+	xInput disable.
+	yLabel
+		label: 'Y: ';
+		disable.
+	yInput disable.
+	addButton
+		label: 'ADD';
+		disable.
+	finishButton
+		label: 'FINISH';
+		disable.
+
 
 	"specification of order of focus"
 	self focusOrder
-		add: axesLabel;
-		add: axesField;
-		add: segmentLabel;
-		add: segmentField;
-		add: creationButton;
-		add: finishButton;
-		add: screen
+		add: startButton;
+		add: stopButton;
+		add: xInput;
+		add: yInput;
+		add: addButton;
+		add: finishButton
 ]
 
 { #category : #accessing }
@@ -130,4 +205,44 @@ creationButton whenActionPerformedDo: aBlock
 { #category : #initialization }
 TelloDroneCreationForm >> whenGameFinishedDo: aBlock [
 	finishButton whenActionPerformedDo: aBlock
+]
+
+{ #category : #accessing }
+TelloDroneCreationForm >> xInput [
+	^ xInput
+]
+
+{ #category : #accessing }
+TelloDroneCreationForm >> xInput: anObject [
+	xInput := anObject
+]
+
+{ #category : #accessing }
+TelloDroneCreationForm >> xLabel [
+	^ xLabel
+]
+
+{ #category : #accessing }
+TelloDroneCreationForm >> xLabel: anObject [
+	xLabel := anObject
+]
+
+{ #category : #accessing }
+TelloDroneCreationForm >> yInput [
+	^ yInput
+]
+
+{ #category : #accessing }
+TelloDroneCreationForm >> yInput: anObject [
+	yInput := anObject
+]
+
+{ #category : #accessing }
+TelloDroneCreationForm >> yLabel [
+	^ yLabel
+]
+
+{ #category : #accessing }
+TelloDroneCreationForm >> yLabel: anObject [
+	yLabel := anObject
 ]
