@@ -33,9 +33,10 @@ TelloDronePlayground >> form: anObject [
 
 { #category : #initialization }
 TelloDronePlayground >> initializePresenter [
-	form whenTelloDroneCreatedDo: [scenarioManager enable].
+	form whenTelloDroneCreatedDo: [ scenarioManager enable ].
+	form whenTelloDroneStopedDo: [ scenarioManager disable ].
 	scenarioManager
-		whenScenarioSelectedDo: [ :scenario | Transcript crShow: 'Selected:' , scenario ].
+		whenScenarioSelectedDo: [ :scenario | Transcript crShow: 'Selected:' , scenario ]
 ]
 
 { #category : #initialization }

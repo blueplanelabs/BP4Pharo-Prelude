@@ -143,6 +143,13 @@ BP4PController >> start [
 
 ]
 
+{ #category : #api }
+BP4PController >> stop [
+	"initially check if all the scenarios are sync"
+
+	scenarios removeAll
+]
+
 { #category : #'private-actions' }
 BP4PController >> syncScenario: aBP4PSynchronizedScenarioAnnouncement [
 	"	Change info from the announcement of scenario synchronized in the BP4PProgram to the map scenarios. "

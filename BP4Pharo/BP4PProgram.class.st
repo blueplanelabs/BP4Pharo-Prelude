@@ -191,6 +191,8 @@ BP4PProgram >> stop [
 
 	"Initializes the scenarios class to reset iterator"
 
+	controller stop.
+	lastEvent := nil.
 	self processes
 		keysAndValuesDo: [ :scenario :process | 
 			(scenario isKindOf: BP4PScenario)

@@ -73,12 +73,12 @@ VirtualDrone >> createSubscriptionsToBProgram: aBP4PProgram [
 			| changedLocation time |
 			self
 				location: self location + (self course * self stepTraveledDistance).
-			self altitude: CruiseAltitude  + self altitudeVariation.
+			(self altitude = GroundAltitude) ifFalse: [self altitude: self altitude + self altitudeVariation].
 			course = DefaultCourse
 				ifFalse: [ self
 						traveledDistance: self traveledDistance + self stepTraveledDistance ].
 			time := self stepTraveledDistance / self travelVelocity.
-			[ (Delay forSeconds: time) wait.
+			[ "(Delay forSeconds: time) wait."
 			changedLocation := ChangedLocationEvent
 				location: self location
 				altitude: self altitude

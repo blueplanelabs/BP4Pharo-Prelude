@@ -6,10 +6,8 @@ Class {
 
 { #category : #initialize }
 Move >> run: aBP4PProgram [
-	| takeoff requestedMove changedLocation |
-	takeoff := TakeoffEvent new.
+	|  requestedMove changedLocation |
 
-	aBP4PProgram syncRequested: takeoff waited: none blocked: none.
 	[ true ]
 		whileTrue: [ requestedMove := RequestedMoveEvent name: 'requestedMove'.
 			aBP4PProgram

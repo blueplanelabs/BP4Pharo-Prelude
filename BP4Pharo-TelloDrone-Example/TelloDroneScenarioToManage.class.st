@@ -83,5 +83,6 @@ TelloDroneScenarioToManage >> title [
 
 { #category : #enumerating }
 TelloDroneScenarioToManage >> whenActivatedDo: aBlock [
+	"aBlock with the scenario class like argument"
 	checkBox whenActivatedDo: [ aBlock value: scenario ]
 ]

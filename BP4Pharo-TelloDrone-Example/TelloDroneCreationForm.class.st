@@ -10,9 +10,9 @@ Class {
 		'yLabel',
 		'yInput',
 		'addButton',
-		'finishButton',
 		'checkPoints',
-		'bp'
+		'takeoffButton',
+		'droneApplication'
 	],
 	#category : #'BP4Pharo-TelloDrone-Example-TelloDrone-GUI'
 }
@@ -61,7 +61,7 @@ TelloDroneCreationForm >> checkPointLabel: anObject [
 
 { #category : #accessing }
 TelloDroneCreationForm >> checkPoints [
-	^ checkPoints ifNil: [ checkPoints := OrderedCollection new ] 
+	^ checkPoints ifNil: [ checkPoints := LinkedList  new ]
 ]
 
 { #category : #'private ' }
@@ -82,23 +82,26 @@ TelloDroneCreationForm >> extent [
 
 { #category : #accessing }
 TelloDroneCreationForm >> finishButton [
-	^ finishButton
+	^ takeoffButton
 ]
 
 { #category : #accessing }
 TelloDroneCreationForm >> finishButton: anObject [
-	finishButton := anObject
+	takeoffButton := anObject
 ]
 
 { #category : #initialization }
 TelloDroneCreationForm >> initializePresenter [
+	| routeScenario |
 	startButton
 		action: [ startButton disable.
-			stopButton enable.
 			checkPointLabel enable.
 			xLabel enable.
 			xInput enable.
-			finishButton enable ].
+			droneApplication := DroneApplication new.
+			[ droneApplication altitudeMonitor ] fork.
+			[ droneApplication routeMonitor ] fork.
+			 ].
 	stopButton
 		action: [ startButton enable.
 			stopButton disable.
@@ -112,14 +115,15 @@ TelloDroneCreationForm >> initializePresenter [
 				text: '';
 				disable.
 			addButton disable.
-			finishButton disable.
-			checkPoints := nil ].
+			takeoffButton disable.
+			checkPoints := nil.
+			droneApplication stop ].
 	xInput
 		whenTextIsAccepted: [ xLabel disable.
 			xInput disable.
 			yLabel enable.
 			yInput enable.
-			finishButton disable ].
+			takeoffButton disable ].
 	yInput
 		whenTextIsAccepted: [ yLabel disable.
 			yInput disable.
@@ -131,10 +135,18 @@ TelloDroneCreationForm >> initializePresenter [
 				text: '';
 				enable.
 			yInput text: ''.
-			finishButton enable.
+			takeoffButton enable.
 			addButton disable ].
-	finishButton action: [ xLabel disable.
-			xInput disable ].
+	takeoffButton
+		action: [ checkPointLabel disable.
+			xLabel disable.
+			xInput disable.
+			stopButton enable.
+			routeScenario := Route
+				initialize;
+				instanceForCheckPoints: checkPoints.
+			droneApplication addScenario: routeScenario withPriority: 1.
+			droneApplication start ]
 ]
 
 { #category : #initialization }
@@ -149,7 +161,7 @@ TelloDroneCreationForm >> initializeWidgets [
 	yLabel := self newLabel.
 	yInput := self newTextInput.
 	addButton := self newButton.
-	finishButton := self newButton.
+	takeoffButton := self newButton.
 
 	"widget configuration"
 	startButton label: 'START'.
@@ -170,8 +182,8 @@ TelloDroneCreationForm >> initializeWidgets [
 	addButton
 		label: 'ADD';
 		disable.
-	finishButton
-		label: 'FINISH';
+	takeoffButton
+		label: 'TAKE-OFF';
 		disable.
 
 
@@ -182,7 +194,7 @@ TelloDroneCreationForm >> initializeWidgets [
 		add: xInput;
 		add: yInput;
 		add: addButton;
-		add: finishButton
+		add: takeoffButton
 ]
 
 { #category : #accessing }
@@ -212,12 +224,17 @@ TelloDroneCreationForm >> title [
 
 { #category : #initialization }
 TelloDroneCreationForm >> whenGameFinishedDo: aBlock [
-	finishButton whenActionPerformedDo: aBlock
+	takeoffButton whenActionPerformedDo: aBlock
 ]
 
 { #category : #initialization }
 TelloDroneCreationForm >> whenTelloDroneCreatedDo: aBlock [
-	finishButton whenActionPerformedDo: aBlock
+	takeoffButton whenActionPerformedDo: aBlock
+]
+
+{ #category : #initialization }
+TelloDroneCreationForm >> whenTelloDroneStopedDo: aBlock [
+	stopButton whenActionPerformedDo: aBlock
 ]
 
 { #category : #accessing }

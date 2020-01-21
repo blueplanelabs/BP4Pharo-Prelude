@@ -26,11 +26,13 @@ Route >> instanceForCheckPoints: aCheckPointCollection [
 
 { #category : #initialize }
 Route >> run: aBP4PProgram [
-	| eoc_changedLocation currentLocation targetCheckPoint fitCourse  eoc_land land lastEvent |
+	| takeoff eoc_changedLocation currentLocation targetCheckPoint fitCourse eoc_land land lastEvent |
 	targetCheckPoint := checkPoints first.
 	eoc_changedLocation := BP4PEventsOfClass class: ChangedLocationEvent.
 	eoc_land := BP4PEventsOfClass class: LandEvent.
 	land := LandEvent name: 'requestedLand'.
+	takeoff := TakeoffEvent new.
+	aBP4PProgram syncRequested: takeoff waited: none blocked: none.
 	[ true ]
 		whileTrue: [ aBP4PProgram
 				syncRequested: none
