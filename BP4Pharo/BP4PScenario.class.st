@@ -138,6 +138,5 @@ BP4PScenario >> valuable [
 	endScenarioAnnouncement := BP4PEndScenarioAnnouncement
 		scenario: self name.
 	Transcript crShow: 'Announced ' , endScenarioAnnouncement printString.
-	self announcer announce: endScenarioAnnouncement.
- ]
+	[self announcer announce: endScenarioAnnouncement] fork ]
 ]

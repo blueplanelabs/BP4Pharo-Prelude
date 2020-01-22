@@ -115,18 +115,19 @@ BP4PController >> createSubscriptions [
 { #category : #'private-actions' }
 BP4PController >> removeScenario: aBP4PEndScenarioAnnouncement [
 	"remove scenario ended in the map scenarios"
+
 	"Trace"
+
 	Transcript
 		crShow:
 			'Removed in controller '
 				, aBP4PEndScenarioAnnouncement scenario asString.
-
-	scenarios removeKey: aBP4PEndScenarioAnnouncement scenario.
+	self scenarios removeKey: aBP4PEndScenarioAnnouncement scenario ifAbsent: [].
 
 
 
 	"check if all the scenarios are sync in every change"
-	self checkAllScenariosSync.
+	self checkAllScenariosSync
 ]
 
 { #category : #'private - initialization' }

@@ -229,7 +229,7 @@ DroneApplication >> addScenario: aScenario withPriority: aPriority [
 		withPriority: aPriority 
 ]
 
-{ #category : #initialization }
+{ #category : #monitoring }
 DroneApplication >> altitudeMonitor [
 	| location altitude distance canvas border shape path steps |
 	location := vdrone location.
@@ -276,6 +276,16 @@ DroneApplication >> altitudeMonitor [
 	^ self
 ]
 
+{ #category : #monitoring }
+DroneApplication >> blackBoxMonitor [
+	| box |
+	box := TelloDroneBlackBox new.
+	box
+		openWithSpec;
+		bp: bp;
+		createSubscriptions
+]
+
 { #category : #initialization }
 DroneApplication >> initialize [
 
@@ -288,7 +298,12 @@ DroneApplication >> initialize [
 
 ]
 
-{ #category : #'as yet unclassified' }
+{ #category : #adding }
+DroneApplication >> removeScenario: aScenario [
+	bp endScenario: aScenario
+]
+
+{ #category : #monitoring }
 DroneApplication >> routeMonitor [
 	| location canvas border shape path steps |
 	location := vdrone location.

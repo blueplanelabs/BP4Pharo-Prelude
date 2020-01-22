@@ -75,6 +75,11 @@ TelloDroneCreationForm >> defaultLabelText [
 ^'Waiting to Create a TicTacToe ...'.
 ]
 
+{ #category : #accessing }
+TelloDroneCreationForm >> droneApplication [
+	^ droneApplication
+]
+
 { #category : #api }
 TelloDroneCreationForm >> extent [
 	^ 400 @ (3 * self class toolbarHeight)
@@ -101,7 +106,7 @@ TelloDroneCreationForm >> initializePresenter [
 			droneApplication := DroneApplication new.
 			[ droneApplication altitudeMonitor ] fork.
 			[ droneApplication routeMonitor ] fork.
-			 ].
+			[ droneApplication blackBoxMonitor ] fork ].
 	stopButton
 		action: [ startButton enable.
 			stopButton disable.

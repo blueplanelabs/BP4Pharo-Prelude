@@ -21,3 +21,11 @@ BP4PLastEventSettedAnnouncement >> event [
 BP4PLastEventSettedAnnouncement >> event: aBP4PEvent [
 	event := aBP4PEvent 
 ]
+
+{ #category : #printing }
+BP4PLastEventSettedAnnouncement >> printOn: aStream [
+	super printOn: aStream.
+	aStream nextPutAll: ' with event '.
+	event printOn: aStream.
+
+]

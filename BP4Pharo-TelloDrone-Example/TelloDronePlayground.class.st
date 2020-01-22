@@ -16,6 +16,12 @@ TelloDronePlayground class >> defaultSpec [
 		yourself
 ]
 
+{ #category : #'instance creation' }
+TelloDronePlayground class >> open [
+	<script>
+	TelloDronePlayground new openWithSpec
+]
+
 { #category : #api }
 TelloDronePlayground >> extent [
 	^ 400 @ (form extent y + scenarioManager extent y + self class toolbarHeight )
@@ -36,7 +42,11 @@ TelloDronePlayground >> initializePresenter [
 	form whenTelloDroneCreatedDo: [ scenarioManager enable ].
 	form whenTelloDroneStopedDo: [ scenarioManager disable ].
 	scenarioManager
-		whenScenarioSelectedDo: [ :scenario | Transcript crShow: 'Selected:' , scenario ]
+		whenScenarioSelectedDo: [ :scenario | 
+			form droneApplication addScenario: scenario withPriority: 2.
+			form droneApplication startScenario: scenario ].
+	scenarioManager whenScenarioDeselectedDo: [ :scenario |
+			form droneApplication removeScenario: scenario ]
 ]
 
 { #category : #initialization }

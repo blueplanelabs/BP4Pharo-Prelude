@@ -73,7 +73,9 @@ VirtualDrone >> createSubscriptionsToBProgram: aBP4PProgram [
 			| changedLocation time |
 			self
 				location: self location + (self course * self stepTraveledDistance).
-			(self altitude = GroundAltitude) ifFalse: [self altitude: self altitude + self altitudeVariation].
+			self altitude = GroundAltitude
+				ifFalse: [ self altitude: self altitude + self altitudeVariation ].
+			altitudeVariation := 0.
 			course = DefaultCourse
 				ifFalse: [ self
 						traveledDistance: self traveledDistance + self stepTraveledDistance ].
@@ -84,7 +86,10 @@ VirtualDrone >> createSubscriptionsToBProgram: aBP4PProgram [
 				altitude: self altitude
 				traveledDistance: self traveledDistance.
 			BP4PEnvironment send: changedLocation toProgram: aBP4PProgram ]
-				fork ]
+				fork ].
+	aBP4PProgram
+		subscribe: LandEvent
+		do: [ :land | self altitude: GroundAltitude ]
 ]
 
 { #category : #accessing }

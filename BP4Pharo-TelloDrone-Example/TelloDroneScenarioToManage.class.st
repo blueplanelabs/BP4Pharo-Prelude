@@ -28,7 +28,7 @@ TelloDroneScenarioToManage >> checkBox: anObject [
 
 { #category : #protocol }
 TelloDroneScenarioToManage >> disable [
-	checkBox disable
+	checkBox state: false; disable
 ]
 
 { #category : #protocol }
@@ -85,4 +85,11 @@ TelloDroneScenarioToManage >> title [
 TelloDroneScenarioToManage >> whenActivatedDo: aBlock [
 	"aBlock with the scenario class like argument"
 	checkBox whenActivatedDo: [ aBlock value: scenario ]
+]
+
+{ #category : #enumerating }
+TelloDroneScenarioToManage >> whenDeactivatedDo: aBlock [
+	"aBlock with the scenario class like argument"
+
+	checkBox whenChangedDo: [ :bool | bool ifFalse: [ aBlock value: scenario ]]
 ]

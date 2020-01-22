@@ -45,7 +45,7 @@ BP4PScenarioState >> blockedEvents [
 
 { #category : #accessing }
 BP4PScenarioState >> isProgressedWithEvent: aBP4PEvent [
-	^ self requestedEvents , self waitedEvents includesEvent: aBP4PEvent
+^ self requestedEvents , self waitedEvents includesEvent: aBP4PEvent
 ]
 
 { #category : #api }
@@ -97,6 +97,7 @@ BP4PScenarioState >> requested: rEvents waited: wEvents blocked: bEvents synchro
 { #category : #accessing }
 BP4PScenarioState >> requestedEvents [
 	^ requestedEvents
+		ifNil: [ requestedEvents := BP4PEvent none ]
 ]
 
 { #category : #accessing }
@@ -121,5 +122,5 @@ BP4PScenarioState >> waited: anObject [
 
 { #category : #accessing }
 BP4PScenarioState >> waitedEvents [
-	^ waitedEvents
+	^ waitedEvents ifNil: [ waitedEvents := BP4PEvent none ]
 ]

@@ -89,6 +89,20 @@ BP4PProgram >> createSubscriptions [
 ]
 
 { #category : #api }
+BP4PProgram >> endScenario: aScenario [
+	| endScenarioAnnouncement |
+	self processes
+		at: aScenario
+		ifPresent: [ :process | process terminate ]
+		ifAbsent: [  ].
+	endScenarioAnnouncement := BP4PEndScenarioAnnouncement
+		scenario: aScenario name.
+	Transcript
+		crShow: 'Announced from BP ' , endScenarioAnnouncement printString.
+	[ self announcer announce: endScenarioAnnouncement ] fork
+]
+
+{ #category : #api }
 BP4PProgram >> getPriorityOfScenario: aScenario [
 	"Return the priority of a scenario in the bprogram"
 	
@@ -133,10 +147,13 @@ BP4PProgram >> lastEvent [
 
 { #category : #accessing }
 BP4PProgram >> lastEvent: aBP4PChangedScenariosStatesAnnouncement [
+	|lastEventSettedAnnouncement |
 	lastEvent := aBP4PChangedScenariosStatesAnnouncement event.
- self announcer
-				announce: (BP4PLastEventSettedAnnouncement event: lastEvent).
-			
+	lastEventSettedAnnouncement := BP4PLastEventSettedAnnouncement event: lastEvent.
+	Transcript
+		crShow: 'Announced ' , lastEventSettedAnnouncement  printString.
+	self announcer
+		announce: (lastEventSettedAnnouncement)
 ]
 
 { #category : #initialization }
@@ -150,13 +167,14 @@ BP4PProgram >> removeProcess: aBP4PEndScenarioAnnouncement [
 
 	| endedScenarioName |
 	endedScenarioName := aBP4PEndScenarioAnnouncement scenario.
-	processes
+	self processes
 		keysAndValuesRemove: [ :scenario :process | process name = endedScenarioName ].
 	"check if all the scenarios are sync in every change"
 	"self checkAllScenariosSync."
 
 	"Trace"
-	Transcript crShow: 'Removed process for ' , endedScenarioName asString
+	Transcript
+		crShow: 'Removed process for ' , endedScenarioName asString
 ]
 
 { #category : #api }
@@ -226,14 +244,19 @@ BP4PProgram >> syncRequested: rEvents waited: wEvents blocked: bEvents [
 				ifFalse: [ "This is not the process of the scenario execution. Resumes it"
 					Transcript
 						crShow:
-							'Resumed ' , scenarioProcess printString , ' scenario: ' , scenario printString.
+							'Resumed ' , scenarioProcess printString , ' scenario: '
+								, scenario printString.
 					scenarioProcess resume ]
 				ifTrue: [ "This is the same process of the scenario execution"
 					"scenarioProcess isSuspended"
 					Transcript
 						crShow:
-							'Progress ' , scenarioProcess printString , ' scenario: ' , scenario printString ] ]
-		ifFalse: [ Transcript crShow: 'NOT Progress ' ,scenarioProcess printString , ' scenario: ', scenario printString ] ].
+							'Progress ' , scenarioProcess printString , ' scenario: '
+								, scenario printString ] ]
+		ifFalse: [ Transcript
+				crShow:
+					'NOT Progress ' , scenarioProcess printString , ' scenario: '
+						, scenario printString ] ].
 	self announcer
 		when: BP4PLastEventSettedAnnouncement
 		send: #value:
@@ -247,7 +270,7 @@ BP4PProgram >> syncRequested: rEvents waited: wEvents blocked: bEvents [
 		blocked: bEvents.
 	Transcript
 		crShow: 'Announced ' , syncScenarioAnnouncement printString.
-	self announcer announce: syncScenarioAnnouncement.
+	[self announcer announce: syncScenarioAnnouncement] fork.
 	continue
 		ifFalse: [ Transcript crShow: 'Suspended process ' , scenarioProcess name.
 			scenarioProcess suspend ].

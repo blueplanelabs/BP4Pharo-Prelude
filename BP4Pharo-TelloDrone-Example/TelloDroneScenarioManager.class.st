@@ -48,11 +48,15 @@ TelloDroneScenarioManager >> extent [
 TelloDroneScenarioManager >> initializeWidgets [
 	"widget instantiation"
 
+	| altitudeVariationByStepFunction |
 	altitude := self instantiate: TelloDroneScenarioToManage.
-	landing := self instantiate:  TelloDroneScenarioToManage.
-	
+	landing := self instantiate: TelloDroneScenarioToManage.
+
 	"widget configuration"
-	altitude scenario: AltitudeController .
+	altitudeVariationByStepFunction := [ :distanceTravaled | 40 * (distanceTravaled * Float pi * 2 / 100) sin ].
+	altitude
+		scenario: (AltitudeController initialize;
+		instanceToFunction: altitudeVariationByStepFunction).
 	landing scenario: Landing.
 
 	"specification of order of focus"
@@ -74,6 +78,12 @@ TelloDroneScenarioManager >> landing: anObject [
 { #category : #api }
 TelloDroneScenarioManager >> title [
 	^ 'ScenarioManager'
+]
+
+{ #category : #initialization }
+TelloDroneScenarioManager >> whenScenarioDeselectedDo: aBlock [
+	altitude whenDeactivatedDo: aBlock.
+	landing whenDeactivatedDo: aBlock
 ]
 
 { #category : #initialization }
