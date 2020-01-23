@@ -30,7 +30,7 @@ Route >> run: aBP4PProgram [
 	targetCheckPoint := checkPoints first.
 	eoc_changedLocation := BP4PEventsOfClass class: ChangedLocationEvent.
 	eoc_land := BP4PEventsOfClass class: LandEvent.
-	land := LandEvent name: 'requestedLand'.
+	land := LandEvent name: 'finishedRouteLand'.
 	takeoff := TakeoffEvent new.
 	aBP4PProgram syncRequested: takeoff waited: none blocked: none.
 	[ true ]

@@ -3,7 +3,8 @@ Class {
 	#superclass : #ComposablePresenter,
 	#instVars : [
 		'checkBox',
-		'scenario'
+		'scenario',
+		'priority'
 	],
 	#category : #'BP4Pharo-TelloDrone-Example-TelloDrone-GUI'
 }
@@ -66,6 +67,16 @@ TelloDroneScenarioToManage >> label: aText [
 ]
 
 { #category : #accessing }
+TelloDroneScenarioToManage >> priority [
+	^ priority
+]
+
+{ #category : #accessing }
+TelloDroneScenarioToManage >> priority: anObject [
+	priority := anObject
+]
+
+{ #category : #accessing }
 TelloDroneScenarioToManage >> scenario [
 	^ scenario
 ]
@@ -84,7 +95,8 @@ TelloDroneScenarioToManage >> title [
 { #category : #enumerating }
 TelloDroneScenarioToManage >> whenActivatedDo: aBlock [
 	"aBlock with the scenario class like argument"
-	checkBox whenActivatedDo: [ aBlock value: scenario ]
+
+	checkBox whenActivatedDo: [ aBlock value: scenario value: priority ]
 ]
 
 { #category : #enumerating }

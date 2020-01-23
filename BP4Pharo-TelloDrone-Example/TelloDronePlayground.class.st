@@ -42,11 +42,11 @@ TelloDronePlayground >> initializePresenter [
 	form whenTelloDroneCreatedDo: [ scenarioManager enable ].
 	form whenTelloDroneStopedDo: [ scenarioManager disable ].
 	scenarioManager
-		whenScenarioSelectedDo: [ :scenario | 
-			form droneApplication addScenario: scenario withPriority: 2.
+		whenScenarioSelectedDo: [ :scenario :priority| 
+			form droneApplication addScenario: scenario withPriority: priority.
 			form droneApplication startScenario: scenario ].
-	scenarioManager whenScenarioDeselectedDo: [ :scenario |
-			form droneApplication removeScenario: scenario ]
+	scenarioManager
+		whenScenarioDeselectedDo: [ :scenario | form droneApplication removeScenario: scenario ]
 ]
 
 { #category : #initialization }

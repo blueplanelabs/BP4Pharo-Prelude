@@ -122,7 +122,9 @@ BP4PController >> removeScenario: aBP4PEndScenarioAnnouncement [
 		crShow:
 			'Removed in controller '
 				, aBP4PEndScenarioAnnouncement scenario asString.
-	self scenarios removeKey: aBP4PEndScenarioAnnouncement scenario ifAbsent: [].
+	self scenarios
+		removeKey: aBP4PEndScenarioAnnouncement scenario
+		ifAbsent: [ 'Not present in controller' ].
 
 
 
@@ -146,9 +148,9 @@ BP4PController >> start [
 
 { #category : #api }
 BP4PController >> stop [
-	"initially check if all the scenarios are sync"
+	""
 
-	scenarios removeAll
+	self scenarios removeAll
 ]
 
 { #category : #'private-actions' }
@@ -160,12 +162,18 @@ BP4PController >> syncScenario: aBP4PSynchronizedScenarioAnnouncement [
 	Transcript
 		crShow: 'Received ' , aBP4PSynchronizedScenarioAnnouncement printString.
 	scenarioName := aBP4PSynchronizedScenarioAnnouncement scenario.
-
-	(self scenarios at: scenarioName)
-		requested: aBP4PSynchronizedScenarioAnnouncement requestedEvents;
-		waited: aBP4PSynchronizedScenarioAnnouncement waitedEvents;
-		blocked: aBP4PSynchronizedScenarioAnnouncement blockedEvents;
-		synchronized: true.
+	self scenarios
+		at: scenarioName
+		ifPresent: [ :scenarioState | 
+			scenarioState
+				requested: aBP4PSynchronizedScenarioAnnouncement requestedEvents;
+				waited: aBP4PSynchronizedScenarioAnnouncement waitedEvents;
+				blocked: aBP4PSynchronizedScenarioAnnouncement blockedEvents;
+				synchronized: true ]
+		ifAbsent: [ Transcript
+				crShow:
+					'Trying to synchronize scenario ' , scenarioName
+						, ' not present in Controller' ].
 
 
 	"check if all the scenarios are sync in every change"

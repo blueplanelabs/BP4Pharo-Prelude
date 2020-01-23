@@ -3,7 +3,7 @@ Class {
 	#superclass : #ComposablePresenter,
 	#instVars : [
 		'altitude',
-		'landing'
+		'lowBattery'
 	],
 	#category : #'BP4Pharo-TelloDrone-Example-TelloDrone-GUI'
 }
@@ -13,7 +13,7 @@ TelloDroneScenarioManager class >> defaultSpec [
 	^ SpecColumnLayout composed
 		newRow: [ :row | row add: #altitude ]
 			height: self toolbarHeight ;
-		newRow: [ :row | row add: #landing ] height: self toolbarHeight ;
+		newRow: [ :row | row add: #lowBattery ] height: self toolbarHeight ;
 		yourself
 ]
 
@@ -30,18 +30,18 @@ TelloDroneScenarioManager >> altitude: anObject [
 { #category : #protocol }
 TelloDroneScenarioManager >> disable [
 	altitude disable.
-	landing disable
+	lowBattery disable
 ]
 
 { #category : #protocol }
 TelloDroneScenarioManager >> enable [ 
 	altitude enable.
-	landing enable
+	lowBattery enable
 ]
 
 { #category : #api }
 TelloDroneScenarioManager >> extent [
-	^ 400 @ (altitude extent y+ landing extent y)
+	^ 400 @ (altitude extent y+ lowBattery extent y)
 ]
 
 { #category : #initialization }
@@ -50,29 +50,37 @@ TelloDroneScenarioManager >> initializeWidgets [
 
 	| altitudeVariationByStepFunction |
 	altitude := self instantiate: TelloDroneScenarioToManage.
-	landing := self instantiate: TelloDroneScenarioToManage.
+	lowBattery := self instantiate: TelloDroneScenarioToManage.
 
 	"widget configuration"
 	altitudeVariationByStepFunction := [ :distanceTravaled | 40 * (distanceTravaled * Float pi * 2 / 100) sin ].
 	altitude
-		scenario: (AltitudeController initialize;
-		instanceToFunction: altitudeVariationByStepFunction).
-	landing scenario: Landing.
+		scenario:
+			(AltitudeController
+				initialize;
+				instanceToFunction: altitudeVariationByStepFunction);
+		priority: 2.
+	lowBattery
+		scenario:
+			(LowBattery
+				initialize;
+				instance);
+		priority: 0.7.
 
 	"specification of order of focus"
 	self focusOrder
 		add: altitude;
-		add: landing
+		add: lowBattery
 ]
 
 { #category : #accessing }
-TelloDroneScenarioManager >> landing [
-	^ landing
+TelloDroneScenarioManager >> lowBattery [
+	^ lowBattery
 ]
 
 { #category : #accessing }
-TelloDroneScenarioManager >> landing: anObject [
-	landing := anObject
+TelloDroneScenarioManager >> lowBattery: anObject [
+	lowBattery := anObject
 ]
 
 { #category : #api }
@@ -83,11 +91,11 @@ TelloDroneScenarioManager >> title [
 { #category : #initialization }
 TelloDroneScenarioManager >> whenScenarioDeselectedDo: aBlock [
 	altitude whenDeactivatedDo: aBlock.
-	landing whenDeactivatedDo: aBlock
+	lowBattery whenDeactivatedDo: aBlock
 ]
 
 { #category : #initialization }
 TelloDroneScenarioManager >> whenScenarioSelectedDo: aBlock [
 	altitude whenActivatedDo:  aBlock .
-	landing whenActivatedDo: aBlock 
+	lowBattery whenActivatedDo: aBlock 
 ]
