@@ -6,10 +6,22 @@ Class {
 		'waitedEvents',
 		'blockedEvents',
 		'synchronized',
+		'auctioned',
 		'priority'
 	],
 	#category : #BP4Pharo
 }
+
+{ #category : #creation }
+BP4PScenarioState class >> requested: rEvents waited: wEvents blocked: bEvents synchronized: aBoolean auctioned: anotherBoolean priority: aPriority [
+	^ self new
+		requested: rEvents
+		waited: wEvents
+		blocked: bEvents
+		synchronized: aBoolean
+		auctioned: anotherBoolean
+		priority: aPriority
+]
 
 { #category : #creation }
 BP4PScenarioState class >> requested: rEvents waited: wEvents blocked: bEvents synchronized: aBoolean priority: aPriority [
@@ -30,7 +42,13 @@ BP4PScenarioState class >> withPriority: aPriority [
 		waited: nil
 		blocked: nil
 		synchronized: false
+		auctioned: false
 		priority: aPriority
+]
+
+{ #category : #accessing }
+BP4PScenarioState >> auctioned [
+	^ auctioned ifNil: [ auctioned := false]
 ]
 
 { #category : #accessing }
@@ -43,6 +61,11 @@ BP4PScenarioState >> blockedEvents [
 	^ blockedEvents
 ]
 
+{ #category : #api }
+BP4PScenarioState >> isAuctioned [
+	^ self auctioned
+]
+
 { #category : #accessing }
 BP4PScenarioState >> isProgressedWithEvent: aBP4PEvent [
 ^ self requestedEvents , self waitedEvents includesEvent: aBP4PEvent
@@ -50,8 +73,11 @@ BP4PScenarioState >> isProgressedWithEvent: aBP4PEvent [
 
 { #category : #api }
 BP4PScenarioState >> isSynchronized [
+	^ synchronized
+"Changing to:
+isSynchronized
+	^ synchronized ifNil: [  ]"	
 
-	^ synchronized 
 ]
 
 { #category : #printing }
@@ -83,6 +109,16 @@ BP4PScenarioState >> priority: anObject [
 { #category : #accessing }
 BP4PScenarioState >> requested: anObject [
 	requestedEvents := anObject
+]
+
+{ #category : #initalize }
+BP4PScenarioState >> requested: rEvents waited: wEvents blocked: bEvents synchronized: aBoolean auctioned: anotherBoolean priority: aPriority [
+	requestedEvents := rEvents.
+	waitedEvents := wEvents.
+	blockedEvents := bEvents.
+	synchronized := aBoolean.
+	auctioned := anotherBoolean.
+	priority := aPriority
 ]
 
 { #category : #initalize }

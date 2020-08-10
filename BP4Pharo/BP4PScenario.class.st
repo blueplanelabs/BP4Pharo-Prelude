@@ -35,7 +35,7 @@ BP4PScenario class >> instance [
 
 	| scenario |
 	scenario := self new.
-	scenario name.
+	"scenario name."
 	self increaseIterator.
 	^ scenario
 ]

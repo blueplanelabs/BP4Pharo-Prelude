@@ -136,7 +136,11 @@ DroneApplication class >> run [
 				initialize;
 				instance)
 		withPriority: 3.
-	bp subscribe: StopEvent do: [ :le | [ bp stop ] fork ].
+	bp
+		subscribe: StopEvent
+		do: [ :le | Transcript crShow: 'Received StopEvent in DroneApplication'.
+			[ 
+			bp stop ] fork ].
 	bp start.
 	"	Timer secondsInterval: 2 forBProgram: bp."
 	^ bp
@@ -241,6 +245,7 @@ DroneApplication >> altitudeMonitor [
 	self
 		subscribe: ChangedLocationEvent
 		do: [ :cle | 
+			Transcript crShow: 'Received ChangedLocationEvent in altitudeMonitor'.
 			distance := cle traveledDistance.
 			altitude := cle altitude.
 			location := distance @ altitude negated.
@@ -249,6 +254,7 @@ DroneApplication >> altitudeMonitor [
 	self
 		subscribe: LandEvent
 		do: [ :cle | 
+			Transcript crShow: 'Received LandEvent in altitudeMonitor'.			
 			altitude := 0.
 			location := distance @ altitude negated.
 			steps add: location.

@@ -82,9 +82,9 @@ TelloDroneScenarioToManage >> scenario [
 ]
 
 { #category : #accessing }
-TelloDroneScenarioToManage >> scenario: aScenarioClass [
-	scenario := aScenarioClass .
-	self label: aScenarioClass name asString 
+TelloDroneScenarioToManage >> scenario: aScenario [
+	scenario := aScenario.
+	self label: aScenario className asString
 ]
 
 { #category : #api }

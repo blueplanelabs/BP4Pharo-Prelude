@@ -184,11 +184,9 @@ BP4PController >> syncScenario: aBP4PSynchronizedScenarioAnnouncement [
 BP4PController >> updateScenariosStates: aBP4PEvent [
 	"	Change to usync scenariosState whose scenario has this event requested or waited. "
 
-
-
 	aBP4PEvent isNone
 		ifTrue: [ ^ self ].
-	scenarios
+	self scenarios
 		do: [ :scenarioState | 
 			(scenarioState isProgressedWithEvent: aBP4PEvent)
 				ifTrue: [ scenarioState unsynchronize ] ].

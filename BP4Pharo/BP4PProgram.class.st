@@ -93,13 +93,13 @@ BP4PProgram >> endScenario: aScenario [
 	| endScenarioAnnouncement |
 	self processes
 		at: aScenario
-		ifPresent: [ :process | process terminate ]
-		ifAbsent: [  ].
-	endScenarioAnnouncement := BP4PEndScenarioAnnouncement
+		ifPresent: [ 	endScenarioAnnouncement := BP4PEndScenarioAnnouncement
 		scenario: aScenario name.
 	Transcript
 		crShow: 'Announced from BP ' , endScenarioAnnouncement printString.
-	[ self announcer announce: endScenarioAnnouncement ] fork
+	[ self announcer announce: endScenarioAnnouncement ] fork]
+		ifAbsent: [ Transcript crShow: 'Not present process ', aScenario name ].
+
 ]
 
 { #category : #api }
